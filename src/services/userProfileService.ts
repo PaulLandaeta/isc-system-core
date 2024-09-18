@@ -1,22 +1,27 @@
 import createProfessorRequest from '../dtos/createProfessorRequest';
 import * as UserProfileRepository from '../repositories/userProfileRepository';
-import * as UserRoleRepository from '../repositories/userRolesRepository'
-import * as PermissionInteractor from '../interactors/permissionsInteractor'
+import * as UserRoleRepository from '../repositories/userRolesRepository';
+import * as PermissionInteractor from '../interactors/permissionsInteractor';
+import * as AuthenticationService from './authenticationService';
 import UserRole from '../constants/roles';
 import UserResponse from '../models/genericUserResponse';
 import { buildLogger } from '../plugin/logger';
 import { NotFoundError } from '../errors/notFoundError';
+import config from '../config/config';
+
 const logger = buildLogger('userProfileService');
+const defaultUserPassword = config.defaultUserPassword;
 
 export const createUserProfile = async (createUserProfileRequest: createProfessorRequest) => {
   try {
+    const hashedPassword = await AuthenticationService.hashPassword(defaultUserPassword);
     logger.info('Creating user profile with data:', { createUserProfileRequest });
     const userProfile = {
       name: createUserProfileRequest.name,
       lastname: createUserProfileRequest.lastname,
       username: createUserProfileRequest.lastname + createUserProfileRequest.name,
       email: createUserProfileRequest.email,
-      password: 'createpassworddefect',
+      password: hashedPassword,
       mothername: createUserProfileRequest.mothername,
       phone: createUserProfileRequest.phone,
       role_id: createUserProfileRequest.isStudent ? UserRole.STUDENT.id : UserRole.PROFESSOR.id,

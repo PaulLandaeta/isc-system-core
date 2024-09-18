@@ -36,7 +36,12 @@ export const getRoles = async () => {
 
 export const createRol = async (rolData: Rol) => {
   try {
-    const newRol = await db(rolesTable).insert(rolData).returning('*');
+    const [{ maxId }] = await db(rolesTable).max('id as maxId');
+    const newId = (maxId || 0) + 1;
+
+    const newRol = await db(rolesTable)
+      .insert({ ...rolData, id: newId })
+      .returning('*');
     return newRol;
   } catch (error) {
     console.error(error);
