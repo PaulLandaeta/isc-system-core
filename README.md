@@ -36,7 +36,7 @@ Make sure you have cloned the repository:
    ```bash
    cd isc-system-core
    ```
-2. chmod +x start-dev.sh
+2. Make sure to give the permissions
    ```bash
    chmod +x start-dev.sh
    ```
