@@ -1,7 +1,9 @@
 import type { Knex } from 'knex';
 
+export const TABLE_STAGES = 'stages';
+
 export async function up(knex: Knex): Promise<void> {
-  await knex.schema.createTable('stages', (table) => {
+  await knex.schema.createTable(TABLE_STAGES, (table) => {
     table.increments('id').primary();
     table.string('name').notNullable();
     table.boolean('disabled').defaultTo(false);
@@ -11,5 +13,5 @@ export async function up(knex: Knex): Promise<void> {
 }
 
 export async function down(knex: Knex): Promise<void> {
-  await knex.schema.dropTableIfExists('stages');
+  await knex.schema.dropTableIfExists(TABLE_STAGES);
 }

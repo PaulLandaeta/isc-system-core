@@ -1,7 +1,9 @@
 import type { Knex } from 'knex';
 
+export const TABLE_GRADPROC = 'graduation_process';
+
 export async function up(knex: Knex): Promise<void> {
-  await knex.schema.createTable('graduation_process', (table) => {
+  await knex.schema.createTable(TABLE_GRADPROC, (table) => {
     table.increments('id').primary();
     table.integer('student_id').unsigned().notNullable().references('id').inTable('students');
     table.integer('modality_id').unsigned().notNullable().references('id').inTable('modalities');
@@ -24,5 +26,5 @@ export async function up(knex: Knex): Promise<void> {
 }
 
 export async function down(knex: Knex): Promise<void> {
-  await knex.schema.dropTableIfExists('graduation_process');
+  await knex.schema.dropTableIfExists(TABLE_GRADPROC);
 }
