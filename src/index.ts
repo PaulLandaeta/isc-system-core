@@ -15,3 +15,6 @@ runMigrations()
     console.error('Failed to run migrations:', err);
     process.exit(1);
   });
+// app.listen(port, () => {
+//   console.log(`Server is Fire at http://localhost:${port}`);
+// });

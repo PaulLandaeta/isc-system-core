@@ -8,6 +8,7 @@ const professorTable = 'professors';
 const eventTable = 'events';
 const internsTable = 'interns';
 const eventInternTable = 'events_interns';
+const modalities = 'modalities';
 
 exports.seed = async function (knex: Knex) {
   // Deletes ALL existing entries
@@ -580,5 +581,11 @@ exports.seed = async function (knex: Knex) {
       type: 'reserve',
       worked_hours: 20,
     },
+  ]);
+
+  await knex(modalities).insert([
+    { id: 1, name: 'Proyecto de Grado', description: 'Modalidad de proyecto de grado' },
+    { id: 2, name: 'Trabajo Dirigido', description: 'Modalidad de trabajo dirigido' },
+    { id: 3, name: 'Tesis', description: 'Modalidad de tesis' },
   ]);
 };
