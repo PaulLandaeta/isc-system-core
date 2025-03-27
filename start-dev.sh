@@ -9,8 +9,8 @@ if ! command -v node &> /dev/null; then
   error_exit "Error: Node.js no está instalado. Por favor instala Node.js versión ${REQUIRED_NODE_MAJOR}.x.x."
 fi
 
-NODE_VERSION=$(node -v | sed 's/v//g')
-NODE_MAJOR=$(echo "$NODE_VERSION" | cut -d. -f1)
+NODE_VERSION=$(node -v)
+NODE_MAJOR=$(echo "$NODE_VERSION" | sed -E 's/^v?([0-9]+).*/\1/')
 
 if [ "$NODE_MAJOR" -ne "$REQUIRED_NODE_MAJOR" ]; then
   error_exit "Error: Se requiere Node.js ${REQUIRED_NODE_MAJOR}.x.x. Versión actual: $NODE_VERSION."
