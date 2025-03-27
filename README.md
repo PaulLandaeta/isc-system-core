@@ -42,23 +42,28 @@ Make sure you have cloned the repository:
    npm install
    ```
 
-3. Run the corresponding script from the scripts/ folder:
-   ```bash
-   node scripts/nombre-del-script.js
-   ```
-
 ### 2. Build and run the Docker container
 
 To build and run the Docker container, follow these steps:
 
 1. Make sure Docker is installed.
 
-2. To build the container image, run the following command in the root directory of the repository:
+2. Launch Docker containers:
    ```bash
-   docker build -t isc-system-core .
+   docker-compose up -d
    ```
 
-3. Once the image is built, you can run the container with the following command:
+3. Run migrations:
    ```bash
-   docker run -d -p 3000:3000 isc-system-core
+   npm run migrate:latest
+   ```
+
+4. Run seed:
+   ```bash
+   npm run seed:run
+   ```
+
+5. Launch the application in development mode:
+   ```bash
+   npm run dev
    ```
