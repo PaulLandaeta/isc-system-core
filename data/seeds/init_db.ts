@@ -1,4 +1,8 @@
 import { Knex } from 'knex';
+import { TABLE_GRADPROC } from '../migrations/20250327005903_create_graduation_process_table';
+import { TABLE_MODALITIES } from '../migrations/20250327005703_create_modalities_table';
+import { TABLE_STAGES } from '../migrations/20250327005854_create_stages_table';
+
 const userProfileTable = 'user_profile';
 const permissionCategoriesTable = 'permission_categories';
 const rolesTable = 'roles';
@@ -9,8 +13,14 @@ const eventTable = 'events';
 const internsTable = 'interns';
 const eventInternTable = 'events_interns';
 
+
 exports.seed = async function (knex: Knex) {
   // Deletes ALL existing entries
+
+  await knex(TABLE_GRADPROC).whereNotNull('modality_id').del();
+  //  eliminamos las modalidades
+  await knex(TABLE_MODALITIES).del();
+
   await knex(rolesTable).del();
   await knex(userProfileTable).del();
   await knex(permissionCategoriesTable).del();
@@ -20,6 +30,10 @@ exports.seed = async function (knex: Knex) {
   await knex(eventTable).del();
   await knex(eventInternTable).del();
   await knex(rolesPermissionsTable).del();
+  await knex(TABLE_STAGES).del();
+
+
+
 
   await knex(rolesTable).insert([
     { id: 1, name: 'admin', category: 'admin' },
@@ -418,7 +432,7 @@ exports.seed = async function (knex: Knex) {
     { role_id: 1, permission_id: 18 },
   ]);
 
-  await knex('user_profile').insert({
+  await knex(userProfileTable).insert({
     id: 2,
     username: 'professor',
     name: 'Alexis',
@@ -581,4 +595,21 @@ exports.seed = async function (knex: Knex) {
       worked_hours: 20,
     },
   ]);
+  await knex(userProfileTable).insert({
+    id: 7,
+    username: 'Maridela',
+    name: 'Mariana',
+    lastname: 'Del',
+    mothername: 'Arroyo',
+    password: '$2a$10$qv1IXHI4lhio8vJGS6O1UuIzTqTpdHY9dz5gyA9D5PFb1pGxJv3Kq',
+    email: 'marimar@gmail.com',
+    phone: '12345678',
+    role_id: 3,
+    code: '54351',
+  });
+  await knex ('students').insert([
+    {id: 7, is_scholarship: true}
+  ])
+  
+  
 };

@@ -6,7 +6,7 @@ export async function up(knex: Knex): Promise<void> {
   await knex.schema.createTable(TABLE_GRADPROC, (table) => {
     table.increments('id').primary();
     table.integer('student_id').unsigned().notNullable().references('id').inTable('students');
-    table.integer('modality_id').unsigned().notNullable().references('id').inTable('modalities');
+    table.integer('modality_id').unsigned().notNullable().references('id').inTable('modalities').onDelete('CASCADE'); 
     table.string('project_name').notNullable();
     table.boolean('seminar_enrollment').notNullable();
     table.timestamp('date_seminar_enrollment', { precision: 6 }).nullable();
