@@ -1,5 +1,5 @@
 import { Knex } from 'knex';
-import { TABLE_MODALITIES } from '../migrations/20250327005703_create_modalities_table'; 
+const TABLE_MODALITIES = 'modalities';
 export async function seed(knex: Knex): Promise<void> {
   await knex(TABLE_MODALITIES).del();
 

@@ -1,7 +1,4 @@
 import { Knex } from 'knex';
-import { TABLE_GRADPROC } from '../migrations/20250327005903_create_graduation_process_table';
-import { TABLE_MODALITIES } from '../migrations/20250327005703_create_modalities_table';
-import { TABLE_STAGES } from '../migrations/20250327005854_create_stages_table';
 
 const userProfileTable = 'user_profile';
 const permissionCategoriesTable = 'permission_categories';
@@ -12,7 +9,9 @@ const professorTable = 'professors';
 const eventTable = 'events';
 const internsTable = 'interns';
 const eventInternTable = 'events_interns';
-
+const TABLE_STAGES = 'stages';
+const TABLE_MODALITIES = 'modalities';
+const TABLE_GRADPROC = 'graduation_process';
 
 exports.seed = async function (knex: Knex) {
   // Deletes ALL existing entries

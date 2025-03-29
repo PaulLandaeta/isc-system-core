@@ -1,5 +1,5 @@
 import { Knex } from 'knex';
-import { TABLE_STAGES } from '../migrations/20250327005854_create_stages_table'; 
+const TABLE_STAGES = 'stages';
 
 export async function seed(knex: Knex): Promise<void> {
   await knex(TABLE_STAGES).del();
