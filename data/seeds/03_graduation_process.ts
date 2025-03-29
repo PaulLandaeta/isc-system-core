@@ -1,5 +1,5 @@
 import { Knex } from 'knex';
-import { TABLE_GRADPROC } from '../migrations/20250327005903_create_graduation_process_table'; // Ruta según tu estructura
+import { TABLE_GRADPROC } from '../migrations/20250327005903_create_graduation_process_table'; 
 
 export async function seed(knex: Knex): Promise<void> {
   await knex(TABLE_GRADPROC).del();

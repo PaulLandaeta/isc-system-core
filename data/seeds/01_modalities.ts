@@ -1,5 +1,5 @@
 import { Knex } from 'knex';
-import { TABLE_MODALITIES } from '../migrations/20250327005703_create_modalities_table'; // Ruta según tu estructura
+import { TABLE_MODALITIES } from '../migrations/20250327005703_create_modalities_table'; 
 export async function seed(knex: Knex): Promise<void> {
   await knex(TABLE_MODALITIES).del();
 

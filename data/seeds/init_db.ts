@@ -18,9 +18,7 @@ exports.seed = async function (knex: Knex) {
   // Deletes ALL existing entries
 
   await knex(TABLE_GRADPROC).whereNotNull('modality_id').del();
-  //  eliminamos las modalidades
   await knex(TABLE_MODALITIES).del();
-
   await knex(rolesTable).del();
   await knex(userProfileTable).del();
   await knex(permissionCategoriesTable).del();
