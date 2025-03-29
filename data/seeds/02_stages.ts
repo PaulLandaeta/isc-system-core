@@ -1,10 +1,10 @@
 import { Knex } from 'knex';
-const TABLE_STAGES = 'stages';
+const stagesTable = 'stages';
 
 export async function seed(knex: Knex): Promise<void> {
-  await knex(TABLE_STAGES).del();
+  await knex(stagesTable).del();
 
-  await knex(TABLE_STAGES).insert([
+  await knex(stagesTable).insert([
     { id: 1, name: 'Inscripción a seminario' },
     { id: 2, name: 'Tutor' },
     { id: 3, name: 'Revisor' },

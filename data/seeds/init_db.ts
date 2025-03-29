@@ -9,15 +9,15 @@ const professorTable = 'professors';
 const eventTable = 'events';
 const internsTable = 'interns';
 const eventInternTable = 'events_interns';
-const TABLE_STAGES = 'stages';
-const TABLE_MODALITIES = 'modalities';
-const TABLE_GRADPROC = 'graduation_process';
+const stagesTable = 'stages';
+const modalitiesTable = 'modalities';
+const gradprocTable = 'graduation_process';
 
 exports.seed = async function (knex: Knex) {
   // Deletes ALL existing entries
 
-  await knex(TABLE_GRADPROC).whereNotNull('modality_id').del();
-  await knex(TABLE_MODALITIES).del();
+  await knex(gradprocTable).whereNotNull('modality_id').del();
+  await knex(modalitiesTable).del();
   await knex(rolesTable).del();
   await knex(userProfileTable).del();
   await knex(permissionCategoriesTable).del();
@@ -27,7 +27,7 @@ exports.seed = async function (knex: Knex) {
   await knex(eventTable).del();
   await knex(eventInternTable).del();
   await knex(rolesPermissionsTable).del();
-  await knex(TABLE_STAGES).del();
+  await knex(stagesTable).del();
 
 
 

@@ -1,10 +1,10 @@
 import { Knex } from 'knex';
-const TABLE_GRADPROC = 'graduation_process';
+const gradprocTable = 'graduation_process';
 
 export async function seed(knex: Knex): Promise<void> {
-  await knex(TABLE_GRADPROC).del();
+  await knex(gradprocTable).del();
 
-  await knex(TABLE_GRADPROC).insert([
+  await knex(gradprocTable).insert([
     {
       student_id: 7,
       modality_id: 1,
