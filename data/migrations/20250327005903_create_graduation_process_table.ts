@@ -16,7 +16,7 @@ export async function up(knex: Knex): Promise<void> {
     table.boolean('tutor_approval').notNullable().defaultTo(false);
     table.timestamp('date_tutor_assignament', { precision: 6 }).nullable();
     table.boolean('reviewer_letter').notNullable().defaultTo(false);
-    table.integer('reviewer_id').unsigned().nullable().references('id').inTable('professors'); // Ahora es nullable
+    table.integer('reviewer_id').unsigned().nullable().references('id').inTable('professors'); 
     table.boolean('reviewer_approval').notNullable().defaultTo(false);
     table.timestamp('date_reviewer_assignament', { precision: 6 }).nullable();
     table.integer('stage_id').unsigned().notNullable().references('id').inTable('stages');
