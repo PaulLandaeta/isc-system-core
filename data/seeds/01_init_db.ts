@@ -12,9 +12,9 @@ const eventInternTable = 'events_interns';
 const stagesTable = 'stages';
 const modalitiesTable = 'modalities';
 const gradprocTable = 'graduation_process';
+const studentsTable = 'students';
 
-exports.seed = async function (knex: Knex) {
-  // Deletes ALL existing entries
+exports.seed = async function(knex: Knex) {
 
   await knex(gradprocTable).whereNotNull('modality_id').del();
   await knex(modalitiesTable).del();
@@ -28,9 +28,6 @@ exports.seed = async function (knex: Knex) {
   await knex(eventInternTable).del();
   await knex(rolesPermissionsTable).del();
   await knex(stagesTable).del();
-
-
-
 
   await knex(rolesTable).insert([
     { id: 1, name: 'admin', category: 'admin' },
@@ -427,6 +424,21 @@ exports.seed = async function (knex: Knex) {
     { role_id: 1, permission_id: 6 },
     { role_id: 1, permission_id: 12 },
     { role_id: 1, permission_id: 18 },
+    { role_id: 2, permission_id: 11 },
+    { role_id: 2, permission_id: 7 },
+    { role_id: 2, permission_id: 6 },
+    { role_id: 2, permission_id: 10 },
+    { role_id: 2, permission_id: 9 },
+    { role_id: 2, permission_id: 8 },
+    { role_id: 2, permission_id: 2 },
+    { role_id: 2, permission_id: 3 },
+    { role_id: 2, permission_id: 4 },
+    { role_id: 2, permission_id: 5 },
+    { role_id: 2, permission_id: 12 },
+    { role_id: 2, permission_id: 13 },
+    { role_id: 2, permission_id: 14 },
+    { role_id: 2, permission_id: 15 },
+    { role_id: 2, permission_id: 16 },
   ]);
 
   await knex(userProfileTable).insert({
@@ -604,9 +616,8 @@ exports.seed = async function (knex: Knex) {
     role_id: 3,
     code: '54351',
   });
-  await knex ('students').insert([
-    {id: 7, is_scholarship: true}
+  await knex(studentsTable).insert([
+    { id: 7, is_scholarship: true }
   ])
-  
-  
+
 };

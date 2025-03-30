@@ -23,6 +23,7 @@ export async function runMigrations(): Promise<void> {
   await checkDatabaseConnection();
   try {
     await db.migrate.latest();
+    await db.seed.run();
     logger.info(`[${environment}] Migrations ran successfully at ${new Date().toISOString()}`);
   } catch (err) {
     const error = err as Error;

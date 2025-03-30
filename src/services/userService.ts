@@ -4,6 +4,7 @@ import * as AuthenticationService from './authenticationService';
 import { buildLogger } from '../plugin/logger';
 import config from '../config/config';
 import createUserRequest from '../dtos/createUserRequest';
+import roles from '../constants/roles';
 
 const logger = buildLogger('userService');
 const defaultUserPassword = config.defaultUserPassword;
@@ -14,8 +15,6 @@ export const findByEmail = async (email: string): Promise<User> => {
 
 export const createUser = async (user: createUserRequest) => {
   try {
-    console.log(user, "yiaaa")
-    // TODO: valid the user does not exist with the email or code
     const existingUser = await UserRepository.getUserByEmail(user.email);
     if (existingUser) {
       throw new Error('User with this email already exists');
@@ -31,6 +30,7 @@ export const createUser = async (user: createUserRequest) => {
       ...user,
       password: hashedPassword,
       username: user.code + user.name + user.lastname,
+      role_id: roles.STUDENT.id,
     });
   } catch (error) {
     console.log('Error creating User');
