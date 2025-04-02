@@ -9,5 +9,3 @@ export async function seed(knex: Knex): Promise<void> {
     { id: 3, name: 'Tesis', description: 'Modalidad Tesis' }
   ]);
 }
-
-
