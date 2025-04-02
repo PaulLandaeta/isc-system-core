@@ -73,10 +73,10 @@ export const getGraduationProcesses = async () => {
         'gp.period as period',
         'gp.id'
       )
-      .join('users as u', 'u.id', '=', 'gp.student_id')
+      .join('user_profile as u', 'u.id', '=', 'gp.student_id')
       .join('modalities as m', 'm.id', '=', 'gp.modality_id')
-      .leftJoin('users as tutor', 'tutor.id', '=', 'gp.tutor_id')
-      .leftJoin('users as reviewer', 'reviewer.id', '=', 'gp.reviewer_id');
+      .leftJoin('user_profile as tutor', 'tutor.id', '=', 'gp.tutor_id')
+      .leftJoin('user_profile as reviewer', 'reviewer.id', '=', 'gp.reviewer_id');
     return students;
   } catch (error) {
     console.error(error);
