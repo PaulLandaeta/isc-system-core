@@ -7,9 +7,12 @@ const tableName = 'graduation_process';
 export const getGraduationProcessById = async (id: number) => {
   try {
     const graduationProcess = await db(`${tableName} as gp`)
-      .join('users as student', 'gp.student_id', 'student.id')
-      .leftJoin('users as tutor', 'gp.tutor_id', 'tutor.id')
-      .leftJoin('users as reviewer', 'gp.reviewer_id', 'reviewer.id')
+      .join('students as st', 'gp.student_id', 'st.id')
+      .join('user_profile as student', 'st.id', 'student.id')
+      .leftJoin('professors as pt', 'gp.tutor_id', 'pt.id')
+      .leftJoin('user_profile as tutor', 'pt.id', 'tutor.id')
+      .leftJoin('professors as pr', 'gp.reviewer_id', 'pr.id')
+      .leftJoin('user_profile as reviewer', 'pr.id', 'reviewer.id')
       .join('modalities', 'gp.modality_id', 'modalities.id')
       .select(
         db.raw(
@@ -21,9 +24,9 @@ export const getGraduationProcessById = async (id: number) => {
         ),
         'student.name as student_name',
         'tutor.name as tutor_name',
-        'tutor.degree as tutor_degree',
+        'pt.degree as tutor_degree',
         'reviewer.name as reviewer_name',
-        'reviewer.degree as reviewer_degree',
+        'pr.degree as reviewer_degree',
         'modalities.name as modality_name',
         'gp.*'
       )
