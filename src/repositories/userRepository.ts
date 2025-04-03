@@ -30,15 +30,13 @@ export const getStudents = async () => {
         'u.email',
         'u.phone'
       )
-      .join('user_roles as ur', 'u.id', '=', 'ur.user_id')
-      .where('ur.role_id', UserRole.STUDENT.id);
+      .where('u.role_id', '=', UserRole.STUDENT.id); 
     return students;
   } catch (error) {
     console.error(error);
     throw error;
   }
 };
-
 export const getStudentByCode = async (userCode: number) => {
   try {
     const student = await db('user_profile as u')
