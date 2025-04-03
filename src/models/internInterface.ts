@@ -11,4 +11,4 @@ interface Intern extends User {
   updated_at: Dayjs;
 }
 
-export default Intern;
+export default Intern

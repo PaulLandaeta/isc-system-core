@@ -101,11 +101,7 @@ export const updateAttendanceController = async (req: Request, res: Response) =>
   try {
     const { id_evento, id_becario } = req.params;
     const { new_status } = req.body;
-    const result = await updateInternsAttendance(
-      parseInt(id_evento, 10),
-      parseInt(id_becario, 10),
-      new_status
-    );
+    const result = await updateInternsAttendance(parseInt(id_evento, 10), parseInt(id_becario, 10), new_status);
     sendSuccess(res, result, 'Attendance updated succesfully');
   } catch (error) {
     if (error instanceof Error) {
@@ -114,7 +110,7 @@ export const updateAttendanceController = async (req: Request, res: Response) =>
   }
 };
 
-export const getEventInformationsController = async (req: Request, res: Response) => {
+export const getEventInformationsController = async(req: Request, res: Response) => {
   try {
     const result = await getEventInformations();
 

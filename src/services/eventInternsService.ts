@@ -42,9 +42,9 @@ export const getEventIntern = async (eventId: number) => {
 
     const sortedList = [
       ...acceptedInterns,
-      ...pendingInterns,
-      ...reserveInterns,
-      ...rejectedInterns,
+      ...pendingInterns, 
+      ...reserveInterns, 
+      ...rejectedInterns
     ];
 
     return {
@@ -57,15 +57,16 @@ export const getEventIntern = async (eventId: number) => {
   }
 };
 
-export const getEventsInternById = async (eventId: number, internId: number) => {
-  try {
-    const listEventInterns = await getEventInternsByTwoId(eventId, internId);
+export const getEventsInternById = async(eventId: number, internId: number) => {
+  try{
+    const listEventInterns = await getEventInternsByTwoId(eventId,internId);
     return listEventInterns;
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Error in EventInternsService.getEventIntern', error);
     throw new Error('Error fetching ListEventInterns');
   }
-};
+}
 
 export const registerIntern = async (eventId: number, internId: number) => {
   try {
@@ -112,11 +113,7 @@ export const updateEventHistory = async (id_evento: number) => {
   }
 };
 
-export const updateInternsAttendance = async (
-  id_evento: number,
-  id_becario: number,
-  new_status: boolean
-) => {
+export const updateInternsAttendance = async (id_evento: number,id_becario: number,new_status: boolean) => {
   try {
     const updatedAttendance = await updateInternAttendance(id_evento, id_becario, new_status);
     return updatedAttendance;
@@ -126,7 +123,7 @@ export const updateInternsAttendance = async (
   }
 };
 
-export const getEventInformations = async () => {
+export const getEventInformations = async() => {
   try {
     const listEventInterns = await getEventInformation();
     return listEventInterns;
