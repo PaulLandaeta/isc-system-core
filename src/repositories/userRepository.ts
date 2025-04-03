@@ -30,8 +30,7 @@ export const getStudents = async () => {
         'u.email',
         'u.phone'
       )
-      .where('u.role_id', UserRole.STUDENT.id);
-
+      .where('u.role_id', '=', UserRole.STUDENT.id); 
     return students;
   } catch (error) {
     console.error(error);
