@@ -16,6 +16,7 @@ router
     validateParams(paramIdSchema),
     GraduationController.getGraduationProcessByIdController
   );
+
 router
   .route('/:id')
   .put(
@@ -24,6 +25,7 @@ router
     validateBody(updateGraduationProcessSchema),
     GraduationController.updateGraduationProcessController
   );
+
 router
   .route('/')
   .post(
@@ -31,6 +33,7 @@ router
     validateBody(createGraduationProcessSchema),
     GraduationController.createGraduationProcessController
   );
+
 router.route('/').get(checkUserAuth, GraduationController.getGraduationProcessesController);
 
 router.route('/:id/defense').post(checkUserAuth, GraduationController.createDefenseController);
