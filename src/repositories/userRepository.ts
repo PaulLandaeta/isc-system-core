@@ -31,13 +31,13 @@ export const getStudents = async () => {
         'u.phone'
       )
       .where('u.role_id', UserRole.STUDENT.id);
+
     return students;
   } catch (error) {
     console.error(error);
     throw error;
   }
 };
-
 export const getStudentByCode = async (userCode: number) => {
   try {
     const student = await db('user_profile as u')
