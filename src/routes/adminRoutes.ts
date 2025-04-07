@@ -16,7 +16,7 @@ router
     validateBody(createAdminSchema),
     AdminController.createAdmin
   );
-  router
+router
   .route('/')
   .post(
     checkUserAuth,
