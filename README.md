@@ -32,19 +32,18 @@ To run the project's scripts, follow these steps:
 
 Make sure you have cloned the repository:
 
-1. Haber clonado el repositorio:
+1. Having cloned the repository:
    ```bash
    cd isc-system-core
    ```
-
-2. Ensure that the necessary dependencies are installed:
+2. Make sure to give the permissions
    ```bash
-   npm install
+   chmod +x start-dev.sh
    ```
 
-3. Run the corresponding script from the scripts/ folder:
+3. Run the development environment script:
    ```bash
-   node scripts/nombre-del-script.js
+   ./start-dev.sh
    ```
 
 ### 2. Build and run the Docker container
@@ -53,12 +52,17 @@ To build and run the Docker container, follow these steps:
 
 1. Make sure Docker is installed.
 
-2. To build the container image, run the following command in the root directory of the repository:
+2. Launch Docker containers:
+   ```bash
+   docker-compose up -d
+   ```
+
+3. Build the Docker image:
    ```bash
    docker build -t isc-system-core .
    ```
 
-3. Once the image is built, you can run the container with the following command:
+4. Run the Docker container:
    ```bash
-   docker run -d -p 3000:3000 isc-system-core
+   docker run -d -p 5000:5000 isc-system-core
    ```
