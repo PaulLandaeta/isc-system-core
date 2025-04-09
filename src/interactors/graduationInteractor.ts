@@ -6,6 +6,8 @@ import { DefenseDetail } from '../models/defenseDetailInterface';
 import GraduationProcess from '../models/graduationProcessInterface';
 import * as GraduationProcessService from '../services/graduationService';
 import { getStudentByCode } from './studentInteractor';
+import * as UserRepository from '../repositories/userRepository';
+import roles from '../constants/roles';
 
 export const getGraduationProcessById = async (processId: number) => {
   const process = await GraduationProcessService.getGraduationProcessById(processId);
@@ -33,9 +35,19 @@ export const updateGraduationProcess = async (
   }
 };
 
+const validateStudentRole = async (code: number) => {
+  const user = await UserRepository.getUserByCode(code);
+  if (!user || user.role_name?.toLowerCase() !== 'student') {
+    throw new BadRequestError('This user is not a student');
+  }
+  return user;
+};
+
 export const createGraduationProcess = async (
   graduationProcess: createGraduationProcessRequest
 ) => {
+  await validateStudentRole(graduationProcess.student_code);
+
   const student = await getStudentByCode(graduationProcess.student_code);
   if (!student) {
     throw new BadRequestError("The provided student doesn't exist");

@@ -152,14 +152,17 @@ export const getProfessorById = async (id: string) => {
 export const getUserByCode = async (userCode: number) => {
   try {
     const student = await db('user_profile as u')
+      .leftJoin('user_roles as ur', 'u.id', 'ur.user_id')
+      .leftJoin('roles as r', 'ur.role_id', 'r.id')
       .select(
         'u.id',
         'u.name as student_name',
         'u.lastname as lastName',
         'u.mothername as motherName',
-        'u.code'
+        'u.code',
+        'ur.role_id',
+        'r.name as role_name'
       )
-      .join('roles as r', 'u.role_id', '=', 'r.id')
       .where('u.code', userCode)
       .first();
 
