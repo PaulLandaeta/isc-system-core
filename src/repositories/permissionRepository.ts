@@ -1,4 +1,4 @@
-import db from "./pg-connection";
+import db from './pg-connection';
 const tableName = 'users';
 
 export const getRoleAndPermissions = async (id: string) => {
@@ -23,4 +23,4 @@ export const getRoleAndPermissions = async (id: string) => {
     console.error('Error in GenericRoleRepository.getRoleAndPermissions:', error);
     throw new Error('Error fetching Roles and Permissions');
   }
-}
+};

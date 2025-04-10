@@ -1,6 +1,6 @@
 import * as UserService from '../services/userService';
 import * as UserRoleService from '../services/userRoleService';
-import { NotFoundError } from "../errors/notFoundError";
+import { NotFoundError } from '../errors/notFoundError';
 
 export const deleteUser = async (userId: number) => {
   try {

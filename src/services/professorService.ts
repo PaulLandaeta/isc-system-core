@@ -1,7 +1,9 @@
 import createProfessorRequest from '../dtos/createProfessorRequest';
 import { storeProfessor } from '../repositories/professorRepository';
 
-export const createProfessorService = async (professor: createProfessorRequest): Promise<any | null> => {
+export const createProfessorService = async (
+  professor: createProfessorRequest
+): Promise<any | null> => {
   try {
     const professorRequest = {
       id: professor.id,

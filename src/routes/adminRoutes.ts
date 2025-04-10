@@ -16,12 +16,10 @@ router
     validateBody(createAdminSchema),
     AdminController.createAdmin
   );
-  router
-  .route('/')
-  .post(
-    checkUserAuth,
-    // requireRole([UserRole.ADMIN.name]),
-    AdminController.createUser
-  );
+router.route('/').post(
+  checkUserAuth,
+  // requireRole([UserRole.ADMIN.name]),
+  AdminController.createUser
+);
 
 export default router;
