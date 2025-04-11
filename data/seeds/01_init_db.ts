@@ -617,7 +617,8 @@ exports.seed = async function(knex: Knex) {
     code: '54351',
   });
   await knex(studentsTable).insert([
-    { id: 7, is_scholarship: true }
+    { id: 7, is_scholarship: true },
+    { id: 6, is_scholarship: false }
   ])
 
 };
