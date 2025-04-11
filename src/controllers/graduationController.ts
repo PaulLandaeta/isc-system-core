@@ -54,8 +54,8 @@ export const createGraduationProcessController = async (req: Request, res: Respo
 
 export const getGraduationProcessesController = async (req: Request, res: Response) => {
   try {
-    // const graduationProcesses = await GraduationProcessInteractor.getGraduationProcesses();
-    sendSuccess(res, [], 'Graduation processes retrieved successfully');
+    const graduationProcesses = await GraduationProcessInteractor.getGraduationProcesses();
+    sendSuccess(res, graduationProcesses, 'Graduation processes retrieved successfully');
   } catch (error) {
     if (error instanceof Error) {
       handleError(res, error);

@@ -1,20 +1,37 @@
 module.exports = {
-  parser: '@typescript-eslint/parser',
+  env: {
+    browser: true,
+    es2021: true,
+    node: true,
+  },
   extends: [
     'eslint:recommended',
-    'plugin:@typescript-eslint/recommended',
-    'prettier',
-    'plugin:prettier/recommended',
+    'plugin:react/recommended',
   ],
   parserOptions: {
-    ecmaVersion: 2020,
+    ecmaVersion: 12,
     sourceType: 'module',
   },
-  env: {
-    node: true,
-    es6: true,
-  },
+  plugins: [
+    'react',
+  ],
   rules: {
-    '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '_' }],
+    //Reglas de estilo
+    'indent': ['error', 2],
+    'quotes': ['error', 'single'],
+    'semi': ['error', 'always'],
+    'linebreak-style': ['error', 'unix'],
+    'no-trailing-spaces': 'error',
+    'max-len': ['error', { 'code': 80 }],
+
+    //Regla de detección de errores
+    'no-duplicate-imports': 'error',
+    'no-unused-vars': 'warn',
+    'no-undef': 'error',
+    'no-console': 'warn',
+    'eqeqeq': ['error', 'always'],
+    'no-empty-function': 'warn',
+    'no-debugger': 'error',
+    'consistent-return': 'warn',
   },
 };
