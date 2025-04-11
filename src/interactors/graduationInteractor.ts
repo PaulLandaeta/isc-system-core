@@ -5,8 +5,8 @@ import { NotFoundError } from '../errors/notFoundError';
 import { DefenseDetail } from '../models/defenseDetailInterface';
 import GraduationProcess from '../models/graduationProcessInterface';
 import * as GraduationProcessService from '../services/graduationService';
-import { getStudentByCode } from './studentInteractor';
-
+import UserRole from '../constants/roles';
+import { getUserByCode } from '../repositories/userRepository';
 export const getGraduationProcessById = async (processId: number) => {
   const process = await GraduationProcessService.getGraduationProcessById(processId);
 
@@ -36,19 +36,22 @@ export const updateGraduationProcess = async (
 export const createGraduationProcess = async (
   graduationProcess: createGraduationProcessRequest
 ) => {
-  const student = await getStudentByCode(graduationProcess.student_code);
-  if (!student) {
-    throw new BadRequestError("The provided student doesn't exist");
+  const user = await getUserByCode(graduationProcess.student_code);
+
+  if (!user || user.role_id !== UserRole.STUDENT.id) {
+    throw new BadRequestError("The provided user doesn't exist or isn't a student");
   }
 
   const newGraduationProcess: NewGraduationProcess = {
     modality_id: graduationProcess.modality_id,
     period: graduationProcess.period,
     project_name: graduationProcess.project_name,
-    student_id: student.id,
+    student_id: user.id,
   };
+
   return await GraduationProcessService.createGraduationProcess(newGraduationProcess);
 };
+
 
 export const getGraduationProcesses = async () => {
   const graduationProcesses = await GraduationProcessService.getGraduationProcesses();
