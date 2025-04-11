@@ -4,6 +4,7 @@ import * as AuthenticationService from './authenticationService';
 import { buildLogger } from '../plugin/logger';
 import config from '../config/config';
 import createUserRequest from '../dtos/createUserRequest';
+import roles from '../constants/roles';
 
 const logger = buildLogger('userService');
 const defaultUserPassword = config.defaultUserPassword;
@@ -14,7 +15,6 @@ export const findByEmail = async (email: string): Promise<User> => {
 
 export const createUser = async (user: createUserRequest) => {
   try {
-    // TODO: valid the user does not exist with the email or code
     const existingUser = await UserRepository.getUserByEmail(user.email);
     if (existingUser) {
       throw new Error('User with this email already exists');
@@ -30,6 +30,7 @@ export const createUser = async (user: createUserRequest) => {
       ...user,
       password: hashedPassword,
       username: user.code + user.name + user.lastname,
+      role_id: roles.STUDENT.id,
     });
   } catch (error) {
     console.log('Error creating User');
@@ -47,21 +48,6 @@ export const getProfessors = async () => {
     logger.error(`Error fetching professors: ${error}`);
     throw new Error('Error occurred while fetching professors');
   }
-};
-
-export const deleteUser = async (userId: number) => {
-  try {
-    logger.debug(`Attempting to delete user with id: ${userId}`);
-    await UserRepository.deleteUser(userId);
-    logger.info('User deleted successfully.');
-  } catch (error) {
-    logger.error(`Error deleting user: ${error}`);
-    throw new Error('Error deleting user');
-  }
-};
-
-export const getUserById = async (userId: number): Promise<User | null> => {
-  return UserRepository.getUserById(userId);
 };
 
 export const getUserByRol = async (rolId: number) => {

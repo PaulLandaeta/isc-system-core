@@ -14,7 +14,7 @@ import eventInternsRouter from './routes/eventInternsRoutes';
 import eventsRouter from './routes/eventsRoutes';
 import internsRouter from './routes/internsRoutes';
 import permissionRouter from './routes/permissionRouters';
-import userRouter from './routes/userRoutes';
+import userProfileRouter from './routes/userProfileRoutes';
 import rolesRouter from './routes/rolesRoutes';
 
 dotenv.config();
@@ -39,7 +39,7 @@ app.use('/api/email', emailRouter);
 app.use('/api/permission', permissionRouter);
 app.use('/api/events', eventInternsRouter, eventsRouter);
 app.use('/api/interns', internsRouter);
-app.use('/api/user', userRouter);
+app.use('/api/user', userProfileRouter);
 app.use('/api/roles', rolesRouter);
 
 export default app;

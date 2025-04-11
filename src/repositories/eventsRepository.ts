@@ -33,9 +33,12 @@ export const createEvent = async (event: Event) => {
   }
 };
 
-export const updateEvent = async (event: Event, id: string) => {
+export const updateEvent = async (event: Partial<Event>, id: string) => {
   try {
-    const eventResponse = await db(tableName).where('id', id).update(event).returning('*');
+    const eventResponse = await db(tableName)
+      .where('id', id)
+      .update({ ...event, updated_at: new Date() })
+      .returning('*');
     return eventResponse;
   } catch (error) {
     console.error('Error in eventsRepository.updateEvent:', error);

@@ -5,7 +5,6 @@ interface createUserRequest {
   code: string;
   email: string;
   phone: string;
-  degree: string;
 }
 
 export default createUserRequest;

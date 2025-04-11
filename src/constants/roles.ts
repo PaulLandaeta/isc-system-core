@@ -1,7 +1,7 @@
 const UserRole = {
-  STUDENT: { id: 1, name: 'student' },
+  STUDENT: { id: 3, name: 'student' },
   PROFESSOR: { id: 2, name: 'professor' },
-  ADMIN: { id: 3, name: 'admin' },
+  ADMIN: { id: 1, name: 'admin' },
 };
 
 export default UserRole;

@@ -7,6 +7,7 @@ interface createProfessorRequest {
   email: string;
   phone: string;
   degree: string;
+  isStudent: boolean
 }
 
 export default createProfessorRequest;

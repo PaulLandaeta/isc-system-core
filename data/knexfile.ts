@@ -11,7 +11,8 @@ const knexConfig: { [key: string]: import('knex').Knex.Config } = {
       user: database.user,
       password: database.password,
       port: Number(database.port as string) || 5432,
-      ssl: false,
+      ssl: { rejectUnauthorized: false },
+      //revert
     },
     migrations: {
       directory: '../data/migrations',
@@ -54,9 +55,15 @@ const knexConfig: { [key: string]: import('knex').Knex.Config } = {
       min: 2,
       max: 10,
     },
+    // migrations: {
+    //   tableName: 'knex_migrations',
+    // },
     migrations: {
-      tableName: 'knex_migrations',
+      directory: '../data/migrations',
     },
+    seeds: {
+      directory: '../data/seeds',
+    }
   },
 };
 

@@ -1,29 +1,36 @@
+import EventInterns from '../models/eventsInternsInterface';
 import db from './pg-connection';
 
 const tableName = 'events_interns';
 
 export const getEventInterns = async (eventId: number) => {
   try {
-    const query = db(`${tableName} as ei`)
-      .join('events as e', 'ei.event_id', 'e.id')
-      .join('interns as i', 'ei.intern_id', 'i.id')
-      .join('user_profile as up', 'i.user_profile_id', 'up.id')
+    const listEventInterns = await db('events as e')
+      .leftJoin(`${tableName} as ei`, 'ei.event_id', 'e.id')
+      .leftJoin('interns as i', 'ei.intern_id', 'i.id')
+      .leftJoin('user_profile as up', 'i.user_profile_id', 'up.id')
       .select(
         'e.id as id_events',
-        'i.id as id_interns',
         'e.*',
-        'i.*',
-        'up.name',
-        'up.lastname',
-        'up.mothername',
-        'up.code',
-        'ei.type',
-        'ei.created_at as registration_date',
-        'ei.updated_at as last_update'
+        db.raw(`array_agg(json_build_object(
+          'id_intern', "i"."id",
+          'name', "up"."name",
+          'lastname', "up"."lastname",
+          'mothername', "up"."mothername",
+          'code', "up"."code",
+          'type', "ei"."type",
+          'worked_hours', "ei"."worked_hours",
+          'notes', "ei"."notes",
+          'attendance', "ei"."attendance",
+          'total_hours', "i"."total_hours",
+          'pending_hours', "i"."pending_hours",
+          'completed_hours', "i"."completed_hours",
+          'registration_date', "ei"."created_at",
+          'last_update', "ei"."updated_at"
+        )) as interns`)
       )
-      .where('ei.event_id', eventId);
-    console.log('sql query', query.toSQL().sql);
-    const listEventInterns = await query;
+      .where('e.id', eventId)
+      .groupBy('e.id');
     return listEventInterns;
   } catch (error) {
     console.error('Error in EventInternsRepository.getEventInterns', error);
@@ -65,13 +72,18 @@ export const getEventInternsByTwoId = async (eventId: number, internId: number) 
   }
 };
 
-export const registerInternProcess = async (eventId: number, internId: number) => {
+export const registerInternProcess = async (
+  eventId: number,
+  internId: number,
+  assigned_hours: number
+) => {
   try {
     const registerInterns = await db(tableName)
       .insert({
         event_id: eventId,
         intern_id: internId,
         type: 'pending',
+        worked_hours: assigned_hours,
       })
       .returning('*');
     return registerInterns;
@@ -157,5 +169,24 @@ export const updateInternAttendance = async (
   } catch (error) {
     console.error('Error in updateInternAttendance', error);
     throw new Error('Error updating attendance status for Interns');
+  }
+};
+
+// TODO: refactor all update controllers to use this one
+export const updateEventInternsRepository = async (
+  eventId: number,
+  internId: number,
+  eventIntern: EventInterns
+) => {
+  try {
+    const eventResponse = await db(tableName)
+      .where('event_id', eventId)
+      .where('intern_id', internId)
+      .update({...eventIntern, updated_at: new Date()})
+      .returning('*');
+    return eventResponse;
+  } catch (error) {
+    console.error('Error in eventInternsRepository.updateEventInterns:', error);
+    throw new Error('Error updating EventIntern');
   }
 };

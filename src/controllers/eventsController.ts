@@ -5,6 +5,7 @@ import {
   createEventService,
   updateEventService,
   deleteEventService,
+  finishEventService,
 } from '../services/eventsService';
 
 import { sendCreated, sendSuccess } from '../handlers/successHandler';
@@ -66,6 +67,18 @@ export const deleteEventController = async (req: Request, res: Response) => {
     const { id } = req.params;
     const event = await deleteEventService(id);
     sendSuccess(res, event, 'Event deleted succesfully');
+  } catch (error) {
+    if (error instanceof Error) {
+      handleError(res, error);
+    }
+  }
+};
+
+export const finishEventController = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const event = await finishEventService(parseInt(id));
+    sendSuccess(res, event, 'Event finished succesfully');
   } catch (error) {
     if (error instanceof Error) {
       handleError(res, error);
