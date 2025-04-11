@@ -29,7 +29,7 @@ export const createUser = async (user: createUserRequest) => {
     return await UserRepository.createUser({
       ...user,
       password: hashedPassword,
-      username: user.code + user.name + user.lastname,
+      username: user.code + user.lastname,
       role_id: roles.STUDENT.id,
     });
   } catch (error) {
