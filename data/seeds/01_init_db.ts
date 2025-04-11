@@ -14,10 +14,12 @@ const modalitiesTable = 'modalities';
 const gradprocTable = 'graduation_process';
 const studentsTable = 'students';
 
-exports.seed = async function (knex: Knex) {
+exports.seed = async function(knex: Knex) {
+
   await knex(gradprocTable).whereNotNull('modality_id').del();
   await knex(modalitiesTable).del();
   await knex(rolesTable).del();
+  await knex(userProfileTable).del();
   await knex(permissionCategoriesTable).del();
   await knex(professorTable).del();
   await knex(permissionCategoriesTable).del();
@@ -34,6 +36,21 @@ exports.seed = async function (knex: Knex) {
     { id: 4, name: 'intern', category: 'student' },
     { id: 5, name: 'program_director', category: 'professor' },
     { id: 6, name: 'supervisor', category: 'student' },
+  ]);
+
+  await knex(userProfileTable).insert([
+    {
+      id: 1,
+      username: 'admin',
+      name: 'Jhonny',
+      lastname: 'Cabezas',
+      mothername: 'Gomez',
+      password: '$2a$10$qv1IXHI4lhio8vJGS6O1UuIzTqTpdHY9dz5gyA9D5PFb1pGxJv3Kq',
+      email: 'admin@gmail.com',
+      phone: '77665544',
+      role_id: 1,
+      code: '12345',
+    },
   ]);
 
   await knex(permissionCategoriesTable).insert([
@@ -423,6 +440,69 @@ exports.seed = async function (knex: Knex) {
     { role_id: 2, permission_id: 15 },
     { role_id: 2, permission_id: 16 },
   ]);
+
+  await knex(userProfileTable).insert({
+    id: 2,
+    username: 'professor',
+    name: 'Alexis',
+    lastname: 'Marechal',
+    mothername: 'Marin',
+    password: '$2a$10$qv1IXHI4lhio8vJGS6O1UuIzTqTpdHY9dz5gyA9D5PFb1pGxJv3Kq',
+    email: 'alexismarechal@upb.edu',
+    phone: '12345678',
+    role_id: 2,
+    code: '12345',
+  });
+
+  await knex(userProfileTable).insert({
+    id: 3,
+    username: 'intern',
+    name: 'INTERN-ACME',
+    lastname: 'Marechal',
+    mothername: 'Marin',
+    password: '$2a$10$qv1IXHI4lhio8vJGS6O1UuIzTqTpdHY9dz5gyA9D5PFb1pGxJv3Kq',
+    email: 'intern@gmail.com',
+    phone: '12345678',
+    role_id: 4,
+    code: '12345',
+  });
+  await knex(userProfileTable).insert({
+    id: 4,
+    username: 'director',
+    name: 'DIRECTOR-ACME',
+    lastname: 'Marechal',
+    mothername: 'Marin',
+    password: '$2a$10$qv1IXHI4lhio8vJGS6O1UuIzTqTpdHY9dz5gyA9D5PFb1pGxJv3Kq',
+    email: 'director@gmail.com',
+    phone: '12345678',
+    role_id: 5,
+    code: '12345',
+  });
+  await knex(userProfileTable).insert({
+    id: 5,
+    username: 'supervisor',
+    name: 'SUPERVISOR-ACME',
+    lastname: 'Marechal',
+    mothername: 'Marin',
+    password: '$2a$10$qv1IXHI4lhio8vJGS6O1UuIzTqTpdHY9dz5gyA9D5PFb1pGxJv3Kq',
+    email: 'supervisor@gmail.com',
+    phone: '12345678',
+    role_id: 6,
+    code: '12345',
+  });
+  await knex(userProfileTable).insert({
+    id: 6,
+    username: 'ZeinTonconi',
+    name: 'Zein',
+    lastname: 'Tonconi',
+    mothername: 'Mendoza',
+    password: '$2a$10$qv1IXHI4lhio8vJGS6O1UuIzTqTpdHY9dz5gyA9D5PFb1pGxJv3Kq',
+    email: 'zeintonconi@gmail.com',
+    phone: '12345678',
+    role_id: 3,
+    code: '54351',
+  });
+
   await knex('professors').insert({
     id: 2,
     degree: 'PhD.',
@@ -524,10 +604,21 @@ exports.seed = async function (knex: Knex) {
       worked_hours: 20,
     },
   ]);
+  await knex(userProfileTable).insert({
+    id: 7,
+    username: 'Maridela',
+    name: 'Mariana',
+    lastname: 'Del',
+    mothername: 'Arroyo',
+    password: '$2a$10$qv1IXHI4lhio8vJGS6O1UuIzTqTpdHY9dz5gyA9D5PFb1pGxJv3Kq',
+    email: 'marimar@gmail.com',
+    phone: '12345678',
+    role_id: 3,
+    code: '54351',
+  });
   await knex(studentsTable).insert([
-    {
-      id: 7,
-      is_scholarship: true,
-    },
-  ]);
+    { id: 7, is_scholarship: true },
+    { id: 6, is_scholarship: false }
+  ])
+
 };
