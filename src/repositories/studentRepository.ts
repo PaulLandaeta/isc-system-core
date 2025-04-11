@@ -1,12 +1,13 @@
 import { buildLogger } from '../plugin/logger';
 import db from './pg-connection';
+import UserRole from '../constants/roles';
 
 const logger = buildLogger('studentRepository');
 
 const TABLE_NAME = 'students';
 interface studentInterface {
   id: string;
-  is_scholarship:boolean;
+  is_scholarship: boolean;
 }
 export const storeStudent = async (student: studentInterface) => {
   try {
@@ -46,6 +47,29 @@ export const deleteStudent = async (userId: string) => {
     await db(TABLE_NAME).where('id', userId).delete();
   } catch (error) {
     logger.error(`Error deleting student: ${error}`);
+    throw error;
+  }
+};
+
+export const getStudentByGraduation = async () => {
+  try {
+    logger.debug('Fetching students without graduation process');
+    
+    const students = await db('user_profile as u')
+      .leftJoin('graduation_process as gp', 'u.id', 'gp.student_id')
+      .where('u.role_id', UserRole.STUDENT.id)
+      .whereNull('gp.student_id')
+      .select(
+        'u.id',
+        'u.code',
+        db.raw("CONCAT(u.name, ' ', u.lastname, ' ', u.mothername) as name"),
+        'u.email',
+        'u.phone'
+      );
+
+    return students;
+  } catch (error) {
+    logger.error(`Error fetching students without graduation process: ${error}`);
     throw error;
   }
 };
