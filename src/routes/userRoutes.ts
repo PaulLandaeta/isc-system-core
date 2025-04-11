@@ -8,11 +8,12 @@ import { createAdminSchema } from '../middlewares/schemas/createUserSchema';
 
 const router = Router();
 
-router.route('/:id').delete(
-  checkUserAuth,
-  // TODO: Make it work with requireRole
-  // requireRole([UserRole.ADMIN.name]),
-  userController.deleteUser
-);
+router
+    .route('/:id')
+    .delete(
+        checkUserAuth, 
+        // TODO: Make it work with requireRole
+        // requireRole([UserRole.ADMIN.name]),
+        userController.deleteUser)
 
 export default router;

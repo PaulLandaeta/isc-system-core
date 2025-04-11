@@ -31,5 +31,5 @@ export const nodemailerPlugin: MailerPlugin = {
     } catch (error) {
       console.error('Error al enviar el correo:', error);
     }
-  },
+  }
 };

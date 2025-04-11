@@ -10,4 +10,4 @@ interface Intern {
   updated_at: Dayjs;
 }
 
-export default Intern;
+export default Intern

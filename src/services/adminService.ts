@@ -1,6 +1,6 @@
-import genericUser from '../models/genericUser';
+import genericUser from "../models/genericUser"
 import * as UserRepository from '../repositories/userRepository';
-import { createUser } from '../repositories/adminRepository';
+import { createUser } from '../repositories/adminRepository'
 import * as AuthenticationService from './authenticationService';
 import { buildLogger } from '../plugin/logger';
 import config from '../config/config';
@@ -20,9 +20,9 @@ export const createUserService = async (user: genericUser) => {
       ...user,
       password: hashedPassword,
       username: user.name + user.lastname,
-    });
+    })
   } catch (error) {
     console.log('Error creating User');
     throw Error('Error creating User');
   }
-};
+}

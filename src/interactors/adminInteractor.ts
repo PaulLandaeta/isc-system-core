@@ -25,16 +25,17 @@ export const createAdmin = async (studentData: createUserRequest) => {
     throw new Error('Error creating the admin');
   }
 };
-export const createUser = async (userData: genericUser) => {
+export const createUser = async (userData: genericUser) =>{
   try {
-    const newUser = await createUserService(userData);
-
-    if (!newUser) {
-      throw new Error('Error creating the User');
+      const newUser = await createUserService(userData);
+  
+      if (!newUser) {
+        throw new Error('Error creating the User');
+      }
+      return newUser;
+    } catch (error) {
+      console.error('Error in createUser interactor:', error);
+      throw new Error('Error creating the user');
     }
-    return newUser;
-  } catch (error) {
-    console.error('Error in createUser interactor:', error);
-    throw new Error('Error creating the user');
-  }
-};
+
+}
