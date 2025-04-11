@@ -157,7 +157,8 @@ export const getUserByCode = async (userCode: number) => {
         'u.name as student_name',
         'u.lastname as lastName',
         'u.mothername as motherName',
-        'u.code'
+        'u.code',
+        'u.role_id'
       )
       .join('roles as r', 'u.role_id', '=', 'r.id')
       .where('u.code', userCode)
@@ -165,7 +166,7 @@ export const getUserByCode = async (userCode: number) => {
 
     return student || null;
   } catch (error) {
-    console.error('Error in getStudentByCode:', error);
+    console.error('Error in getUserByCode:', error);
     throw new Error('Error fetching student by code');
   }
 };

@@ -4,6 +4,7 @@ import { buildLogger } from '../plugin/logger';
 import { handleError } from '../handlers/errorHandler';
 import { sendCreated, sendSuccess } from '../handlers/successHandler';
 import createProfessorRequest from '../dtos/createProfessorRequest';
+import { deleteProfessorService } from '../services/professorService';
 
 const logger = buildLogger('professorController');
 
@@ -46,6 +47,18 @@ export const getProfessorById = async (req: Request, res: Response) => {
     sendSuccess(res, professor, 'Professor retrieved successfully');
   } catch (error) {
     logger.error(`Error in getProfessorById for id ${id}: ${error}`);
+    if (error instanceof Error) {
+      handleError(res, error);
+    }
+  }
+};
+
+export const deleteProfessorController = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const professor = await deleteProfessorService(id);
+    sendSuccess(res, professor, 'Professor deleted succesfully');
+  } catch (error) {
     if (error instanceof Error) {
       handleError(res, error);
     }
