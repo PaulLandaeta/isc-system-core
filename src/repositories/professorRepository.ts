@@ -43,12 +43,13 @@ export const updateProfessor = async (userId: string, professorData: any) => {
     throw error;
   }
 };
-export const deleteProfessor = async (userId: string) => {
+
+export const deleteProfessor = async (id: string) => {
   try {
-    await db(TABLE_NAME).where('id', userId).delete();
+    const professorDeleted = await db(TABLE_NAME).where('id', id).delete().returning('*');
+    return professorDeleted;
   } catch (error) {
-    logger.error(`Error deleting professor: ${error}`);
-    throw error;
+    console.error('Error in professorRepository.deleteProfessor:', error);
+    throw new Error('Error deleting Professor');
   }
 };
-
