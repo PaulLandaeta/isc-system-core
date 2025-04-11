@@ -1,6 +1,7 @@
+import { getStudentByGraduation as fetchStudentsByGraduation } from './../repositories/studentRepository';
 import * as StudentService from '../services/studentService';
 import * as UserService from '../services/userService';
-import * as UserProfileService from '../services/userProfileService'
+import * as UserProfileService from '../services/userProfileService';
 import * as UserRoleService from '../services/userRoleService';
 import createUserRequest from '../dtos/createUserRequest';
 import { NotFoundError } from '../errors/notFoundError';
@@ -10,7 +11,7 @@ const studentRole = 1;
 export const getStudents = async () => {
   const students = await StudentService.getStudents();
 
-  if (!students) {
+  if (!students || students.length === 0) {
     throw new NotFoundError('There are no students');
   }
 
@@ -98,5 +99,21 @@ export const updateStudent = async (studentId: number, studentData: createUserRe
   } catch (error) {
     console.error('Error updating student:', error);
     throw new Error('Error updating student');
+  }
+};
+
+export const getStudentByGraduation = async () => {
+  try {
+    const students = await StudentService.getStudentByGraduation();
+    if (!students) {
+      throw new NotFoundError('There are no students without graduation process');
+    }
+    if (students.length === 0) {
+      throw new NotFoundError('There are no students without graduation process');
+    }
+    return students;
+  } catch (error) {
+    console.error('Error getting students by graduation:', error);
+    throw new Error('Error getting students by graduation');
   }
 };

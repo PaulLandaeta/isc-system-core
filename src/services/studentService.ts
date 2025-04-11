@@ -1,3 +1,4 @@
+import { getStudent } from './../controllers/studentController';
 import createUserRequest from '../dtos/createUserRequest';
 import createStudentRequest from '../dtos/createStudentRequest';
 import Student from '../models/studentInterface';
@@ -62,3 +63,14 @@ export const handleStudentUpdate = async (userId: string, userProfileData: any) 
     throw error;
   }
 };
+
+export const getStudentByGraduation = async () => {
+  try {
+    const students = await StudentRepository.getStudentByGraduation();
+    logger.debug(`Fetching students without graduation process ${students}`);
+    return Array.isArray(students) ? students : [];
+  } catch (error) {
+    logger.error(`Error fetching students without graduation process: ${error}`);
+    throw error;
+  }
+}
