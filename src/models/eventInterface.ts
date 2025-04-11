@@ -9,6 +9,7 @@ interface Event {
   end_date: Dayjs;
   duration_hours: number;
   location: string;
+  is_finished: boolean;
   max_interns: number;
   min_interns: number;
   responsible_intern_id?: number;

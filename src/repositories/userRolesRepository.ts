@@ -2,7 +2,7 @@ import db from './pg-connection';
 
 const tableName = 'user_roles';
 
-export const assignUserRole = async (userId: number, userRoleId: number) => {
+export const assignUserRole = async (userId: string, userRoleId: number) => {
   try {
     return await db(tableName).insert({
       user_id: userId,
@@ -14,7 +14,7 @@ export const assignUserRole = async (userId: number, userRoleId: number) => {
   }
 };
 
-export const deleteUserRole = async (userId: number) => {
+export const deleteUserRole = async (userId: string) => {
   try {
     return await db(tableName).where('user_id', userId).delete();
   } catch (error) {

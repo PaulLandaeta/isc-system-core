@@ -14,6 +14,7 @@ export const findByEmail = async (email: string): Promise<User> => {
 
 export const createUser = async (user: createUserRequest) => {
   try {
+    console.log(user, "yiaaa")
     // TODO: valid the user does not exist with the email or code
     const existingUser = await UserRepository.getUserByEmail(user.email);
     if (existingUser) {
@@ -47,21 +48,6 @@ export const getProfessors = async () => {
     logger.error(`Error fetching professors: ${error}`);
     throw new Error('Error occurred while fetching professors');
   }
-};
-
-export const deleteUser = async (userId: number) => {
-  try {
-    logger.debug(`Attempting to delete user with id: ${userId}`);
-    await UserRepository.deleteUser(userId);
-    logger.info('User deleted successfully.');
-  } catch (error) {
-    logger.error(`Error deleting user: ${error}`);
-    throw new Error('Error deleting user');
-  }
-};
-
-export const getUserById = async (userId: number): Promise<User | null> => {
-  return UserRepository.getUserById(userId);
 };
 
 export const getUserByRol = async (rolId: number) => {

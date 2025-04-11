@@ -8,7 +8,7 @@ interface User {
   email: string;
   code: string;
   phone: string;
-  degree: string;
+  role_id?: number;
   roles?: string[];
 }
 

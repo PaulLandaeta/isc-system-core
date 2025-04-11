@@ -6,6 +6,7 @@ export async function up(knex: Knex): Promise<void> {
       table.increments('id').primary();
       table.string('name').notNullable().unique();
       table.boolean('disabled').notNullable().defaultTo(false);
+      table.string('category');
       table.timestamps(true, true);
     })
     .createTable('permission_categories', function (table) {
