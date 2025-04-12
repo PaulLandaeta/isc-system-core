@@ -13,6 +13,20 @@ export async function up(knex: Knex): Promise<void> {
     table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
     table.timestamp('updated_at').notNullable().defaultTo(knex.fn.now());
   });
+  await knex.schema.alterTable('students', (table) => {
+    table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
+    table.timestamp('updated_at').notNullable().defaultTo(knex.fn.now());
+  });
+
+  await knex.schema.alterTable('professors', (table) => {
+    table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
+    table.timestamp('updated_at').notNullable().defaultTo(knex.fn.now());
+  });
+  await knex.schema.alterTable('permission_categories', (table) => {
+    table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
+    table.timestamp('updated_at').notNullable().defaultTo(knex.fn.now());
+  });
+
 }
 
 export async function down(knex: Knex): Promise<void> {
@@ -28,6 +42,19 @@ export async function down(knex: Knex): Promise<void> {
   await knex.schema.alterTable('knex_migrations_lock', (table) => {
     table.dropColumn('created_at');
     table.dropColumn('updated_at');
+});
+await knex.schema.alterTable('students', (table) => {
+  table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
+  table.timestamp('updated_at').notNullable().defaultTo(knex.fn.now());
+});
+
+await knex.schema.alterTable('professors', (table) => {
+  table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
+  table.timestamp('updated_at').notNullable().defaultTo(knex.fn.now());
+});
+await knex.schema.alterTable('permission_categories', (table) => {
+  table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
+  table.timestamp('updated_at').notNullable().defaultTo(knex.fn.now());
 });
 
 }
