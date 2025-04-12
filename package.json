@@ -13,8 +13,13 @@
     "migrate:rollback": "knex migrate:rollback --knexfile src/knexfile.ts",
     "seed:make": "knex seed:make --knexfile src/knexfile.ts",
     "seed:run": "knex seed:run --knexfile data/knexfile.ts",
+
+    "lint": "eslint . --ext .ts --fix",
+    "prepare": "husky install",
+    "format": "prettier --write ."
+
     "migrate": "ts-node scripts/run-migrations.ts",
-        "lint": "eslint . --ignore-pattern node_modules/*",
+    "lint": "eslint . --ignore-pattern node_modules/*",
     "prepare": "husky install",
     "postinstall": "git config core.hooksPath .husky && git config core.fileMode false"
   },
@@ -31,8 +36,7 @@
     "hooks": {
       "pre-commit": "lint-staged"
     }
-    "lint": "eslint . --ext .ts --fix",
-    "format": "prettier --write ."
+
   },
   "keywords": [],
   "author": "",
@@ -73,7 +77,11 @@
     "@typescript-eslint/parser": "^6.18.0",
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^9.1.0",
+
+    "eslint-plugin-prettier": "^5.1.2",
+
     "eslint-plugin-prettier": "^5.2.6",
+
     "husky": "^9.1.7",
     "jsdoc": "^4.0.3",
     "lint-staged": "^15.5.0",
