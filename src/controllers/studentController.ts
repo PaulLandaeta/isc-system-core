@@ -78,3 +78,14 @@ export const updateStudent = async (req: Request, res: Response) => {
     }
   }
 };
+
+export const getStudentByGraduation = async (req: Request, res: Response) => {
+  try {
+    const students = await StudentInteractor.getStudentByGraduation();
+    sendSuccess(res, students, 'Students retrieved successfully');
+  } catch (error) {
+    if (error instanceof Error) {
+      handleError(res, error);
+    }
+  }
+};

@@ -30,15 +30,14 @@ export const getStudents = async () => {
         'u.email',
         'u.phone'
       )
-      .join('user_roles as ur', 'u.id', '=', 'ur.user_id')
-      .where('ur.role_id', UserRole.STUDENT.id);
+      .where('u.role_id', UserRole.STUDENT.id);
+
     return students;
   } catch (error) {
     console.error(error);
     throw error;
   }
 };
-
 export const getStudentByCode = async (userCode: number) => {
   try {
     const student = await db('user_profile as u')
@@ -158,7 +157,8 @@ export const getUserByCode = async (userCode: number) => {
         'u.name as student_name',
         'u.lastname as lastName',
         'u.mothername as motherName',
-        'u.code'
+        'u.code',
+        'u.role_id'
       )
       .join('roles as r', 'u.role_id', '=', 'r.id')
       .where('u.code', userCode)
@@ -166,7 +166,7 @@ export const getUserByCode = async (userCode: number) => {
 
     return student || null;
   } catch (error) {
-    console.error('Error in getStudentByCode:', error);
+    console.error('Error in getUserByCode:', error);
     throw new Error('Error fetching student by code');
   }
 };

@@ -1,11 +1,19 @@
 import createProfessorRequest from '../dtos/createProfessorRequest';
-import * as ProfessorRepository from '../repositories/professorRepository'
-import * as StudentRepository from '../repositories/studentRepository'
+import * as ProfessorRepository from '../repositories/professorRepository';
+import * as StudentRepository from '../repositories/studentRepository';
 import { buildLogger } from '../plugin/logger';
-import { storeProfessor } from '../repositories/professorRepository';
+import { deleteProfessor, storeProfessor } from '../repositories/professorRepository';
+
+import knex from 'knex';
+import knexConfig from '../knexfile';
+
+const db = knex(knexConfig.development);
+export default db;
 const logger = buildLogger('professorsService');
 
-export const createProfessorService = async (professor: createProfessorRequest): Promise<any | null> => {
+export const createProfessorService = async (
+  professor: createProfessorRequest
+): Promise<any | null> => {
   try {
     const professorRequest = {
       id: professor.id,
@@ -29,7 +37,7 @@ export const handleProfessorUpdate = async (userId: string, userProfileData: any
       id: userId,
       degree: userProfileData.degree,
       department: userProfileData.department,
-      specialty: userProfileData.specialty
+      specialty: userProfileData.specialty,
     };
     if (existingProfessor) {
       await ProfessorRepository.updateProfessor(userId, professorData);
@@ -38,6 +46,24 @@ export const handleProfessorUpdate = async (userId: string, userProfileData: any
     }
   } catch (error) {
     logger.error(`Error updating professor: ${error}`);
+    throw error;
+  }
+};
+
+export const deleteProfessorService = async (id: string) => {
+  try {
+    const tutorInGraduation = await db('graduation_process').where('tutor_id', id).first();
+
+    if (tutorInGraduation) {
+      throw new Error(
+        'Unable to delete the professor as they are currently assigned as a tutor in an ongoing graduation process'
+      );
+    }
+
+    const professorDeleted = await deleteProfessor(id);
+    return professorDeleted;
+  } catch (error) {
+    console.error('Error in professorService.deleteProfessorService:', error);
     throw error;
   }
 };
