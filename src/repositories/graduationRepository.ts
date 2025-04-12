@@ -1,5 +1,6 @@
 import { DefenseDetail } from '../models/defenseDetailInterface';
 import GraduationProcess from '../models/graduationProcessInterface';
+import { NotFoundError } from '../errors/notFoundError'; // Ajusta la ruta según tu estructura
 import db from './pg-connection';
 
 const tableName = 'graduation_process';
@@ -101,14 +102,29 @@ export const createDefense = async (processId: number, defenseData: DefenseDetai
 
 export const updateDefense = async (defenseId: number, updatedData: Partial<DefenseDetail>) => {
   try {
-    const updatedRows = await db('defense_details').where({ id: defenseId }).update(updatedData);
+    const updatedRows = await db('defense_details')
+      .where({ id: defenseId })
+      .update(updatedData);
+      
     if (updatedRows === 0) {
-      throw new Error('Defense not found or no change made');
+      throw new NotFoundError('Defense not found');
     }
-    return await db('defenseDetail').where({ id: defenseId }).first();
+    
+    return await getDefenseById(defenseId); 
   } catch (error) {
     console.error('Error in GraduationProcessRepository.updateDefense:', error);
-    throw new Error('Error updating defense');
+    throw error; // para que el interactor lo maneje
+  }
+};
+export const getDefenseById = async (defenseId: number) => {
+  try {
+    const defense = await db('defense_details')
+      .where({ id: defenseId })
+      .first();
+    return defense;
+  } catch (error) {
+    console.error('Error in GraduationProcessRepository.getDefenseById:', error);
+    throw new Error('Error fetching defense by ID');
   }
 };
 

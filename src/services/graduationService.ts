@@ -41,6 +41,10 @@ export const updateDefense = async (defenseId: number, updatedData: Partial<Defe
   return GraduationProcessRepository.updateDefense(defenseId, updatedData);
 };
 
+export const getDefenseById = async (defenseId: number) => {
+  return GraduationProcessRepository.getDefenseById(defenseId);
+};
+
 export const getDefense = async (processId: number, type: string) => {
   return GraduationProcessRepository.getDefense(processId, type);
 };
