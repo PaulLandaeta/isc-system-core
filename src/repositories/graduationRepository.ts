@@ -1,6 +1,5 @@
 import { DefenseDetail } from '../models/defenseDetailInterface';
 import GraduationProcess from '../models/graduationProcessInterface';
-import { NotFoundError } from '../errors/notFoundError'; // Ajusta la ruta según tu estructura
 import db from './pg-connection';
 
 const tableName = 'graduation_process';
@@ -107,13 +106,13 @@ export const updateDefense = async (defenseId: number, updatedData: Partial<Defe
       .update(updatedData);
       
     if (updatedRows === 0) {
-      throw new NotFoundError('Defense not found');
+      throw new Error('Defense not found or no change made');
     }
     
     return await getDefenseById(defenseId); 
   } catch (error) {
     console.error('Error in GraduationProcessRepository.updateDefense:', error);
-    throw error; // para que el interactor lo maneje
+    throw new Error('Error updating defense'); 
   }
 };
 export const getDefenseById = async (defenseId: number) => {

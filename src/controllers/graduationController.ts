@@ -78,7 +78,7 @@ export const createDefenseController = async (req: Request, res: Response) => {
 };
 
 export const updateDefenseController = async (req: Request, res: Response) => {
-  const defenseId = parseInt(req.params.id); // Ahora recibimos defenseId directamente
+  const defenseId = parseInt(req.params.id); 
   const updatedData = req.body;
 
   try {
