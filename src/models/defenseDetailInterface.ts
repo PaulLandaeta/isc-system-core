@@ -8,4 +8,5 @@ export interface DefenseDetail {
   reviewer?: number;
   tutor?: number;
   grade?: number;
+  date?: string;
 }

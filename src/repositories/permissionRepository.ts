@@ -117,3 +117,23 @@ export const getPermissionByID = async (id: number) => {
     throw new Error('Error fetching Permission');
   }
 };
+
+
+//todo
+export const getMenuItemsByRoleId = async (roleId: number) => {
+  try {
+    const permissions = await db('role_permissions as rp')
+      .join('permissions as p', 'p.id', 'rp.permission_id')
+      .where('rp.role_id', roleId)
+      .select(
+        'p.display_name as name',
+        'p.path',
+        'rp.menu_order'
+      )
+      .orderBy('rp.menu_order', 'asc');
+    return permissions;
+  } catch (error) {
+    console.error('Error fetching menu items by role ID:', error);
+    throw new Error('Error fetching menu items');
+  }
+};
