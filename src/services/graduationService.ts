@@ -24,7 +24,6 @@ export const createGraduationProcess = async (graduationProcess: NewGraduationPr
     reviewer_approval: false,
     stage_id: 1,
   };
-  console.log(newGraduationProcess);
 
   return GraduationProcessRepository.createGraduationProcess(newGraduationProcess);
 };
