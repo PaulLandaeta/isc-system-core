@@ -53,3 +53,68 @@ export const deleteProfessor = async (id: string) => {
     throw new Error('Error deleting Professor');
   }
 };
+
+export const getThesisStudentsByTutor = async (
+  tutorId: string,
+  filters: {
+    type?: string;
+    sortBy?: 'date' | 'status';
+    order?: 'asc' | 'desc';
+  }
+) => {
+  try {
+    const { type, sortBy, order } = filters;
+
+    const sortField = sortBy === 'status' ? 'gp.stage_id' : 'gp.date_tutor_assignament';
+    const sortOrder = order || 'desc';
+
+    const query = db('graduation_process as gp')
+      .join('user_profile as u', 'gp.student_id', 'u.id')
+      .join('modalities as m', 'gp.modality_id', 'm.id')
+      .join('stages as s', 'gp.stage_id', 's.id')
+      .where('gp.tutor_id', tutorId);
+
+    if (type) {
+      query.andWhere('m.name', type);
+    }
+
+    query.select(
+      db.raw("CONCAT(u.name, ' ', u.lastname, ' ', u.mothername) as name"),
+      'u.email',
+      'm.name as modality',
+      's.name as stage',
+      'gp.date_tutor_assignament as assignedAt'
+    );
+
+    query.orderBy(sortField, sortOrder);
+
+    const students = await query;
+
+    const counts: Record<string, number> = {
+      'Tesis': 0,
+      'Proyecto de Grado': 0,
+      'Trabajo Dirigido': 0,
+    };
+
+    students.forEach((student) => {
+      const modality = student.modality;
+      if (counts[modality] !== undefined) {
+        counts[modality]++;
+      }
+    });
+
+    const summaryByType = {
+      thesis: counts['Tesis'],
+      'degree project': counts['Proyecto de Grado'],
+      'guided work': counts['Trabajo Dirigido'],
+    };
+
+    return {
+      summaryByType,
+      students,
+    };
+  } catch (error) {
+    logger.error(`Error fetching thesis students by tutor: ${error}`);
+    throw error;
+  }
+};
