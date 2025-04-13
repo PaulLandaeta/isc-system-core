@@ -67,3 +67,56 @@ export const deleteProfessorService = async (id: string) => {
     throw error;
   }
 };
+
+export const getThesisStudentsService = async (
+  tutorId: string,
+  filters: {
+    type?: string;
+    sortBy?: 'date' | 'status';
+    order?: 'asc' | 'desc';
+  }
+) => {
+  try {
+    const modalityMap: Record<string, string> = {
+      thesis: 'Tesis',
+      tesis: 'Tesis',
+      degree_project: 'Proyecto de Grado',
+      'proyecto de grado': 'Proyecto de Grado',
+      guided_work: 'Trabajo Dirigido',
+      'trabajo dirigido': 'Trabajo Dirigido',
+    };
+
+    let normalizedType: string | undefined;
+
+    if (filters.type) {
+      const key = filters.type.trim().toLowerCase();
+      normalizedType = modalityMap[key];
+
+      if (!normalizedType) {
+        return {
+          summaryByType: {
+            thesis: 0,
+            'degree project': 0,
+            'guided work': 0,
+          },
+          students: [],
+        };
+      }
+    }
+
+    const normalizedFilters = {
+      ...filters,
+      type: normalizedType,
+    };
+
+    const result = await ProfessorRepository.getThesisStudentsByTutor(
+      tutorId,
+      normalizedFilters
+    );
+
+    return result;
+  } catch (error) {
+    logger.error(`Error in getThesisStudentsService: ${error}`);
+    throw error;
+  }
+};
