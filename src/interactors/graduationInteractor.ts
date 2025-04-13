@@ -65,8 +65,13 @@ export const createDefense = async (processId: number, defenseData: DefenseDetai
   return await GraduationProcessService.createDefense(processId, defenseData);
 };
 
-export const updateDefense = async (processId: number, updatedData: Partial<DefenseDetail>) => {
-  return await GraduationProcessService.updateDefense(processId, updatedData);
+export const updateDefense = async (defenseId: number, updatedData: Partial<DefenseDetail>) => {
+  const existingDefense = await GraduationProcessService.getDefenseById(defenseId);
+  if (!existingDefense) {
+    throw new NotFoundError('Defense not found');
+  }
+
+  return await GraduationProcessService.updateDefense(defenseId, updatedData);
 };
 
 export const getDefense = async (processId: number, type: string) => {
