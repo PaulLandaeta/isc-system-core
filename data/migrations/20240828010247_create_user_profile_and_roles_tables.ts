@@ -1,5 +1,9 @@
 import type { Knex } from 'knex';
 
+const tableNameRolePermissionsAction= 'role_permissions_action';
+const tableNameRoles = 'roles';
+const tableNamePermissions = 'permissions';
+
 export async function up(knex: Knex): Promise<void> {
   return knex.schema
     .createTable('roles', function (table) {
@@ -86,7 +90,23 @@ export async function up(knex: Knex): Promise<void> {
         .onDelete('CASCADE');
       table.integer('role_id').unsigned().references('id').inTable('roles').onDelete('CASCADE');
       table.primary(['user_id', 'role_id']);
-    });
+    })
+    .createTable(tableNameRolePermissionsAction, function (table) {
+      table
+        .integer('role_id')
+        .unsigned()
+        .references('id')
+        .inTable(tableNameRoles)
+        .onDelete('CASCADE');
+      table
+        .integer('permission_id')
+        .unsigned()
+        .references('id')
+        .inTable(tableNamePermissions)
+        .onDelete('CASCADE');
+      table.timestamp('created_at').defaultTo(knex.fn.now(6));
+      table.timestamp('updated_at').defaultTo(knex.fn.now(6));
+      });
 }
 
 export async function down(knex: Knex): Promise<void> {
@@ -97,5 +117,6 @@ export async function down(knex: Knex): Promise<void> {
     .dropTableIfExists('user_profile')
     .dropTableIfExists('role_permissions')
     .dropTableIfExists('permissions')
-    .dropTableIfExists('roles');
+    .dropTableIfExists('roles')
+    .dropTableIfExists(tableNameRolePermissionsAction);
 }
