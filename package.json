@@ -15,7 +15,7 @@
     "seed:run": "knex seed:run --knexfile data/knexfile.ts",
     "lint": "eslint . --ext .ts --fix",
     "prepare": "husky install",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
     "migrate": "ts-node scripts/run-migrations.ts",
     "lint": "eslint . --ignore-pattern node_modules/*",
     "prepare": "husky install",
