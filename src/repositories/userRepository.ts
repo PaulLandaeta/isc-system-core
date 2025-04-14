@@ -64,7 +64,18 @@ export const createUser = async (userData: User) => {
   try {
     console.log("Inserting user with data: ", userData);  // Log de los datos que se están insertando.
 
-    
+    // Verificar el valor máximo de 'id' y ajustar la secuencia si es necesario
+    const [maxId] = await db('user_profile').max('id as max_id');
+    const maxIdValue = maxId?.max_id || 0; // Asegúrate de que maxId es un número válido.
+
+    // Si maxId tiene un valor, sincronizamos la secuencia
+    if (maxIdValue > 0) {
+      await db.raw(`SELECT setval(pg_get_serial_sequence('user_profile', 'id'), ?, true)`, [maxIdValue]);
+
+      console.log("Synced sequence with max id: ", maxIdValue);
+    }
+
+    // Insertar el nuevo usuario
     const [newUser] = await db('user_profile').insert(userData).returning('id');
     console.log("User created with id: ", newUser);  // Log del ID retornado tras la inserción.
 
@@ -74,6 +85,7 @@ export const createUser = async (userData: User) => {
     throw error;
   }
 };
+
 
 export const getProfessors = async () => {
   try {
