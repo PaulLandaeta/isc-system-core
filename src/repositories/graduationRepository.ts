@@ -101,14 +101,29 @@ export const createDefense = async (processId: number, defenseData: DefenseDetai
 
 export const updateDefense = async (defenseId: number, updatedData: Partial<DefenseDetail>) => {
   try {
-    const updatedRows = await db('defense_details').where({ id: defenseId }).update(updatedData);
+    const updatedRows = await db('defense_details')
+      .where({ id: defenseId })
+      .update(updatedData);
+      
     if (updatedRows === 0) {
       throw new Error('Defense not found or no change made');
     }
-    return await db('defenseDetail').where({ id: defenseId }).first();
+    
+    return await getDefenseById(defenseId); 
   } catch (error) {
     console.error('Error in GraduationProcessRepository.updateDefense:', error);
-    throw new Error('Error updating defense');
+    throw new Error('Error updating defense'); 
+  }
+};
+export const getDefenseById = async (defenseId: number) => {
+  try {
+    const defense = await db('defense_details')
+      .where({ id: defenseId })
+      .first();
+    return defense;
+  } catch (error) {
+    console.error('Error in GraduationProcessRepository.getDefenseById:', error);
+    throw new Error('Error fetching defense by ID');
   }
 };
 
