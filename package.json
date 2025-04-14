@@ -14,7 +14,9 @@
     "seed:make": "knex seed:make --knexfile src/knexfile.ts",
     "seed:run": "knex seed:run --knexfile data/knexfile.ts",
     "migrate": "ts-node scripts/run-migrations.ts",
-    "lint": "eslint . --ignore-pattern node_modules/*"
+    "lint": "eslint . --ignore-pattern node_modules/*",
+    "prepare": "if [ \"$VERCEL\" != \"1\" ]; then husky install; fi",
+    "postinstall": "if [ \"$VERCEL\" != \"1\" ]; then git config core.hooksPath .husky && git config core.fileMode false; fi"
   },
   "lint-staged": {
     "*.{js,ts}": [
