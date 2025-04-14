@@ -62,10 +62,15 @@ export const getStudentByCode = async (userCode: number) => {
 
 export const createUser = async (userData: User) => {
   try {
+    console.log("Inserting user with data: ", userData);  // Log de los datos que se están insertando.
+
+    
     const [newUser] = await db('user_profile').insert(userData).returning('id');
+    console.log("User created with id: ", newUser);  // Log del ID retornado tras la inserción.
+
     return newUser;
   } catch (error) {
-    console.error(error);
+    console.error("Error creating user: ", error);  // Log del error si ocurre.
     throw error;
   }
 };
