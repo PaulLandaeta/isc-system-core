@@ -13,7 +13,7 @@ const db = knex({
     database: database.name,
     user: database.user,
     password: database.password,
-    port: 5432,
+    port: database.port,
     ssl: ssl ? true : false
   },
 });
