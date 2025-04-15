@@ -42,6 +42,7 @@ export const seed = async (knex: Knex): Promise<void> => {
       role_id: 4,
       code: '12345',
     },
+
     {
       id: 4,
       username: 'director',
