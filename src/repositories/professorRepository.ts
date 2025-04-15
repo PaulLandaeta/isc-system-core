@@ -53,3 +53,12 @@ export const deleteProfessor = async (id: string) => {
     throw new Error('Error deleting Professor');
   }
 };
+export const getProfessorByCode = async (code: string) => {
+  try {
+    const professor = await db(TABLE_NAME).where('code', code).first();
+    return professor;
+  } catch (error) {
+    logger.error(`Error fetching professor by code: ${error}`);
+    throw error;
+  }
+};

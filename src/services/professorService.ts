@@ -15,8 +15,16 @@ export const createProfessorService = async (
   professor: createProfessorRequest
 ): Promise<any | null> => {
   try {
+    const existingProfessor = await ProfessorRepository.getProfessorByCode(professor.code);
+    if (existingProfessor) {
+      throw new Error('Professor code already exists');
+    }
     const professorRequest = {
       id: professor.id,
+      name:professor.name,
+      lastname:professor.lastname,
+      mothername:professor.mothername,
+      code:professor.code,
       degree: professor.degree,
       department: 'DTI',
       specialty: 'Dormir',
@@ -24,10 +32,11 @@ export const createProfessorService = async (
     const newProfessor = await storeProfessor(professorRequest);
     return newProfessor;
   } catch (error) {
-    console.error('Error in createProfessor interactor:', error);
-    return null;
+    console.error('Error in createProfessor interactors:', error);
+    throw error;
   }
 };
+
 
 export const handleProfessorUpdate = async (userId: string, userProfileData: any) => {
   try {

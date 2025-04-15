@@ -30,7 +30,7 @@ export const createProfessor = async (professorData: createProfessorRequest) => 
     return newProfessor;
   } catch (error) {
     console.error('Error in createProfessor interactor:', error);
-    throw new Error('Error creating the professor');
+    throw error;
   }
 };
 
