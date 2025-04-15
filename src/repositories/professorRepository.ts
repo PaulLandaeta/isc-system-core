@@ -54,6 +54,35 @@ export const deleteProfessor = async (id: string) => {
   }
 };
 
+export const getThesisSummaryByTutor = async (tutorId: string) => {
+  try {
+    const result = await db('graduation_process as gp')
+      .join('modalities as m', 'gp.modality_id', 'm.id')
+      .where('gp.tutor_id', tutorId)
+      .groupBy('m.name')
+      .select('m.name')
+      .count('* as count');
+
+    const summaryByType: Record<string, number> = {
+      thesis: 0,
+      'degree project': 0,
+      'guided work': 0,
+    };
+
+    result.forEach((row: any) => {
+      const name = row.name?.toLowerCase();
+      if (name === 'tesis') summaryByType.thesis = Number(row.count);
+      if (name === 'proyecto de grado') summaryByType['degree project'] = Number(row.count);
+      if (name === 'trabajo dirigido') summaryByType['guided work'] = Number(row.count);
+    });
+
+    return summaryByType;
+  } catch (error) {
+    logger.error(`Error fetching thesis summary by tutor: ${error}`);
+    throw error;
+  }
+};
+
 export const getThesisStudentsByTutor = async (
   tutorId: string,
   filters: {
@@ -88,31 +117,7 @@ export const getThesisStudentsByTutor = async (
 
     query.orderBy(sortField, sortOrder);
 
-    const students = await query;
-
-    const counts: Record<string, number> = {
-      'Tesis': 0,
-      'Proyecto de Grado': 0,
-      'Trabajo Dirigido': 0,
-    };
-
-    students.forEach((student) => {
-      const modality = student.modality;
-      if (counts[modality] !== undefined) {
-        counts[modality]++;
-      }
-    });
-
-    const summaryByType = {
-      thesis: counts['Tesis'],
-      'degree project': counts['Proyecto de Grado'],
-      'guided work': counts['Trabajo Dirigido'],
-    };
-
-    return {
-      summaryByType,
-      students,
-    };
+    return await query;
   } catch (error) {
     logger.error(`Error fetching thesis students by tutor: ${error}`);
     throw error;
