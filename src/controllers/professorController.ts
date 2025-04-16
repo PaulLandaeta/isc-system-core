@@ -6,7 +6,7 @@ import { sendCreated, sendSuccess } from '../handlers/successHandler';
 import createProfessorRequest from '../dtos/createProfessorRequest';
 import { deleteProfessorService } from '../services/professorService';
 import { getThesisStudentsService } from '../services/professorService';
-import { BadRequestError } from 'src/errors/badRequestError';
+import { BadRequestError } from '../errors/badRequestError';
 
 const logger = buildLogger('professorController');
 
@@ -76,11 +76,11 @@ export const getThesisStudentsController = async (req: Request, res: Response) =
     const validOrder = ['asc', 'desc'];
 
     if (sortBy && !validSortBy.includes(sortBy as string)) {
-      throw new BadRequestError ('Parámetro "sortBy" inválido');
+      throw new BadRequestError('Parámetro "sortBy" inválido');
     }
 
     if (order && !validOrder.includes(order as string)) {
-      throw new BadRequestError ('Parámetro "order" inválido');
+      throw new BadRequestError('Parámetro "order" inválido');
     }
 
     const filters = {
@@ -93,6 +93,8 @@ export const getThesisStudentsController = async (req: Request, res: Response) =
 
     sendSuccess(res, result, 'Tesistas obtenidos correctamente');
   } catch (error) {
-    handleError (res, error, 'getThesisStudentController');
+    if (error instanceof Error) {
+      handleError(res, error);
+    }
   }
 };
