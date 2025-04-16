@@ -10,8 +10,8 @@ const knexConfig: { [key: string]: import('knex').Knex.Config } = {
       database: database.name,
       user: database.user,
       password: database.password,
-      port: Number(database.port as string) || 5432,
-      ssl: { rejectUnauthorized: false },
+      port: Number(database.port as string) || 5466,
+      ssl: false,
     },
     migrations: {
       directory: '../data/migrations',
