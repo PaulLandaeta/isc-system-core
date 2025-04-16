@@ -82,13 +82,14 @@ export const getThesisStudentsService = async (
 
     if (filters.type) {
       const normalizedKey = filters.type.trim().toLowerCase();
-      // Normalización de caracteres especiales (acentos, tildes, etc.)
- //     const normalizedKey = key.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
-      // Comprobación de tipo normalizado en modalityMap
-    //  normalizedType = modalityMap[normalizedKey];
-      normalizedType = modalityMap[normalizedKey];
-      console.log("Tipo normalizado:", normalizedType);
+      const modalityNormalizer: Record<string, string> = {};
+      for (const [key, value] of Object.entries(modalityMap)) {
+        modalityNormalizer[key.toLowerCase()] = value;
+        modalityNormalizer[value.toLowerCase()] = value;
+      }
+
+      normalizedType = modalityNormalizer[normalizedKey];
 
       if (!normalizedType) {
         return {
@@ -106,14 +107,18 @@ export const getThesisStudentsService = async (
       ...filters,
       type: normalizedType,
     };
-    console.log("Normalizados:", normalizedFilters);
 
-    const result = await ProfessorRepository.getThesisStudentsByTutor(
+    const students = await ProfessorRepository.getThesisStudentsByTutor(
       tutorId,
       normalizedFilters
     );
 
-    return result;
+    const summary = await ProfessorRepository.getThesisSummaryByTutor(tutorId);
+
+    return {
+      summaryByType: summary,
+      students: students
+    };
   } catch (error) {
     logger.error(`Error in getThesisStudentsService: ${error}`);
     throw error;
