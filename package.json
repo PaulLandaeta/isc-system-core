@@ -13,10 +13,12 @@
     "migrate:rollback": "knex migrate:rollback --knexfile src/knexfile.ts",
     "seed:make": "knex seed:make --knexfile src/knexfile.ts",
     "seed:run": "knex seed:run --knexfile data/knexfile.ts",
-    "lint": "eslint . --ignore-pattern node_modules/*",
-    "prepare": "if [ \"$VERCEL\" != \"1\" ]; then husky install; fi",
+    "lint": "eslint . --ext .ts --fix",
+    "prepare": "husky install",
     "format": "prettier --write .",
     "migrate": "ts-node scripts/run-migrations.ts",
+    "lint": "eslint . --ignore-pattern node_modules/*",
+    "prepare": "if [ \"$VERCEL\" != \"1\" ]; then husky install; fi",
     "postinstall": "if [ \"$VERCEL\" != \"1\" ]; then git config core.hooksPath .husky && git config core.fileMode false; fi"
   },
   "lint-staged": {
@@ -76,13 +78,13 @@
     "eslint-plugin-prettier": "^5.2.6",
     "eslint-plugin-react": "^7.37.5",
     "husky": "^9.1.7",
-    "jest": "^29.7.0",
     "jsdoc": "^4.0.3",
     "lint-staged": "^15.5.0",
     "prettier": "^3.5.3",
+    "jest": "^29.7.0",
     "ts-jest": "^29.3.1",
     "ts-node-dev": "^2.0.0",
-    "typescript": "^5.8.3"
+    "typescript": "^5.3.3"
   },
   "volta": {
     "node": "20.19.0"
