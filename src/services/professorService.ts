@@ -3,6 +3,7 @@ import * as ProfessorRepository from '../repositories/professorRepository';
 import * as StudentRepository from '../repositories/studentRepository';
 import { buildLogger } from '../plugin/logger';
 import { deleteProfessor, storeProfessor } from '../repositories/professorRepository';
+import { modalityMap } from '../constants/modalityMap';
 
 import knex from 'knex';
 import knexConfig from '../knexfile';
@@ -77,26 +78,23 @@ export const getThesisStudentsService = async (
   }
 ) => {
   try {
-    const modalityMap: Record<string, string> = {
-      thesis: 'Tesis',
-      tesis: 'Tesis',
-      degree_project: 'Proyecto de Grado',
-      'proyecto de grado': 'Proyecto de Grado',
-      guided_work: 'Trabajo Dirigido',
-      'trabajo dirigido': 'Trabajo Dirigido',
-    };
-
     let normalizedType: string | undefined;
 
     if (filters.type) {
-      const key = filters.type.trim().toLowerCase();
-      normalizedType = modalityMap[key];
+      const normalizedKey = filters.type.trim().toLowerCase();
+      // Normalización de caracteres especiales (acentos, tildes, etc.)
+ //     const normalizedKey = key.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+      // Comprobación de tipo normalizado en modalityMap
+    //  normalizedType = modalityMap[normalizedKey];
+      normalizedType = modalityMap[normalizedKey];
+      console.log("Tipo normalizado:", normalizedType);
 
       if (!normalizedType) {
         return {
           summaryByType: {
             thesis: 0,
-            'degree project': 0,
+            'degree project': 3453,
             'guided work': 0,
           },
           students: [],
@@ -108,6 +106,7 @@ export const getThesisStudentsService = async (
       ...filters,
       type: normalizedType,
     };
+    console.log("Normalizados:", normalizedFilters);
 
     const result = await ProfessorRepository.getThesisStudentsByTutor(
       tutorId,
