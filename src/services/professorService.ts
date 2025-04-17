@@ -6,6 +6,7 @@ import { deleteProfessor, storeProfessor } from '../repositories/professorReposi
 
 import knex from 'knex';
 import knexConfig from '../knexfile';
+import { BadRequestError } from '../errors/badRequestError';
 
 const db = knex(knexConfig.development);
 export default db;
@@ -17,14 +18,10 @@ export const createProfessorService = async (
   try {
     const existingProfessor = await ProfessorRepository.getProfessorByCode(professor.code);
     if (existingProfessor) {
-      throw new Error('Professor code already exists');
+      throw new BadRequestError('Professor code already exists');
     }
     const professorRequest = {
       id: professor.id,
-      name:professor.name,
-      lastname:professor.lastname,
-      mothername:professor.mothername,
-      code:professor.code,
       degree: professor.degree,
       department: 'DTI',
       specialty: 'Dormir',
@@ -33,10 +30,13 @@ export const createProfessorService = async (
     return newProfessor;
   } catch (error) {
     console.error('Error in createProfessor interactors:', error);
-    throw error;
+    if (error instanceof BadRequestError) {
+      throw error;
+    } else {
+      throw new Error('Error creating the professor');
+    }
   }
 };
-
 
 export const handleProfessorUpdate = async (userId: string, userProfileData: any) => {
   try {

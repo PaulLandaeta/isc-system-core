@@ -34,12 +34,6 @@ export const createProfessor = async (req: Request, res: Response) => {
     sendCreated(res, { profesor: newProfessor }, 'Professor created successfully');
   } catch (error) {
     if (error instanceof Error) {
-      if (error.message.includes('Professor code already exists')) {
-        return res.status(409).json({
-          success: false,
-          message: 'Professor code is already in use'
-        });
-      }
       handleError(res, error);
     }
   }

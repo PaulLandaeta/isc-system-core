@@ -55,10 +55,13 @@ export const deleteProfessor = async (id: string) => {
 };
 export const getProfessorByCode = async (code: string) => {
   try {
-    const professor = await db(TABLE_NAME).where('code', code).first();
+    const professor = await db(`${TABLE_NAME} as p`)
+      .join('user_profile as u', 'u.id', 'p.id')
+      .where('code', code)
+      .first();
     return professor;
   } catch (error) {
-    logger.error(`Error fetching professor by code: ${error}`);
+    logger.error('Error fetching professor by code: ${error}');
     throw error;
   }
 };
