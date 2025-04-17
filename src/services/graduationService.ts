@@ -24,7 +24,6 @@ export const createGraduationProcess = async (graduationProcess: NewGraduationPr
     reviewer_approval: false,
     stage_id: 1,
   };
-  console.log(newGraduationProcess);
 
   return GraduationProcessRepository.createGraduationProcess(newGraduationProcess);
 };
@@ -39,6 +38,10 @@ export const createDefense = async (processId: number, defenseData: DefenseDetai
 
 export const updateDefense = async (defenseId: number, updatedData: Partial<DefenseDetail>) => {
   return GraduationProcessRepository.updateDefense(defenseId, updatedData);
+};
+
+export const getDefenseById = async (defenseId: number) => {
+  return GraduationProcessRepository.getDefenseById(defenseId);
 };
 
 export const getDefense = async (processId: number, type: string) => {
