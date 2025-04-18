@@ -3,6 +3,7 @@ import * as ProfessorRepository from '../repositories/professorRepository';
 import * as StudentRepository from '../repositories/studentRepository';
 import { buildLogger } from '../plugin/logger';
 import { deleteProfessor, storeProfessor } from '../repositories/professorRepository';
+import { modalityMap } from '../constants/modalityMap';
 
 import knex from 'knex';
 import knexConfig from '../knexfile';
@@ -64,6 +65,62 @@ export const deleteProfessorService = async (id: string) => {
     return professorDeleted;
   } catch (error) {
     console.error('Error in professorService.deleteProfessorService:', error);
+    throw error;
+  }
+};
+
+export const getThesisStudentsService = async (
+  tutorId: string,
+  filters: {
+    type?: string;
+    sortBy?: 'date' | 'status';
+    order?: 'asc' | 'desc';
+  }
+) => {
+  try {
+    let normalizedType: string | undefined;
+
+    if (filters.type) {
+      const normalizedKey = filters.type.trim().toLowerCase();
+
+      const modalityNormalizer: Record<string, string> = {};
+      for (const [key, value] of Object.entries(modalityMap)) {
+        modalityNormalizer[key.toLowerCase()] = value;
+        modalityNormalizer[value.toLowerCase()] = value;
+      }
+
+      normalizedType = modalityNormalizer[normalizedKey];
+
+      if (!normalizedType) {
+        return {
+          summaryByType: {
+            thesis: 0,
+            'degree project': 0,
+            'guided work': 0,
+          },
+          students: [],
+        };
+      }
+    }
+
+    const normalizedFilters = {
+      ...filters,
+      type: normalizedType,
+    };
+
+    const students = await ProfessorRepository.getThesisStudentsByTutor(
+      tutorId,
+      normalizedFilters
+    );
+
+    const summary = await ProfessorRepository.getThesisSummaryByTutor(tutorId);
+
+    return {
+      summaryByType: summary,
+      students: students
+    };
+  } catch (error) {
+    logger.error(`Error in getThesisStudentsService: ${error}`);
     throw error;
   }
 };
