@@ -5,6 +5,8 @@ import { handleError } from '../handlers/errorHandler';
 import { sendCreated, sendSuccess } from '../handlers/successHandler';
 import createProfessorRequest from '../dtos/createProfessorRequest';
 import { deleteProfessorService } from '../services/professorService';
+import { getThesisStudentsService } from '../services/professorService';
+import { BadRequestError } from '../errors/badRequestError';
 
 const logger = buildLogger('professorController');
 
@@ -58,6 +60,38 @@ export const deleteProfessorController = async (req: Request, res: Response) => 
     const { id } = req.params;
     const professor = await deleteProfessorService(id);
     sendSuccess(res, professor, 'Professor deleted succesfully');
+  } catch (error) {
+    if (error instanceof Error) {
+      handleError(res, error);
+    }
+  }
+};
+
+export const getThesisStudentsController = async (req: Request, res: Response) => {
+  try {
+    const { supervisorId } = req.params;
+    const { type, sortBy = 'date', order = 'desc' } = req.query;
+
+    const validSortBy = ['date', 'status'];
+    const validOrder = ['asc', 'desc'];
+
+    if (sortBy && !validSortBy.includes(sortBy as string)) {
+      throw new BadRequestError('Parámetro "sortBy" inválido');
+    }
+
+    if (order && !validOrder.includes(order as string)) {
+      throw new BadRequestError('Parámetro "order" inválido');
+    }
+
+    const filters = {
+      type: type as string | undefined,
+      sortBy: sortBy as 'date' | 'status',
+      order: order as 'asc' | 'desc',
+    };
+
+    const result = await getThesisStudentsService(supervisorId, filters);
+
+    sendSuccess(res, result, 'Tesistas obtenidos correctamente');
   } catch (error) {
     if (error instanceof Error) {
       handleError(res, error);
