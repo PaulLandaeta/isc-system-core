@@ -6,7 +6,7 @@ const logger = buildLogger('studentRepository');
 
 const TABLE_NAME = 'students';
 interface studentInterface {
-  id: string;
+  id: number;
   is_scholarship: boolean;
 }
 export const storeStudent = async (student: studentInterface) => {
@@ -21,7 +21,7 @@ export const storeStudent = async (student: studentInterface) => {
     throw error;
   }
 };
-export const getStudentById = async (userId: string) => {
+export const getStudentById = async (userId: number) => {
   try {
     const student = await db(TABLE_NAME).where('id', userId).first();
     return student;
@@ -30,7 +30,7 @@ export const getStudentById = async (userId: string) => {
     throw error;
   }
 };
-export const updateStudent = async (userId: string, studentData: any) => {
+export const updateStudent = async (userId: number, studentData: any) => {
   try {
     const updatedStudent = await db(TABLE_NAME)
       .where('id', userId)
