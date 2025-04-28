@@ -419,27 +419,34 @@ exports.seed = async function(knex: Knex) {
     },
   ]);
   await knex(rolesPermissionsTable).insert([
-    { role_id: 1, permission_id: 1 },
-    { role_id: 1, permission_id: 2 },
-    { role_id: 1, permission_id: 6 },
-    { role_id: 1, permission_id: 12 },
-    { role_id: 1, permission_id: 18 },
-    { role_id: 2, permission_id: 11 },
-    { role_id: 2, permission_id: 7 },
-    { role_id: 2, permission_id: 6 },
-    { role_id: 2, permission_id: 10 },
-    { role_id: 2, permission_id: 9 },
-    { role_id: 2, permission_id: 8 },
-    { role_id: 2, permission_id: 2 },
-    { role_id: 2, permission_id: 3 },
-    { role_id: 2, permission_id: 4 },
-    { role_id: 2, permission_id: 5 },
-    { role_id: 2, permission_id: 12 },
-    { role_id: 2, permission_id: 13 },
-    { role_id: 2, permission_id: 14 },
-    { role_id: 2, permission_id: 15 },
-    { role_id: 2, permission_id: 16 },
+    { role_id: 1, permission_id: 1, menu_order: 1}, // dashboard
+    { role_id: 1, permission_id: 18, menu_order: 2}, // users
+    { role_id: 1, permission_id: 2, menu_order: 2}, // processes 
+    { role_id: 1, permission_id: 23, menu_order: 3}, // events
+    { role_id: 1, permission_id: 26, menu_order: 4}, // event list
+    { role_id: 1, permission_id: 28, menu_order: 5 }, // finshed events (idk if it needs to lie here)
+//    { role_id: 1, permission_id: 33, menu_order: 5 }, // TODO update roles y permissions to the permissions table
+    { role_id: 1, permission_id: 32, menu_order: 6 }, // interns list
+    { role_id: 1, permission_id: 24, menu_order: 7 }, // event history
+//    { role_id: 1, permission_id: 34, menu_order: 8 }, // create user (professor, student, intern, etc.) TODO
+    { role_id: 2, permission_id: 1, menu_order: 1},
+    { role_id: 2, permission_id: 11, menu_order: 2 },
+    { role_id: 2, permission_id: 7, menu_order: 3 },
+    { role_id: 2, permission_id: 6, menu_order: 4 },
+    { role_id: 2, permission_id: 10, menu_order: 5 },
+    { role_id: 2, permission_id: 9, menu_order: 6 },
+    { role_id: 2, permission_id: 8, menu_order: 7 },
+    { role_id: 2, permission_id: 2, menu_order: 8 },
+    { role_id: 2, permission_id: 3, menu_order: 9 },
+    { role_id: 2, permission_id: 4, menu_order: 10 },
+    { role_id: 2, permission_id: 5, menu_order: 11 },
+    { role_id: 2, permission_id: 12, menu_order: 12 },
+    { role_id: 2, permission_id: 13, menu_order: 13 },
+    { role_id: 2, permission_id: 14, menu_order: 14 },
+    { role_id: 2, permission_id: 15, menu_order: 15 },
+    { role_id: 2, permission_id: 16, menu_order: 16 },
   ]);
+
 
   await knex(userProfileTable).insert({
     id: 2,
