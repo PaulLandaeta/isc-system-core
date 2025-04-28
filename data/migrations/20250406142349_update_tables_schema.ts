@@ -30,7 +30,7 @@ export async function up(knex: Knex): Promise<void> {
   });
 
   // permissions ordering to the table role_permissions
-  await knex.schema.alterTable('role_permission', (table) => { // <- fijate el nombre
+  await knex.schema.alterTable('role_permissions', (table) => { 
     table.integer('menu_order').notNullable();
     table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
     table.timestamp('updated_at').notNullable().defaultTo(knex.fn.now());
