@@ -1,5 +1,5 @@
 interface createStudentRequest {
-    id: string;
+    id: number;
     name: string;
     lastname: string;
     mothername?: string;
