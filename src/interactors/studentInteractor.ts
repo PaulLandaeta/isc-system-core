@@ -94,7 +94,7 @@ export const updateStudent = async (studentId: number, studentData: createUserRe
       throw new NotFoundError('Student not found');
     }
 
-    const updatedStudent = await StudentService.updateStudent(studentId, studentData);
+    const updatedStudent = await StudentService.updateUser(studentId, studentData);
     return updatedStudent;
   } catch (error) {
     console.error('Error updating student:', error);

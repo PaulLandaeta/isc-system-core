@@ -44,7 +44,7 @@ export const updateProfessor = async (userId: string, professorData: any) => {
   }
 };
 
-export const deleteProfessor = async (id: number) => {
+export const deleteProfessor = async (id: string) => {
   try {
     const professorDeleted = await db(TABLE_NAME).where('id', id).delete().returning('*');
     return professorDeleted;
