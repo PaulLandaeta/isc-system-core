@@ -170,3 +170,21 @@ export const getUserByCode = async (userCode: number) => {
     throw new Error('Error fetching student by code');
   }
 };
+
+export const getUserById = async (userId: number) => {
+  try {
+    const user = await db('user_profile as u')
+      .join('roles as r', 'u.role_id', '=', 'r.id')
+      .where('u.id', userId)
+      .select(
+        'u.id',
+        'u.role_id',
+        'r.name as role'
+      )
+      .first();
+    return user || null;
+  } catch (error) {
+    console.error('Error in getUserById:', error);
+    throw new Error('Error fetching user by ID');
+  }
+};
