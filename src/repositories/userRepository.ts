@@ -62,13 +62,22 @@ export const getStudentByCode = async (userCode: number) => {
 
 export const createUser = async (userData: User) => {
   try {
+    const [maxId] = await db('user_profile').max('id as max_id');
+    const maxIdValue = maxId?.max_id || 0; 
+
+    if (maxIdValue > 0) {
+      await db.raw(`SELECT setval(pg_get_serial_sequence('user_profile', 'id'), ?, true)`, [maxIdValue]);
+    }
+
     const [newUser] = await db('user_profile').insert(userData).returning('id');
+
     return newUser;
   } catch (error) {
-    console.error(error);
+    console.error(error);  
     throw error;
   }
 };
+
 
 export const getProfessors = async () => {
   try {
