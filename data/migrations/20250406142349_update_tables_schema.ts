@@ -55,18 +55,18 @@ export async function down(knex: Knex): Promise<void> {
   });
   
   await knex.schema.alterTable('students', (table) => {
-    table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
-    table.timestamp('updated_at').notNullable().defaultTo(knex.fn.now());
+    table.timestamp('created_at');
+    table.timestamp('updated_at');
   });
 
   await knex.schema.alterTable('professors', (table) => {
-    table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
-    table.timestamp('updated_at').notNullable().defaultTo(knex.fn.now());
+    table.timestamp('created_at');
+    table.timestamp('updated_at');
   });
 
   await knex.schema.alterTable('permission_categories', (table) => {
-    table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
-    table.timestamp('updated_at').notNullable().defaultTo(knex.fn.now());
+    table.timestamp('created_at');
+    table.timestamp('updated_at');
   });
 
   await knex.schema.alterTable('role_permissions', (table) => {
