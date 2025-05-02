@@ -1,0 +1,44 @@
+name: Deploy to Render on Develop Push
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  deploy-dev:
+    name: Trigger Render Deploy Hook
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger deploy on Render
+        run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+  qa-approval:
+    name: Wait for QA Approval
+    needs: deploy-dev
+    runs-on: ubuntu-latest
+    environment:
+      name: qa
+    steps:
+      - run: echo "Esperando aprobación manual para QA..."
+  promote-to-qa:
+    needs: qa-approval
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout QA branch
+        uses: actions/checkout@v3
+        with:
+          ref: qa
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+
+      - name: Merge develop into qa
+        run: |
+          git fetch origin develop
+          git merge origin/develop --no-edit
+          git push origin qa
+
+      - name: Deploy QA on Render
+        run: curl -X POST ${{ secrets.RENDER_QA_DEPLOY_HOOK_URL }}
