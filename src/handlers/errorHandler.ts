@@ -13,6 +13,7 @@ const errorMap: Record<string, ErrorResponse> = {
   NotFoundError: { error: 'No data available', code: 404 },
   ValidationError: { error: 'Invalid input data', code: 400 },
   BadRequestError: { error: 'Bad Request', code: 400 },
+  ConflictError: { error: 'Email already exists', code: 409 },
   DefaultError: { error: 'Unexpected error. Please try again later', code: 500 },
 };
 
