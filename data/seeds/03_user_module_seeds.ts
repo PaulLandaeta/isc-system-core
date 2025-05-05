@@ -3,10 +3,11 @@ import { Knex } from 'knex';
 const userProfileTable = 'user_profile';
 const internsTable = 'interns';
 const professorTable = 'professors';
+const studentsTable = 'students';
+
 
 export const seed = async (knex: Knex): Promise<void> => {
-  await knex(userProfileTable).del();
-
+  
   await knex(userProfileTable).insert([
     {
       id: 1,
@@ -340,6 +341,17 @@ export const seed = async (knex: Knex): Promise<void> => {
       completed_hours: 5,
     },
   ]);
+  await knex(studentsTable).insert([
+    { id: 6, is_scholarship: true },
+    { id: 7, is_scholarship: false },
+    { id: 8, is_scholarship: true },
+    { id: 9, is_scholarship: false },
+    { id: 10, is_scholarship: true },
+    { id: 11, is_scholarship: false },
+    { id: 12, is_scholarship: true },
+    { id: 13, is_scholarship: false },
+
+  ])
 
   await knex(professorTable).insert([
     {
