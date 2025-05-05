@@ -44,7 +44,7 @@ export const updateProfessor = async (userId: string, professorData: any) => {
   }
 };
 
-export const deleteProfessor = async (id: number) => {
+export const deleteProfessor = async (id: string) => {
   try {
     const professorDeleted = await db(TABLE_NAME).where('id', id).delete().returning('*');
     return professorDeleted;
@@ -135,4 +135,10 @@ export const getThesisStudentsByTutor = async (
     logger.error(`Error fetching thesis students by tutor: ${error}`);
     throw error;
   }
+};
+
+export const findProcessByTutorId = async (tutorId: string) => {
+  return db('graduation_process')
+    .where('tutor_id', tutorId)
+    .first();
 };

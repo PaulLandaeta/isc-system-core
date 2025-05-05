@@ -1,12 +1,13 @@
 import { buildLogger } from '../plugin/logger';
 import db from './pg-connection';
+import { HttpError } from '../errors/httpError';
 import UserRole from '../constants/roles';
 
 const logger = buildLogger('studentRepository');
 
 const TABLE_NAME = 'students';
 interface studentInterface {
-  id: number;
+  id: string;
   is_scholarship: boolean;
 }
 export const storeStudent = async (student: studentInterface) => {
@@ -16,12 +17,15 @@ export const storeStudent = async (student: studentInterface) => {
       logger.debug('Student have not created');
     }
     return newStudent;
-  } catch (error) {
+  } catch (error: any) {
+    if (error.code === '23505') {
+      throw new HttpError(409, 'Ya existe un estudiante con ese código o correo');
+    }
     logger.error(`Error creating student: ${error}`);
     throw error;
   }
 };
-export const getStudentById = async (userId: number) => {
+export const getStudentById = async (userId: string) => {
   try {
     const student = await db(TABLE_NAME).where('id', userId).first();
     return student;
@@ -30,7 +34,7 @@ export const getStudentById = async (userId: number) => {
     throw error;
   }
 };
-export const updateStudent = async (userId: number, studentData: any) => {
+export const updateStudent = async (userId: string, studentData: any) => {
   try {
     const updatedStudent = await db(TABLE_NAME)
       .where('id', userId)

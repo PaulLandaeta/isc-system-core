@@ -25,23 +25,12 @@ export const getStudentById = async (studentId: number): Promise<Student | null>
   return UserProfileRepository.getUserById(studentId);
 };
 
-export const updateStudent = async (
+export const updateUser = async (
   studentId: number,
   studentData: createUserRequest
 ): Promise<createUserRequest | null> => {
-  const allowedFields = ['name', 'lastname', 'mothername', 'phone'] as const;
-  const safeData: Partial<createUserRequest> = {};
-
-  for (const field of allowedFields) {
-    if (field in studentData) {
-      safeData[field] = studentData[field as keyof createUserRequest];
-    }
-  }
-
-  const [updatedStudent] = await StudentRepository.updateStudent(studentId, safeData);
-  return updatedStudent || null;
+  return UserRepository.updateUser(studentId, studentData);
 };
-
 export const createStudent = async (student: createStudentRequest): Promise<any | null> => {
   try {
     const studentRequest = {
@@ -52,11 +41,11 @@ export const createStudent = async (student: createStudentRequest): Promise<any 
     return newStudent;
   } catch (error) {
     logger.error(`Error in createStudent interactor: ${error}`);
-    return null;
+    throw error;
   }
 };
 
-export const handleStudentUpdate = async (userId: number, userProfileData: any) => {
+export const handleStudentUpdate = async (userId: string, userProfileData: any) => {
   try {
     await ProfessorRepository.deleteProfessor(userId);
     const existingStudent = await StudentRepository.getStudentById(userId)
