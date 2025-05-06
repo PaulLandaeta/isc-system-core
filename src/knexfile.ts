@@ -17,7 +17,7 @@ const knexConfig: { [key: string]: import('knex').Knex.Config } = {
       ssl: ssl ? { rejectUnauthorized: false } : false
     },
     migrations: {
-      directory: './data/migrations',
+      directory: '../data/migrations',
     },
     seeds: {
       directory: './data/seeds',

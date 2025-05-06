@@ -13,6 +13,7 @@
     "migrate:rollback": "knex migrate:rollback --knexfile src/knexfile.ts",
     "seed:make": "knex seed:make --knexfile src/knexfile.ts",
     "seed:run": "knex seed:run --knexfile data/knexfile.ts",
+    "format": "prettier --write .",
     "migrate": "ts-node scripts/run-migrations.ts",
     "lint": "eslint . --ignore-pattern node_modules/*",
     "prepare": "if [ \"$VERCEL\" != \"1\" ]; then husky install; fi",

@@ -6,6 +6,7 @@ import { ConflictError } from '../errors/conflictError';
 import createProfessorRequest from '../dtos/createProfessorRequest';
 import { createProfessorService } from '../services/professorService';
 import * as userProfileService from '../services/userProfileService';
+import { BadRequestError } from '../errors/badRequestError';
 const logger = buildLogger('professorInteractor');
 
 export const getProfessors = async () => {
@@ -35,10 +36,17 @@ export const createProfessor = async (professorData: createProfessorRequest) => 
     return newProfessor;
   } catch (error) {
     console.error('Error in createProfessor interactor:', error);
-    throw error;
+    {
+    }
+    if (error instanceof BadRequestError) {
+      throw error;
+    } else {
+      throw new Error('Error creating the professor');
+    }
   }
+
 };
-//
+
 export const getProfessorById = async (id: string) => {
   logger.debug('Fetching professor by id:', { id });
   try {
