@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import * as LoginInteractor from '../interactors/loginInteractor';
-import { getMenuForUser } from '../interactors/menuInteractor'
 import * as PermissionsInteractor from '../interactors/permissionsInteractor';
 import { sendSuccess } from '../handlers/successHandler';
 import { handleError } from '../handlers/errorHandler';
