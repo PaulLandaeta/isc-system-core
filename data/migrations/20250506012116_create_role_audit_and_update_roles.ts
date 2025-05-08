@@ -14,7 +14,6 @@ export async function up(knex: Knex): Promise<void> {
     table.timestamp('changed_at', { precision: 6 }).defaultTo(knex.fn.now(6));
     table.timestamp('created_at', { precision: 6 }).defaultTo(knex.fn.now(6));
     table.timestamp('updated_at', { precision: 6 }).defaultTo(knex.fn.now(6));
-    table.timestamps(true, true); 
   });
 }
 
