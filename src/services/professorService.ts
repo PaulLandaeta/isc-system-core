@@ -2,15 +2,12 @@ import createProfessorRequest from '../dtos/createProfessorRequest';
 import * as ProfessorRepository from '../repositories/professorRepository';
 import * as StudentRepository from '../repositories/studentRepository';
 import { buildLogger } from '../plugin/logger';
-import { deleteProfessor, storeProfessor } from '../repositories/professorRepository';
+import { deleteProfessor, findProcessByTutorId, storeProfessor } from '../repositories/professorRepository';
 import { modalityMap } from '../constants/modalityMap';
 
-import knex from 'knex';
-import knexConfig from '../knexfile';
 import { BadRequestError } from '../errors/badRequestError';
+import { HttpError } from '../errors/httpError';
 
-const db = knex(knexConfig.development);
-export default db;
 const logger = buildLogger('professorsService');
 
 export const createProfessorService = async (
@@ -62,11 +59,12 @@ export const handleProfessorUpdate = async (userId: string, userProfileData: any
 
 export const deleteProfessorService = async (id: string) => {
   try {
-    const tutorInGraduation = await db('graduation_process').where('tutor_id', id).first();
+    const tutorInGraduation = await findProcessByTutorId(id);
 
     if (tutorInGraduation) {
-      throw new Error(
-        'Unable to delete the professor as they are currently assigned as a tutor in an ongoing graduation process'
+      throw new HttpError(
+        409,
+        'No se puede eliminar el profesor: está asignado como tutor en un proceso de graduación activo'
       );
     }
 
