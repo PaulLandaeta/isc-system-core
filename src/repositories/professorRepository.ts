@@ -136,3 +136,9 @@ export const getThesisStudentsByTutor = async (
     throw error;
   }
 };
+
+export const findProcessByTutorId = async (tutorId: string) => {
+  return db('graduation_process')
+    .where('tutor_id', tutorId)
+    .first();
+};

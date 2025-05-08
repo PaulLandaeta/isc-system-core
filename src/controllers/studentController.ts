@@ -1,3 +1,4 @@
+import { HttpError } from '../errors/httpError';
 import { Request, Response } from 'express';
 import * as StudentInteractor from '../interactors/studentInteractor';
 import createUserRequest from '../dtos/createUserRequest';
@@ -21,9 +22,10 @@ export const createStudent = async (req: Request, res: Response) => {
     const newStudent = await StudentInteractor.createStudent(studentData);
     sendCreated(res, newStudent, 'Student created successfully');
   } catch (error) {
-    if (error instanceof Error) {
-      handleError(res, error);
-    }
+    if (error instanceof HttpError) {
+      return res.status(error.statusCode).json({ error: error.message });
+    }    
+    return res.status(500).json({ error: 'Internal server error' });
   }
 };
 
