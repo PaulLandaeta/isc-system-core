@@ -49,7 +49,6 @@ export const getStudentByCode = async (userCode: number) => {
         'u.code'
       )
       .join('user_roles as ur', 'u.id', '=', 'ur.user_id')
-      .where('ur.role_id', UserRole.STUDENT.id)
       .andWhere('u.code', userCode)
       .first();
 
@@ -62,13 +61,22 @@ export const getStudentByCode = async (userCode: number) => {
 
 export const createUser = async (userData: User) => {
   try {
+    const [maxId] = await db('user_profile').max('id as max_id');
+    const maxIdValue = maxId?.max_id || 0; 
+
+    if (maxIdValue > 0) {
+      await db.raw(`SELECT setval(pg_get_serial_sequence('user_profile', 'id'), ?, true)`, [maxIdValue]);
+    }
+
     const [newUser] = await db('user_profile').insert(userData).returning('id');
+
     return newUser;
   } catch (error) {
-    console.error(error);
+    console.error(error);  
     throw error;
   }
 };
+
 
 export const getProfessors = async () => {
   try {
@@ -168,5 +176,23 @@ export const getUserByCode = async (userCode: number) => {
   } catch (error) {
     console.error('Error in getUserByCode:', error);
     throw new Error('Error fetching student by code');
+  }
+};
+
+export const getUserById = async (userId: number) => {
+  try {
+    const user = await db('user_profile as u')
+      .join('roles as r', 'u.role_id', '=', 'r.id')
+      .where('u.id', userId)
+      .select(
+        'u.id',
+        'u.role_id',
+        'r.name as role'
+      )
+      .first();
+    return user || null;
+  } catch (error) {
+    console.error('Error in getUserById:', error);
+    throw new Error('Error fetching user by ID');
   }
 };

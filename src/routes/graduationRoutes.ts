@@ -35,11 +35,8 @@ router
   );
 
 router.route('/').get(checkUserAuth, GraduationController.getGraduationProcessesController);
-
+router.route('/defense/:id').put(checkUserAuth, GraduationController.updateDefenseController);
 router.route('/:id/defense').post(checkUserAuth, GraduationController.createDefenseController);
-
-router.route('/:id/defense').put(checkUserAuth, GraduationController.updateDefenseController);
-
 router.route('/:id/defense').get(checkUserAuth, GraduationController.getDefenseController);
 
 export default router;
