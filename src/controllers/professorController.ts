@@ -7,6 +7,7 @@ import createProfessorRequest from '../dtos/createProfessorRequest';
 import { deleteProfessorService } from '../services/professorService';
 import { getThesisStudentsService } from '../services/professorService';
 import { BadRequestError } from '../errors/badRequestError';
+import { HttpError } from '../errors/httpError';
 
 const logger = buildLogger('professorController');
 
@@ -59,11 +60,17 @@ export const deleteProfessorController = async (req: Request, res: Response) => 
   try {
     const { id } = req.params;
     const professor = await deleteProfessorService(id);
-    sendSuccess(res, professor, 'Professor deleted succesfully');
+    sendSuccess(res, professor, 'Professor deleted successfully');
   } catch (error) {
-    if (error instanceof Error) {
-      handleError(res, error);
+    if (error instanceof HttpError) {
+      return res
+        .status(error.statusCode)
+        .json({ error: error.message });
     }
+    logger.error(`deleteProfessorController: ${error}`);
+    return res
+      .status(500)
+      .json({ error: 'Error interno del servidor' });
   }
 };
 

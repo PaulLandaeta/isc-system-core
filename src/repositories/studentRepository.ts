@@ -1,5 +1,6 @@
 import { buildLogger } from '../plugin/logger';
 import db from './pg-connection';
+import { HttpError } from '../errors/httpError';
 import UserRole from '../constants/roles';
 
 const logger = buildLogger('studentRepository');
@@ -16,7 +17,10 @@ export const storeStudent = async (student: studentInterface) => {
       logger.debug('Student have not created');
     }
     return newStudent;
-  } catch (error) {
+  } catch (error: any) {
+    if (error.code === '23505') {
+      throw new HttpError(409, 'Ya existe un estudiante con ese código o correo');
+    }
     logger.error(`Error creating student: ${error}`);
     throw error;
   }

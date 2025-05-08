@@ -49,7 +49,6 @@ export const getStudentByCode = async (userCode: number) => {
         'u.code'
       )
       .join('user_roles as ur', 'u.id', '=', 'ur.user_id')
-      .where('ur.role_id', UserRole.STUDENT.id)
       .andWhere('u.code', userCode)
       .first();
 
