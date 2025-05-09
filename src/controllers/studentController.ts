@@ -4,6 +4,7 @@ import * as StudentInteractor from '../interactors/studentInteractor';
 import createUserRequest from '../dtos/createUserRequest';
 import { handleError } from '../handlers/errorHandler';
 import { sendCreated, sendSuccess } from '../handlers/successHandler';
+import createStudentRequest from 'src/dtos/createStudentRequest';
 
 export const getStudents = async (req: Request, res: Response) => {
   try {
@@ -18,7 +19,7 @@ export const getStudents = async (req: Request, res: Response) => {
 
 export const createStudent = async (req: Request, res: Response) => {
   try {
-    const studentData: createUserRequest = req.body;
+    const studentData: createStudentRequest = req.body;
     const newStudent = await StudentInteractor.createStudent(studentData);
     sendCreated(res, newStudent, 'Student created successfully');
   } catch (error) {
