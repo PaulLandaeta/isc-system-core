@@ -26,6 +26,9 @@ const createAdminSchema = Joi.object({
 
 const createStudentSchema = Joi.object({
   ...baseUserSchema,
+  is_scholarship: Joi.boolean().required().messages({
+    'any.required': 'is_scholarship is required.',
+  }),
 });
 
 const createProfessorSchema = Joi.object({

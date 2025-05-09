@@ -41,7 +41,7 @@ export const createStudent = async (student: createStudentRequest): Promise<any 
     return newStudent;
   } catch (error) {
     logger.error(`Error in createStudent interactor: ${error}`);
-    return null;
+    throw error;
   }
 };
 
