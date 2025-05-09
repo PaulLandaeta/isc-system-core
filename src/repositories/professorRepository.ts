@@ -46,11 +46,11 @@ export const updateProfessor = async (userId: string, professorData: any) => {
 
 export const deleteProfessor = async (id: string) => {
   try {
-    const professorDeleted = await db(TABLE_NAME).where('id', id).delete().returning('*');
-    return professorDeleted;
+    const professorUpdated = await db(TABLE_NAME).where('id', id).update({ disabled: true }).returning('*');
+    return professorUpdated;
   } catch (error) {
     console.error('Error in professorRepository.deleteProfessor:', error);
-    throw new Error('Error deleting Professor');
+    throw new Error('Error updating Professor disabled status');
   }
 };
 
