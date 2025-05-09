@@ -118,6 +118,8 @@ export const getPermissionByID = async (id: number) => {
   }
 };
 
+
+//todo
 export const getMenuItemsByRoleId = async (roleId: number) => {
   try {
     const permissions = await db('role_permissions as rp')

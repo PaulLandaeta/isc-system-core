@@ -19,7 +19,10 @@ export const getRoles = async (rolName: string) => {
         response[roleName] = {
           id: rolePermissions.id,
           disabled: rolePermissions.disabled,
-          permissions: rolePermissions.permissions,
+          permissions: {
+            page: rolePermissions.permissions?.page || [],
+            actions: rolePermissions.permissions?.actions || [],
+          },
         };
       }
     });
@@ -98,7 +101,10 @@ function filterEqualName(roles: RolePermissionsResponse, roleNameToSearch: strin
       response[roleName] = {
         id: rolePermissions.id,
         disabled: rolePermissions.disabled,
-        permissions: rolePermissions.permissions,
+        permissions: {
+          page: rolePermissions.permissions?.page || [],
+          actions: rolePermissions.permissions?.actions || [],
+        },
       };
     }
   });

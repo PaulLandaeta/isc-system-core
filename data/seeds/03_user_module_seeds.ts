@@ -6,9 +6,7 @@ const professorTable = 'professors';
 const studentsTable = 'students';
 const userRolesTable = 'user_roles';
 
-
 export const seed = async (knex: Knex): Promise<void> => {
-  
   await knex(userProfileTable).insert([
     {
       id: 1,
@@ -351,8 +349,7 @@ export const seed = async (knex: Knex): Promise<void> => {
     { id: 11, is_scholarship: false },
     { id: 12, is_scholarship: true },
     { id: 13, is_scholarship: false },
-
-  ])
+  ]);
 
   await knex(professorTable).insert([
     {
@@ -410,7 +407,6 @@ export const seed = async (knex: Knex): Promise<void> => {
     { user_id: 19, role_id: 4 },
     { user_id: 20, role_id: 4 },
     { user_id: 4, role_id: 5 },
-    { user_id: 5, role_id: 6 }
+    { user_id: 5, role_id: 6 },
   ]);
-  
 };
