@@ -3,10 +3,6 @@ name: Backend Unit Tests
 on:
   pull_request:
     branches: [develop]
-  workflow_run:
-    workflows: ["Deploy to Render on Develop Push"]
-    types:
-      - completed
 
 jobs:
   test:
