@@ -109,10 +109,18 @@ export const getProfessors = async () => {
  * @param userData User data
  * @returns Updated user data
  */
-export const updateUser = async (userId: number, userData: User | createUserRequest) => {
+export const updateUser = async (userId: number, userData: createUserRequest) => {
   try {
-    await db('user_profile').where('id', userId).update(userData);
-    return userData;
+    const allowedFields = {
+      name: userData.name,
+      lastname: userData.lastname,
+      mothername: userData.mothername,
+      code: userData.code,
+      email: userData.email,
+      phone: userData.phone
+    };
+    await db('user_profile').where('id', userId).update(allowedFields);
+    return allowedFields;
   } catch (error) {
     console.error('Error updating user:', error);
     throw error;
