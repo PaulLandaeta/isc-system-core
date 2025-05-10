@@ -18,3 +18,8 @@ export const getPermissionByID = async (id: number) => {
   const permission = await permissionRepository.getPermissionByID(id);
   return permission;
 };
+
+export const getActionPermissions = async (id: number) => {
+  const permissions = await permissionRepository.getActionPermissions(id);
+  return permissions;
+};

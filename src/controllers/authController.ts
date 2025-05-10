@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import * as LoginInteractor from '../interactors/loginInteractor';
-import { getMenuForUser } from '../interactors/menuInteractor';
+import { getMenuForUser, getActionPermissionForUser } from '../interactors/menuInteractor';
 import * as PermissionsInteractor from '../interactors/permissionsInteractor';
 import { sendSuccess } from '../handlers/successHandler';
 import { handleError } from '../handlers/errorHandler';
@@ -16,10 +16,12 @@ const login = async (req: Request, res: Response) => {
     }
     const roles_permissions = await PermissionsInteractor.getRolesAndPermissions(resLogin.id);
     const menu = await getMenuForUser(resLogin.id);
+    const permission = await PermissionsInteractor.getActionPermissions(resLogin.id);
     const result = {
     ...resLogin,
-  roles_permissions,
-  menu,
+    roles_permissions,
+    menu,
+    permission
     };
     sendSuccess(res, result, 'Successfully logged in');
   } catch (error) {
