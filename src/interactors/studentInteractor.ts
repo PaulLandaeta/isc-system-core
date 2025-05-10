@@ -6,6 +6,7 @@ import * as UserRoleService from '../services/userRoleService';
 import createUserRequest from '../dtos/createUserRequest';
 import { NotFoundError } from '../errors/notFoundError';
 import { HttpError } from '../errors/httpError';
+import createStudentRequest from 'src/dtos/createStudentRequest';
 
 const studentRole = 1;
 
@@ -28,7 +29,7 @@ export const getStudentByCode = async (studentCode: number) => {
   return student;
 };
 
-export const createStudent = async (studentData: createUserRequest) => {
+export const createStudent = async (studentData: createStudentRequest) => {
   try {
     console.log(studentData);
     const existingUser = await StudentService.getStudentByEmail(studentData.email);
@@ -40,8 +41,9 @@ export const createStudent = async (studentData: createUserRequest) => {
     if (existingUserWithCode) {
       throw new HttpError(409, 'Ya existe un estudiante con este código.');
     }
-
-    const newStudent = await UserService.createUser(studentData);
+    
+    const { is_scholarship, ...userData } = studentData;
+    const newStudent = await UserService.createUser(userData);
 
     if (!newStudent) {
       throw new HttpError(500, 'Error al crear el estudiante');
@@ -52,6 +54,12 @@ export const createStudent = async (studentData: createUserRequest) => {
     if (!userRole) {
       throw new Error('Error creating the student Role');
     }
+
+    await StudentService.createStudent({
+      ...studentData,
+      id: newStudent.id
+    });
+
     return newStudent;
   } catch (error) {
     if (error instanceof HttpError) {
