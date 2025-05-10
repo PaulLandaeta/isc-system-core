@@ -4,7 +4,7 @@ import db from './pg-connection';
 const logger = buildLogger('professorRepository');
 
 const TABLE_NAME = 'professors';
-interface professorInterface {
+  interface professorInterface {
   id: string;
   degree: string;
   department: string;
@@ -23,14 +23,19 @@ export const storeProfessor = async (professor: professorInterface) => {
   }
 };
 export const getProfessorById = async (userId: string) => {
-  try {
-    const professor = await db(TABLE_NAME).where('id', userId).first();
-    return professor;
-  } catch (error) {
-    logger.error(`Error fetching professor by id: ${error}`);
-    throw error;
-  }
+    try {
+        const professor = await db(TABLE_NAME)
+          .where('id', userId)
+          .where('disabled', false)
+          .first();
+        return professor;
+      } catch (error) {
+        logger.error('Error fetching professor by id');
+        throw error;
+      }
 };
+    
+
 export const updateProfessor = async (userId: string, professorData: any) => {
   try {
     const updatedProfessor = await db(TABLE_NAME)
