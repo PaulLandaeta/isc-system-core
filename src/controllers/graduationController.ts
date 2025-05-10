@@ -54,8 +54,8 @@ export const createGraduationProcessController = async (req: Request, res: Respo
 
 export const getGraduationProcessesController = async (req: Request, res: Response) => {
   try {
-    // const graduationProcesses = await GraduationProcessInteractor.getGraduationProcesses();
-    sendSuccess(res, [], 'Graduation processes retrieved successfully');
+    const graduationProcesses = await GraduationProcessInteractor.getGraduationProcesses();
+    sendSuccess(res, graduationProcesses, 'Graduation processes retrieved successfully');
   } catch (error) {
     if (error instanceof Error) {
       handleError(res, error);
@@ -78,11 +78,11 @@ export const createDefenseController = async (req: Request, res: Response) => {
 };
 
 export const updateDefenseController = async (req: Request, res: Response) => {
-  const processId = parseInt(req.params.id);
+  const defenseId = parseInt(req.params.id); 
   const updatedData = req.body;
 
   try {
-    const defense = await GraduationProcessInteractor.updateDefense(processId, updatedData);
+    const defense = await GraduationProcessInteractor.updateDefense(defenseId, updatedData);
     sendSuccess(res, defense, 'Defense updated successfully');
   } catch (error) {
     if (error instanceof Error) {

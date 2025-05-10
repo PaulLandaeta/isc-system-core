@@ -8,6 +8,8 @@ import { studentCodeSchema } from '../middlewares/schemas/studenCodeSchema';
 
 const router = Router();
 
+router.route('/graduation').get(checkUserAuth, StudentController.getStudentByGraduation);
+
 router.route('/').get(checkUserAuth, StudentController.getStudents);
 router
   .route('/')

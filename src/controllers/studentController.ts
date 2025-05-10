@@ -1,8 +1,10 @@
+import { HttpError } from '../errors/httpError';
 import { Request, Response } from 'express';
 import * as StudentInteractor from '../interactors/studentInteractor';
 import createUserRequest from '../dtos/createUserRequest';
 import { handleError } from '../handlers/errorHandler';
 import { sendCreated, sendSuccess } from '../handlers/successHandler';
+import createStudentRequest from 'src/dtos/createStudentRequest';
 
 export const getStudents = async (req: Request, res: Response) => {
   try {
@@ -17,13 +19,14 @@ export const getStudents = async (req: Request, res: Response) => {
 
 export const createStudent = async (req: Request, res: Response) => {
   try {
-    const studentData: createUserRequest = req.body;
+    const studentData: createStudentRequest = req.body;
     const newStudent = await StudentInteractor.createStudent(studentData);
     sendCreated(res, newStudent, 'Student created successfully');
   } catch (error) {
-    if (error instanceof Error) {
-      handleError(res, error);
-    }
+    if (error instanceof HttpError) {
+      return res.status(error.statusCode).json({ error: error.message });
+    }    
+    return res.status(500).json({ error: 'Internal server error' });
   }
 };
 
@@ -72,6 +75,17 @@ export const updateStudent = async (req: Request, res: Response) => {
   try {
     const student = await StudentInteractor.updateStudent(userId, studentData);
     sendSuccess(res, student, 'Student updated successfully');
+  } catch (error) {
+    if (error instanceof Error) {
+      handleError(res, error);
+    }
+  }
+};
+
+export const getStudentByGraduation = async (req: Request, res: Response) => {
+  try {
+    const students = await StudentInteractor.getStudentByGraduation();
+    sendSuccess(res, students, 'Students retrieved successfully');
   } catch (error) {
     if (error instanceof Error) {
       handleError(res, error);

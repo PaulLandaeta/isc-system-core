@@ -1,26 +1,11 @@
 import { Knex } from 'knex';
-const userProfileTable = 'user_profile';
-const permissionCategoriesTable = 'permission_categories';
+
 const rolesTable = 'roles';
-const rolesPermissionsTable = 'role_permissions';
+const permissionCategoriesTable = 'permission_categories';
 const permissionsTable = 'permissions';
-const professorTable = 'professors';
-const eventTable = 'events';
-const internsTable = 'interns';
-const eventInternTable = 'events_interns';
+const rolesPermissionsTable = 'role_permissions';
 
-exports.seed = async function (knex: Knex) {
-  // Deletes ALL existing entries
-  await knex(rolesTable).del();
-  await knex(userProfileTable).del();
-  await knex(permissionCategoriesTable).del();
-  await knex(professorTable).del();
-  await knex(permissionCategoriesTable).del();
-  await knex(internsTable).del();
-  await knex(eventTable).del();
-  await knex(eventInternTable).del();
-  await knex(rolesPermissionsTable).del();
-
+export const seed = async (knex: Knex): Promise<void> => {
   await knex(rolesTable).insert([
     { id: 1, name: 'admin', category: 'admin' },
     { id: 2, name: 'professor', category: 'professor' },
@@ -28,21 +13,6 @@ exports.seed = async function (knex: Knex) {
     { id: 4, name: 'intern', category: 'student' },
     { id: 5, name: 'program_director', category: 'professor' },
     { id: 6, name: 'supervisor', category: 'student' },
-  ]);
-
-  await knex(userProfileTable).insert([
-    {
-      id: 1,
-      username: 'admin',
-      name: 'Jhonny',
-      lastname: 'Cabezas',
-      mothername: 'Gomez',
-      password: '$2a$10$qv1IXHI4lhio8vJGS6O1UuIzTqTpdHY9dz5gyA9D5PFb1pGxJv3Kq',
-      email: 'admin@gmail.com',
-      phone: '77665544',
-      role_id: 1,
-      code: '12345',
-    },
   ]);
 
   await knex(permissionCategoriesTable).insert([
@@ -85,7 +55,7 @@ exports.seed = async function (knex: Knex) {
       display_name: 'Procesos',
       path: '/process',
       sort: 2,
-      type: 'page',
+      type: 'action',
       disabled: 'false',
       name: 'Crear proceso de graduación',
       category_id: 2,
@@ -107,7 +77,7 @@ exports.seed = async function (knex: Knex) {
       display_name: 'Procesos',
       path: '/process',
       sort: 2,
-      type: 'page',
+      type: 'action',
       disabled: 'false',
       name: 'Asignar proceso de graduación',
       category_id: 2,
@@ -129,7 +99,7 @@ exports.seed = async function (knex: Knex) {
       display_name: 'Docentes',
       path: '/professors',
       sort: 3,
-      type: 'page',
+      type: 'action',
       disabled: 'false',
       name: 'Agregar docente',
       category_id: 3,
@@ -151,7 +121,7 @@ exports.seed = async function (knex: Knex) {
       display_name: 'Docentes',
       path: '/professors',
       sort: 3,
-      type: 'page',
+      type: 'action',
       disabled: 'false',
       name: 'Realizar una cita con docente',
       category_id: 3,
@@ -162,7 +132,7 @@ exports.seed = async function (knex: Knex) {
       display_name: 'Docentes',
       path: '/professors',
       sort: 3,
-      type: 'page',
+      type: 'action',
       disabled: 'false',
       name: 'Eliminar docente',
       category_id: 3,
@@ -173,7 +143,7 @@ exports.seed = async function (knex: Knex) {
       display_name: 'Docentes',
       path: '/professors',
       sort: 3,
-      type: 'page',
+      type: 'action',
       disabled: 'false',
       name: 'Editar información de docente',
       category_id: 3,
@@ -195,7 +165,7 @@ exports.seed = async function (knex: Knex) {
       display_name: 'Estudiantes',
       path: '/students',
       sort: 4,
-      type: 'page',
+      type: 'action',
       disabled: 'false',
       name: 'Agregar estudiante',
       category_id: 4,
@@ -206,7 +176,7 @@ exports.seed = async function (knex: Knex) {
       display_name: 'Estudiantes',
       path: '/students',
       sort: 4,
-      type: 'page',
+      type: 'action',
       disabled: 'false',
       name: 'Eliminar estudiante',
       category_id: 4,
@@ -217,7 +187,7 @@ exports.seed = async function (knex: Knex) {
       display_name: 'Estudiantes',
       path: '/students',
       sort: 4,
-      type: 'page',
+      type: 'action',
       disabled: 'false',
       name: 'Editar información de estudiante',
       category_id: 4,
@@ -239,7 +209,7 @@ exports.seed = async function (knex: Knex) {
       display_name: 'Estudiantes',
       path: '/students',
       sort: 4,
-      type: 'page',
+      type: 'action',
       disabled: 'false',
       name: 'Realizar cita con estudiante',
       category_id: 4,
@@ -272,7 +242,7 @@ exports.seed = async function (knex: Knex) {
       display_name: 'Usuarios',
       path: '/users',
       sort: 5,
-      type: 'page',
+      type: 'action',
       disabled: 'false',
       name: 'Eliminar usuario',
       category_id: 5,
@@ -283,7 +253,7 @@ exports.seed = async function (knex: Knex) {
       display_name: 'Usuarios',
       path: '/users',
       sort: 5,
-      type: 'page',
+      type: 'action',
       disabled: 'false',
       name: 'Editar información de usuario',
       category_id: 5,
@@ -294,7 +264,7 @@ exports.seed = async function (knex: Knex) {
       display_name: 'Usuarios',
       path: '/users',
       sort: 5,
-      type: 'page',
+      type: 'action',
       disabled: 'false',
       name: 'Agregar usuario',
       category_id: 5,
@@ -360,7 +330,7 @@ exports.seed = async function (knex: Knex) {
       display_name: 'FinalizarEvento',
       path: '/CompleteScholarshipHour',
       sort: 6,
-      type: 'page',
+      type: 'action',
       disabled: 'false',
       name: 'Finalizar evento',
       category_id: 6,
@@ -371,7 +341,7 @@ exports.seed = async function (knex: Knex) {
       display_name: 'CrearEvento',
       path: '/events/create',
       sort: 6,
-      type: 'page',
+      type: 'action',
       disabled: 'false',
       name: 'Crear evento',
       category_id: 6,
@@ -411,174 +381,29 @@ exports.seed = async function (knex: Knex) {
     },
   ]);
   await knex(rolesPermissionsTable).insert([
-    { role_id: 1, permission_id: 1 },
-    { role_id: 1, permission_id: 2 },
-    { role_id: 1, permission_id: 6 },
-    { role_id: 1, permission_id: 12 },
-    { role_id: 1, permission_id: 18 },
-  ]);
-
-  await knex('user_profile').insert({
-    id: 2,
-    username: 'professor',
-    name: 'Alexis',
-    lastname: 'Marechal',
-    mothername: 'Marin',
-    password: '$2a$10$qv1IXHI4lhio8vJGS6O1UuIzTqTpdHY9dz5gyA9D5PFb1pGxJv3Kq',
-    email: 'alexismarechal@upb.edu',
-    phone: '12345678',
-    role_id: 2,
-    code: '12345',
-  });
-
-  await knex(userProfileTable).insert({
-    id: 3,
-    username: 'intern',
-    name: 'INTERN-ACME',
-    lastname: 'Marechal',
-    mothername: 'Marin',
-    password: '$2a$10$qv1IXHI4lhio8vJGS6O1UuIzTqTpdHY9dz5gyA9D5PFb1pGxJv3Kq',
-    email: 'intern@gmail.com',
-    phone: '12345678',
-    role_id: 4,
-    code: '12345',
-  });
-  await knex(userProfileTable).insert({
-    id: 4,
-    username: 'director',
-    name: 'DIRECTOR-ACME',
-    lastname: 'Marechal',
-    mothername: 'Marin',
-    password: '$2a$10$qv1IXHI4lhio8vJGS6O1UuIzTqTpdHY9dz5gyA9D5PFb1pGxJv3Kq',
-    email: 'director@gmail.com',
-    phone: '12345678',
-    role_id: 5,
-    code: '12345',
-  });
-  await knex(userProfileTable).insert({
-    id: 5,
-    username: 'supervisor',
-    name: 'SUPERVISOR-ACME',
-    lastname: 'Marechal',
-    mothername: 'Marin',
-    password: '$2a$10$qv1IXHI4lhio8vJGS6O1UuIzTqTpdHY9dz5gyA9D5PFb1pGxJv3Kq',
-    email: 'supervisor@gmail.com',
-    phone: '12345678',
-    role_id: 6,
-    code: '12345',
-  });
-  await knex(userProfileTable).insert({
-    id: 6,
-    username: 'ZeinTonconi',
-    name: 'Zein',
-    lastname: 'Tonconi',
-    mothername: 'Mendoza',
-    password: '$2a$10$qv1IXHI4lhio8vJGS6O1UuIzTqTpdHY9dz5gyA9D5PFb1pGxJv3Kq',
-    email: 'zeintonconi@gmail.com',
-    phone: '12345678',
-    role_id: 3,
-    code: '54351',
-  });
-
-  await knex('professors').insert({
-    id: 2,
-    degree: 'PhD.',
-    department: 'Computer Science',
-    specialty: 'Artificial Intelligence',
-  });
-  await knex(internsTable).insert([
-    {
-      id: 1,
-      user_profile_id: 1,
-      total_hours: 10,
-      pending_hours: 5,
-      completed_hours: 5,
-    },
-    {
-      id: 2,
-      user_profile_id: 2,
-      total_hours: 15,
-      pending_hours: 10,
-      completed_hours: 5,
-    },
-    {
-      id: 3,
-      user_profile_id: 3,
-      total_hours: 20,
-      pending_hours: 10,
-      completed_hours: 10,
-    },
-  ]);
-
-  await knex(eventTable).insert([
-    {
-      id: 1,
-      responsible_intern_id: 1,
-      title: 'Event 1',
-      description: 'Description for event 1',
-      location: 'Location 1',
-      duration_hours: 2,
-      max_interns: 10,
-      min_interns: 5,
-      assigned_hours: 4,
-      start_date: knex.fn.now(),
-      end_date: knex.fn.now(),
-      registration_deadline: knex.fn.now(),
-      start_cancellation_date: knex.fn.now(),
-      end_cancellation_date: knex.fn.now(),
-    },
-    {
-      id: 2,
-      responsible_intern_id: 2,
-      title: 'Event 2',
-      description: 'Description for event 2',
-      location: 'Location 2',
-      duration_hours: 3,
-      max_interns: 15,
-      min_interns: 7,
-      assigned_hours: 4,
-      start_date: knex.fn.now(),
-      end_date: knex.fn.now(),
-      registration_deadline: knex.fn.now(),
-      start_cancellation_date: knex.fn.now(),
-      end_cancellation_date: knex.fn.now(),
-    },
-    {
-      id: 3,
-      responsible_intern_id: 3,
-      title: 'Event 3',
-      description: 'Description for event 3',
-      location: 'Location 3',
-      duration_hours: 4,
-      max_interns: 20,
-      min_interns: 10,
-      assigned_hours: 4,
-      start_date: knex.fn.now(),
-      end_date: knex.fn.now(),
-      registration_deadline: knex.fn.now(),
-      start_cancellation_date: knex.fn.now(),
-      end_cancellation_date: knex.fn.now(),
-    },
-  ]);
-
-  await knex(eventInternTable).insert([
-    {
-      intern_id: 1,
-      event_id: 1,
-      type: 'accepted',
-      worked_hours: 20,
-    },
-    {
-      intern_id: 2,
-      event_id: 2,
-      type: 'pending',
-      worked_hours: 20,
-    },
-    {
-      intern_id: 3,
-      event_id: 3,
-      type: 'reserve',
-      worked_hours: 20,
-    },
+    { role_id: 1, permission_id: 1, menu_order: 1 },
+    { role_id: 1, permission_id: 18, menu_order: 2 },
+    { role_id: 1, permission_id: 2, menu_order: 2 },
+    { role_id: 1, permission_id: 23, menu_order: 3 },
+    { role_id: 1, permission_id: 26, menu_order: 4 },
+    { role_id: 1, permission_id: 28, menu_order: 5 },
+    { role_id: 1, permission_id: 32, menu_order: 6 },
+    { role_id: 1, permission_id: 24, menu_order: 7 },
+    { role_id: 2, permission_id: 1, menu_order: 1 },
+    { role_id: 2, permission_id: 11, menu_order: 2 },
+    { role_id: 2, permission_id: 7, menu_order: 3 },
+    { role_id: 2, permission_id: 6, menu_order: 4 },
+    { role_id: 2, permission_id: 10, menu_order: 5 },
+    { role_id: 2, permission_id: 9, menu_order: 6 },
+    { role_id: 2, permission_id: 8, menu_order: 7 },
+    { role_id: 2, permission_id: 2, menu_order: 8 },
+    { role_id: 2, permission_id: 3, menu_order: 9 },
+    { role_id: 2, permission_id: 4, menu_order: 10 },
+    { role_id: 2, permission_id: 5, menu_order: 11 },
+    { role_id: 2, permission_id: 12, menu_order: 12 },
+    { role_id: 2, permission_id: 13, menu_order: 13 },
+    { role_id: 2, permission_id: 14, menu_order: 14 },
+    { role_id: 2, permission_id: 15, menu_order: 15 },
+    { role_id: 2, permission_id: 16, menu_order: 16 },
   ]);
 };
