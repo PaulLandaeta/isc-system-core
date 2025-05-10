@@ -43,6 +43,4 @@ app.use('/api/interns', internsRouter);
 app.use('/api/user', userProfileRouter);
 app.use('/api/roles', rolesRouter);
 
-
-
 export default app;

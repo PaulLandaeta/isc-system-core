@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import * as LoginInteractor from '../interactors/loginInteractor';
-import { getMenuForUser, getActionPermissionForUser } from '../interactors/menuInteractor';
+import * as  MenuInteractor from '../interactors/menuInteractor';
 import * as PermissionsInteractor from '../interactors/permissionsInteractor';
 import { sendSuccess } from '../handlers/successHandler';
 import { handleError } from '../handlers/errorHandler';
@@ -14,12 +14,12 @@ const login = async (req: Request, res: Response) => {
     if (typeof resLogin === 'string') {
       throw new AuthenticationError(resLogin);
     }
-    const roles_permissions = await PermissionsInteractor.getRolesAndPermissions(resLogin.id);
-    const menu = await getMenuForUser(resLogin.id);
+    // const roles_permissions = await PermissionsInteractor.getRolesAndPermissions(resLogin.id);
+    const menu = await MenuInteractor.getMenuForUser(resLogin.id);
     const permission = await PermissionsInteractor.getActionPermissions(resLogin.id);
     const result = {
     ...resLogin,
-    roles_permissions,
+    // roles_permissions,
     menu,
     permission
     };

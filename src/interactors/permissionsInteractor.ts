@@ -35,6 +35,16 @@ export const getActionPermissions = async (userId: number) => {
   }
 };
 
+export const getPagePermissions = async (userId: number) => {
+  try {
+    const Permissions = await userService.getPagePermissions(userId);
+    return Permissions;
+  } catch (error) {
+    console.error('Error getting action permissions:', error);
+    throw error;
+  }
+};
+
 export const getPermissionByID = async (id:number) => {
   try {
     const Permission = await userService.getPermissionByID(id);
