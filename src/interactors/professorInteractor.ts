@@ -38,7 +38,7 @@ export const createProfessor = async (professorData: createProfessorRequest) => 
     console.error('Error in createProfessor interactor:', error);
     {
     }
-    if (error instanceof BadRequestError) {
+    if (error instanceof BadRequestError || error instanceof ConflictError) {
       throw error;
     } else {
       throw new Error('Error creating the professor');
