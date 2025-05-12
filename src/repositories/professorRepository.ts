@@ -147,3 +147,14 @@ export const findProcessByTutorId = async (tutorId: string) => {
     .where('tutor_id', tutorId)
     .first();
 };
+
+export const getProfessors = async () => {
+  try {
+    const professors = await db('professor')
+      .where({ disabled: false }); 
+    return professors;
+  } catch (error) {
+    console.error('Error fetching professors:', error);
+    throw error;
+  }
+};
