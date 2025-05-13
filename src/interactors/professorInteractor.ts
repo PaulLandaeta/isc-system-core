@@ -40,7 +40,7 @@ export const createProfessor = async (professorData: createProfessorRequest) => 
   }
 
 };
-//
+
 export const getProfessorById = async (id: string) => {
   logger.debug('Fetching professor by id:', { id });
   try {

@@ -26,4 +26,3 @@ jobs:
 
       - name: ESLint (sin warnings)
         run: npx eslint "src/**/*.{js,jsx,ts,tsx}" --max-warnings=0
- 
