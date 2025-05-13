@@ -4,10 +4,12 @@ const baseUserSchema = {
   name: Joi.string().required().messages({
     'any.required': 'Name is required.',
   }),
-  lastname: Joi.string().optional().messages({
+  lastname: Joi.string().required().messages({
     'any.required': 'Last name is required.',
   }),
-  mothername: Joi.string().optional(),
+  mothername: Joi.string().required().messages({
+    'any.required': 'Mothername is required.',
+  }),
   email: Joi.string().email().required().messages({
     'string.email': 'Please provide a valid email address.',
     'any.required': 'Email is required.',
