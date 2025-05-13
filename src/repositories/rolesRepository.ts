@@ -96,7 +96,9 @@ export const createRol = async (rolData: Rol) => {
   }
 };
 
+
 export const editRol = async (rolData: Rol, id: number) => {
+
   try {
     const editedRol = await db(rolesTable).where('id', id).update(rolData).returning('*');
     return editedRol;
