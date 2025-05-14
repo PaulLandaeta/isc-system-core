@@ -51,3 +51,7 @@ export const getDefense = async (processId: number, type: string) => {
 export const getProcessByStudentId = async (studentId: number) => {
   return GraduationProcessRepository.getGraduationProcessById(studentId);
 };
+
+export const getProcessByName = async (projectName: string) => {
+  return GraduationProcessRepository.getProcessByName(projectName);
+};

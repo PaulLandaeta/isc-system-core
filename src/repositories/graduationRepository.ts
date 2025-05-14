@@ -137,10 +137,20 @@ export const getDefense = async (processId: number, type: string) => {
 
 export const getProcessByStudentId = async (studentId: number) => {
   try {
-    const defense = await db(tableName).where({ student_id: studentId }).first();
-    return defense;
+    const process = await db(tableName).where({ student_id: studentId }).first();
+    return process;
   } catch (error) {
     console.error('Error in GraduationProcessRepository.getProcessByStudentId:', error);
     throw new Error('Error fetching Process by student ID');
+  }
+};
+
+export const getProcessByName = async (projectName: string) => {
+  try {
+    const process = await db(tableName).where({ project_name: projectName }).first();
+    return process;
+  } catch (error) {
+    console.error('Error in GraduationProcessRepository.getProcessByName:', error);
+    throw new Error('Error fetching Process by name');
   }
 };
