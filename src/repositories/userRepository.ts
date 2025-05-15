@@ -62,21 +62,22 @@ export const getStudentByCode = async (userCode: number) => {
 export const createUser = async (userData: User) => {
   try {
     const [maxId] = await db('user_profile').max('id as max_id');
-    const maxIdValue = maxId?.max_id || 0; 
+    const maxIdValue = maxId?.max_id || 0;
 
     if (maxIdValue > 0) {
-      await db.raw(`SELECT setval(pg_get_serial_sequence('user_profile', 'id'), ?, true)`, [maxIdValue]);
+      await db.raw(`SELECT setval(pg_get_serial_sequence('user_profile', 'id'), ?, true)`, [
+        maxIdValue,
+      ]);
     }
 
     const [newUser] = await db('user_profile').insert(userData).returning('id');
 
     return newUser;
   } catch (error) {
-    console.error(error);  
+    console.error(error);
     throw error;
   }
 };
-
 
 export const getProfessors = async () => {
   try {
@@ -117,7 +118,7 @@ export const updateUser = async (userId: number, userData: createUserRequest) =>
       mothername: userData.mothername,
       code: userData.code,
       email: userData.email,
-      phone: userData.phone
+      phone: userData.phone,
     };
     await db('user_profile').where('id', userId).update(allowedFields);
     return allowedFields;
@@ -165,7 +166,7 @@ export const getProfessorById = async (id: string) => {
     throw new Error(`Unable to retrieve professor with id: ${id}`);
   }
 };
-export const getUserByCode = async (userCode: number) => {
+export const getUserByCode = async (userCode: string) => {
   try {
     const student = await db('user_profile as u')
       .select(
@@ -176,7 +177,6 @@ export const getUserByCode = async (userCode: number) => {
         'u.code',
         'u.role_id'
       )
-      .join('roles as r', 'u.role_id', '=', 'r.id')
       .where('u.code', userCode)
       .first();
 
@@ -192,11 +192,7 @@ export const getUserById = async (userId: number) => {
     const user = await db('user_profile as u')
       .join('roles as r', 'u.role_id', '=', 'r.id')
       .where('u.id', userId)
-      .select(
-        'u.id',
-        'u.role_id',
-        'r.name as role'
-      )
+      .select('u.id', 'u.role_id', 'r.name as role')
       .first();
     return user || null;
   } catch (error) {
