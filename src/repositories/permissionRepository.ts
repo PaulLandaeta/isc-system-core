@@ -13,6 +13,10 @@ const tablePermissions = 'permissions'
 const permissionCategoryTable = 'permission_categories';
 const rolePermissionsActionTable = 'role_permissions_action';
 
+interface QueryResult {
+  name: string;
+}
+
 export const getRoleAndPermissions = async (id: number) => {
   try {
     const profileRolesAndPermissions = await db(userProfileTable)
@@ -115,34 +119,25 @@ export const getPermissions = async () => {
   }
 };
 
-
-export const getActionPermissions = async (id: number): Promise<Permission[]> => {
-  try{
+export const getActionPermissions = async (userId: number): Promise<Permission[]> => {
+  try {
     const actionPermissions = await db
-      .select(
-        `${tablePermissions}.id as permission_id`,
-        `${tablePermissions}.name as permission_name`,
-        `${permissionCategoryTable}.id as category_id`,
-        `${permissionCategoryTable}.name as category_name`
-      )
-      .from(rolePermissionsActionTable)
-      .where(`${rolePermissionsActionTable}.role_id`, id)
-      .leftJoin(tablePermissions, `${rolePermissionsActionTable}.permission_id`, `${tablePermissions}.id`)
-      .leftJoin(permissionCategoryTable, `${tablePermissions}.category_id`, `${permissionCategoryTable}.id`)
-      .where(`${tablePermissions}.type`, 'action')
-      .orderBy(`${tablePermissions}.id`, 'asc');
+      .select(`${tablePermissions}.name`)
+      .from(userRolesTable)
+      .innerJoin(rolePermissionsActionTable, `${userRolesTable}.role_id`, `${rolePermissionsActionTable}.role_id`)
+      .innerJoin(tablePermissions, `${rolePermissionsActionTable}.permission_id`, `${tablePermissions}.id`)
+      .where(`${userRolesTable}.user_id`, userId);
+      
+    const permissions: Permission[] = actionPermissions.map((permission: QueryResult) => ({
+      name: permission.name,
+    }));
 
-      const permissions: Permission[] = actionPermissions.map((permission: ActionPermissionResult) => ({
-        id: permission.permission_id,
-        name: permission.permission_name,
-      }));
-  
-      return permissions;
-    } catch (error) {
-      console.error('Error fetching action permissions:', error);
-      throw error;
-    }
-  };
+    return permissions;
+  } catch (error) {
+    console.error('Error fetching action permissions:', error);
+    throw error;
+  }
+};
 
 export const getPermissionByID = async (id: number) => {
   try {
