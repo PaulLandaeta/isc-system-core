@@ -12,6 +12,7 @@ import {
 } from '../services/internService';
 import { sendCreated, sendSuccess } from '../handlers/successHandler';
 import { handleError } from '../handlers/errorHandler';
+import { createInternInteractor } from '../interactors/internInteractor';
 
 export const updateHoursController = async (req: Request, res: Response) => {
   try {
@@ -135,7 +136,7 @@ export const getAllDataInternsControlller = async (req: Request, res: Response) 
 export const createInternController = async (req: Request, res: Response) => {
   try {
     const intern = req.body;
-    const newIntern = await createInternService(intern);
+    const newIntern = await createInternInteractor(intern);
     if (!newIntern) {
       return res.status(404).json({ success: false, message: 'New intern not found' });
     }

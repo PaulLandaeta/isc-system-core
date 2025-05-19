@@ -8,6 +8,7 @@ import {
   getInternsByUserId,
   getAllDataInternsRepository,
   getSupervisor,
+  createInternRepo,
 } from '../repositories/internsRepository';
 import { createInternInteractor } from '../interactors/internInteractor';
 
@@ -111,13 +112,13 @@ export const getAllDataInternsService = async () => {
     const eventComplete = await getSupervisor();
     const interns = await getAllDataInternsRepository();
 
-    const unionEventIntern = [...eventComplete,...interns]
+    const unionEventIntern = [...eventComplete, ...interns];
 
     const groupedInterns = unionEventIntern.reduce((acc, item) => {
-      const {id, id_intern, responsible_intern_id, name, lastname, mothername } = item;
+      const { id, id_intern, responsible_intern_id, name, lastname, mothername } = item;
 
       if (!acc[id_intern]) {
-        acc[id_intern] = {  
+        acc[id_intern] = {
           id: id_intern,
           name: name,
           lastname: lastname,
@@ -146,11 +147,9 @@ export const getAllDataInternsService = async () => {
         is_supervisor: is_supervisor,
       });
 
-
       return acc;
     }, []);
     return Object.values(groupedInterns);
-
   } catch (error) {
     console.error('Error in InternsService.getAllDataInternsService:', error);
     throw new Error('Error fetching Interns');
@@ -159,7 +158,7 @@ export const getAllDataInternsService = async () => {
 
 export const createInternService = async (intern: Intern) => {
   try {
-    const newIntern = createInternInteractor(intern);
+    const newIntern = createInternRepo(intern);
     return newIntern;
   } catch (error) {
     console.error('Error in internsService.createInternService:', error);
