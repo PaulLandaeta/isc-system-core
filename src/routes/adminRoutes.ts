@@ -21,6 +21,7 @@ router
   .post(
     checkUserAuth,
     // requireRole([UserRole.ADMIN.name]),
+    validateBody(createAdminSchema),
     AdminController.createUser
   );
 
