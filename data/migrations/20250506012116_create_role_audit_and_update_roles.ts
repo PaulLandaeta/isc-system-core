@@ -10,6 +10,7 @@ export async function up(knex: Knex): Promise<void> {
     table.boolean('disabled').defaultTo(false).notNullable();
     table.string('category').notNullable();
     table.string('changed_by').notNullable();
+    table.integer('role_id').notNullable().references('id').inTable('roles');
     table.timestamp('changed_at', { precision: 6 }).defaultTo(knex.fn.now(6));
     table.timestamp('created_at', { precision: 6 }).defaultTo(knex.fn.now(6));
     table.timestamp('updated_at', { precision: 6 }).defaultTo(knex.fn.now(6));
