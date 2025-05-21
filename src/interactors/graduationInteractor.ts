@@ -7,6 +7,8 @@ import GraduationProcess from '../models/graduationProcessInterface';
 import * as GraduationProcessService from '../services/graduationService';
 import UserRole from '../constants/roles';
 import { getUserByCode } from '../repositories/userRepository';
+import { ConflictError } from '../errors/conflictError';
+
 export const getGraduationProcessById = async (processId: number) => {
   const process = await GraduationProcessService.getGraduationProcessById(processId);
 
@@ -39,7 +41,13 @@ export const createGraduationProcess = async (
   const user = await getUserByCode(graduationProcess.student_code);
 
   if (!user || user.role_id !== UserRole.STUDENT.id) {
-    throw new BadRequestError("The provided user doesn't exist or isn't a student");
+    throw new BadRequestError("El usuario no existe o no es un estudiante");
+  }
+
+  const process = await GraduationProcessService.getProcessByName(graduationProcess.project_name)
+
+  if (process) {
+    throw new ConflictError('Ya existe un proceso con el mismo nombre')
   }
 
   const newGraduationProcess: NewGraduationProcess = {
