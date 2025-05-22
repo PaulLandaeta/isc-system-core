@@ -142,3 +142,15 @@ export const findProcessByTutorId = async (tutorId: string) => {
     .where('tutor_id', tutorId)
     .first();
 };
+
+export const getRolesCountByProfessor = async (professorId: string) => {
+  const resTutor = await db('graduation_process')
+    .where('tutor_id', professorId)
+    .count('*')
+    .first();
+  const resReviewer = await db('graduation_process')
+    .where('reviewer_id', professorId)
+    .count('*')
+    .first();
+  return { resTutor, resReviewer }
+}
