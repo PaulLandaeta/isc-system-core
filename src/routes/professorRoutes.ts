@@ -9,5 +9,5 @@ router.get('/', checkUserAuth, ProfessorController.getProfessorsController);
 router.post('/', checkUserAuth, validateBody(professorSchema), ProfessorController.createProfessor);
 router.get('/:id', checkUserAuth, ProfessorController.getProfessorById);
 router.delete('/:id', checkUserAuth, ProfessorController.deleteProfessorController);
-router.get('/thesis-students/:supervisorId', ProfessorController.getThesisStudentsController);
+router.get('/thesis-students/:supervisorId', checkUserAuth, ProfessorController.getThesisStudentsController);
 export default router;
