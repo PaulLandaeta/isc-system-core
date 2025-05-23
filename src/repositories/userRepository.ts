@@ -81,8 +81,7 @@ export const createUser = async (userData: User) => {
 
 export const getProfessors = async () => {
   try {
-    // TODO: fix getting tutorias and revisiones
-    logger.debug('Fetching professors');
+    logger.debug('Fetching professors with tutorias and revisiones');
     const professors = await db('professors as p')
       .select(
         'up.id',
@@ -93,15 +92,22 @@ export const getProfessors = async () => {
         'up.code as code',
         'up.phone as phone',
         'p.degree as degree',
-        db.raw("CONCAT(up.name, ' ', up.lastname, ' ', up.mothername) as fullname")
+        db.raw("CONCAT(up.name, ' ', up.lastname, ' ', up.mothername) as fullname"),
+        db.raw(`(
+          SELECT COUNT(*) FROM graduation_process gp WHERE gp.tutor_id = p.id
+        ) as tutor_count`),
+        db.raw(`(
+          SELECT COUNT(*) FROM graduation_process gp WHERE gp.reviewer_id = p.id
+        ) as reviewer_count`)
       )
       .join('user_profile as up', 'p.id', '=', 'up.id');
-    logger.info('Professors fetched successfully.');
+
+    logger.info('Professors fetched successfully with tutorias and revisiones.');
     logger.debug(`Fetched professors: ${JSON.stringify(professors)}`);
     return professors;
   } catch (error) {
     logger.error(`Error fetching professors: ${error}`);
-    throw Error('Error');
+    throw Error('Error fetching professors');
   }
 };
 /**
