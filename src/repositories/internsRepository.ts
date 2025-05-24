@@ -5,7 +5,7 @@ const tableName = 'interns';
 export const getSupervisor = async () => {
   try {
     const infoIntern = await db(`${tableName} as in`)
-      .join('user_profile as up', 'in.user_profile_id', 'up.id')
+      .join('user_profile as up', 'in.id', 'up.id')
       .join('events as e', 'in.id', 'e.responsible_intern_id')
       .select(
         'up.name',
@@ -50,9 +50,9 @@ export const updateHoursInterns = async (
 export const getInternsByUserId = async (userId: number) => {
   try {
     const infoIntern = await db(`${tableName} as in`)
-      .join('user_profile as up', 'in.user_profile_id', 'up.id')
+      .join('user_profile as up', 'in.id', 'up.id')
       .select('up.*', 'in.id as id_intern', 'in.*')
-      .where('in.user_profile_id', userId)
+      .where('in.id', userId)
       .first();
     return infoIntern;
   } catch (error) {
@@ -92,7 +92,7 @@ export const getRecordIntern = async (internId: number) => {
 export const getInformationIntern = async (internId: number) => {
   try {
     const infoIntern = await db(`${tableName} as in`)
-      .join('user_profile as up', 'in.user_profile_id', 'up.id')
+      .join('user_profile as up', 'in.id', 'up.id')
       .select('up.*', 'in.*')
       .where('in.id', internId)
       .first();
@@ -127,7 +127,7 @@ export const getListIntern = async () => {
 export const getAllDataInternsRepository = async () => {
   try {
     const infoIntern = await db(`${tableName} as in`)
-      .join('user_profile as up', 'in.user_profile_id', 'up.id')
+      .join('user_profile as up', 'in.id', 'up.id')
       .join('events_interns as ei', 'in.id', 'ei.intern_id')
       .join('events as e', 'ei.event_id', 'e.id')
       .select(
