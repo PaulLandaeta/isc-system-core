@@ -305,36 +305,31 @@ export const seed = async (knex: Knex): Promise<void> => {
 
   await knex(internsTable).insert([
     {
-      id: 1,
-      user_profile_id: 16,
+      id: 16,
       total_hours: 10,
       pending_hours: 5,
       completed_hours: 5,
     },
     {
-      id: 2,
-      user_profile_id: 17,
+      id: 17,
       total_hours: 15,
       pending_hours: 10,
       completed_hours: 5,
     },
     {
-      id: 3,
-      user_profile_id: 18,
+      id: 18,
       total_hours: 20,
       pending_hours: 10,
       completed_hours: 10,
     },
     {
-      id: 4,
-      user_profile_id: 19,
+      id: 19,
       total_hours: 13,
       pending_hours: 5,
       completed_hours: 8,
     },
     {
-      id: 5,
-      user_profile_id: 20,
+      id: 20,
       total_hours: 10,
       pending_hours: 5,
       completed_hours: 5,
