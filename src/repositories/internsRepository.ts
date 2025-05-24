@@ -2,7 +2,7 @@ import Intern from 'src/models/internInterface';
 import db from './pg-connection';
 
 const tableName = 'interns';
-export const getSupervisor = async() => {
+export const getSupervisor = async () => {
   try {
     const infoIntern = await db(`${tableName} as in`)
       .join('user_profile as up', 'in.user_profile_id', 'up.id')
@@ -62,8 +62,8 @@ export const getInternsByUserId = async (userId: number) => {
 };
 export const getInternsById = async (internId: number) => {
   try {
-    const event = await db(tableName).where('id', internId).first();
-    return event;
+    const interns = await db(tableName).where('id', internId).first();
+    return interns;
   } catch (error) {
     console.error('Error in InternsRepository.getInternsById', error);
     throw new Error('Error fetching Interns');
@@ -106,8 +106,17 @@ export const getInformationIntern = async (internId: number) => {
 export const getListIntern = async () => {
   try {
     const infoIntern = await db(`${tableName} as in`)
-      .join('user_profile as up', 'in.user_profile_id', 'up.id')
-      .select('up.*', 'in.id as id_intern', 'in.*');
+      .join('user_profile as u', 'in.id', 'u.id')
+      .select(
+        'u.id',
+        'u.code',
+        db.raw("CONCAT(u.name, ' ', u.lastname, ' ', u.mothername) as name"),
+        'u.email',
+        'u.phone',
+        'in.total_hours',
+        'in.pending_hours',
+        'in.completed_hours'
+      )
     return infoIntern;
   } catch (error) {
     console.error('Error in InternsRepository.getRecordIntern', error);
