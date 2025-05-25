@@ -125,7 +125,6 @@ export const getAllDataInternsService = async () => {
           mothername: mothername,
           full_name: `${name} ${lastname} ${mothername}`,
           code: item.code,
-          user_profile_id: item.user_profile_id,
           total_hours: item.total_hours,
           pending_hours: item.pending_hours,
           completed_hours: item.completed_hours,

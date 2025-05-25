@@ -120,10 +120,16 @@ export const getThesisStudentsService = async (
       normalizedFilters
     );
 
-    const summary = await ProfessorRepository.getThesisSummaryByTutor(tutorId);
+    const summaryByType = await ProfessorRepository.getThesisSummaryByTutor(tutorId);
+
+    const { resTutor, resReviewer } = await ProfessorRepository.getRolesCountByProfessor(tutorId);
 
     return {
-      summaryByType: summary,
+      summaryByType: summaryByType,
+      rolesCount: {
+        tutor: resTutor ? resTutor.count : 0,
+        reviewer: resReviewer ? resReviewer.count : 0
+      },
       students: students
     };
   } catch (error) {

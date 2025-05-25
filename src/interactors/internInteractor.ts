@@ -9,7 +9,7 @@ export const createInternInteractor = async (intern: Intern) => {
     const userRes = await UserService.createUser({ ...userData, role_id: UserRole.INTERN.id });
 
     const internInfo = {
-      user_profile_id: userRes.id,
+      id: userRes.id,
       total_hours,
       pending_hours,
       completed_hours,

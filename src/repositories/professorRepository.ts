@@ -158,3 +158,15 @@ export const getProfessors = async () => {
     throw error;
   }
 };
+
+export const getRolesCountByProfessor = async (professorId: string) => {
+  const resTutor = await db('graduation_process')
+    .where('tutor_id', professorId)
+    .count('*')
+    .first();
+  const resReviewer = await db('graduation_process')
+    .where('reviewer_id', professorId)
+    .count('*')
+    .first();
+  return { resTutor, resReviewer }
+}
