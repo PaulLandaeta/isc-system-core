@@ -58,10 +58,10 @@ export const deleteStudent = async (userId: string) => {
 export const getStudentByGraduation = async () => {
   try {
     logger.debug('Fetching students without graduation process');
-    
-    const students = await db('user_profile as u')
+
+    const students = await db('students as s')
+      .join('user_profile as u', 'u.id', 's.id')
       .leftJoin('graduation_process as gp', 'u.id', 'gp.student_id')
-      .where('u.role_id', UserRole.STUDENT.id)
       .whereNull('gp.student_id')
       .select(
         'u.id',
