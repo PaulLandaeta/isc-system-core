@@ -346,6 +346,11 @@ export const seed = async (knex: Knex): Promise<void> => {
     { id: 13, is_scholarship: false },
     { id: 14, is_scholarship: false },
     { id: 15, is_scholarship: false },
+    { id: 16, is_scholarship: true },
+    { id: 17, is_scholarship: true },
+    { id: 18, is_scholarship: true },
+    { id: 19, is_scholarship: true },
+    { id: 20, is_scholarship: true },
   ]);
 
   await knex(professorTable).insert([
