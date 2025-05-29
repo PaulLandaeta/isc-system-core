@@ -31,7 +31,6 @@ export const getStudentByCode = async (studentCode: number) => {
 
 export const createStudent = async (studentData: createStudentRequest) => {
   try {
-    console.log(studentData);
     const existingUser = await StudentService.getStudentByEmail(studentData.email);
     if (existingUser) {
       throw new HttpError(409, 'Ya existe un estudiante con este correo electrónico.');

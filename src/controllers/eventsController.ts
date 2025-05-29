@@ -73,15 +73,3 @@ export const deleteEventController = async (req: Request, res: Response) => {
     }
   }
 };
-
-export const finishEventController = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-    const event = await finishEventService(parseInt(id));
-    sendSuccess(res, event, 'Event finished succesfully');
-  } catch (error) {
-    if (error instanceof Error) {
-      handleError(res, error);
-    }
-  }
-};

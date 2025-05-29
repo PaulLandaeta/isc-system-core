@@ -24,7 +24,7 @@ export const getEventsByIdService = async (id: string) => {
   try {
     const event = await getEvent(id);
     return event;
-    //TODO: LOGIC BUSINESS
+  //TODO: LOGIC BUSINESS
   } catch (error) {
     console.error('Error in eventsService.getEventsByIdService:', error);
     throw new Error('Error fetching Event');

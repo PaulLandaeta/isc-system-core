@@ -1,12 +1,12 @@
 import * as userService from '../services/permissionService';
 import { NotFoundError } from '../errors/notFoundError';
 
-export const getRolesAndPermissions = async (userId: number) => {
+export const getRolesAndPermissions = async (userId: string) => {
     try {
       const rolesAndPermissions = await userService.getUserRolesAndPermissions(userId);
   
       if (!rolesAndPermissions|| Object.keys(rolesAndPermissions).length === 0) {
-        return [];
+        throw new NotFoundError('Permissions not found');
       }
       return rolesAndPermissions;
     } catch (error) {
