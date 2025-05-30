@@ -7,9 +7,8 @@ const baseUserSchema = {
   lastname: Joi.string().required().messages({
     'any.required': 'Last name is required.',
   }),
-  mothername: Joi.string().required().messages({
-    'any.required': 'Mothername is required.',
-  }),
+  mothername: Joi.string().required(),
+
   email: Joi.string().email().required().messages({
     'string.email': 'Please provide a valid email address.',
     'any.required': 'Email is required.',
