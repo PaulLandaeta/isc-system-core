@@ -19,8 +19,8 @@ export default [
       ecmaVersion: 'latest',
       sourceType: 'module',
       globals: {
-        ...globals.node
-      }
+        ...globals.node,
+      },
     },
     plugins: {
       import: importPlugin,
@@ -30,7 +30,7 @@ export default [
       n: nodePlugin,
       security,
       jest,
-      prettier: prettierPlugin
+      prettier: prettierPlugin,
     },
     rules: {
       ...airbnbBase.rules,
@@ -54,8 +54,8 @@ export default [
         'warn',
         {
           groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
-          'newlines-between': 'always'
-        }
+          'newlines-between': 'always',
+        },
       ],
       'n/no-missing-import': ['error', { tryExtensions: ['.js', '.json'] }],
 
@@ -78,35 +78,35 @@ export default [
           vars: 'all',
           varsIgnorePattern: '^_',
           args: 'after-used',
-          argsIgnorePattern: '^_'
-        }
+          argsIgnorePattern: '^_',
+        },
       ],
 
       // ✅ Prettier rule
       'prettier/prettier': 'error',
-      quotes: ['error', 'single', { avoidEscape: true }]
+      quotes: ['error', 'single', { avoidEscape: true }],
     },
     settings: {
       'import/resolver': {
         node: {
-          extensions: ['.js']
-        }
-      }
-    }
+          extensions: ['.js'],
+        },
+      },
+    },
   },
   {
     files: ['**/*.test.js', '**/*.spec.js'],
     languageOptions: {
       globals: {
-        ...globals.jest
-      }
+        ...globals.jest,
+      },
     },
     rules: {
       'jest/no-disabled-tests': 'warn',
       'jest/no-focused-tests': 'error',
       'jest/no-identical-title': 'error',
       'jest/prefer-to-have-length': 'warn',
-      'jest/valid-expect': 'error'
-    }
-  }
+      'jest/valid-expect': 'error',
+    },
+  },
 ];
