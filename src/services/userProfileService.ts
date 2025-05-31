@@ -35,7 +35,6 @@ export const createUserProfile = async (createUserProfileRequest: createProfesso
   }
 };
 
-
 export const deleteUser = async (userId: number) => {
   try {
     logger.debug(`Attempting to delete user with id: ${userId}`);
@@ -54,7 +53,9 @@ export const getUserById = async (userId: string): Promise<UserResponse | null> 
 export const getAllUsers = async (): Promise<UserResponse[] | null> => {
   try {
     const users = await UserProfileRepository.getAllUsers();
-    if (!users) { throw new NotFoundError('Users not found') }
+    if (!users) {
+      throw new NotFoundError('Users not found');
+    }
 
     const usersWithRolesAndPermissions = await Promise.all(
       users.map(async (user: any) => {
@@ -82,14 +83,15 @@ export const getAllUsers = async (): Promise<UserResponse[] | null> => {
 
 export const getUser = async (userId: string): Promise<UserResponse | null> => {
   const user = await UserProfileRepository.getUserById(parseInt(userId));
-  if (!user) { throw new NotFoundError(`User not found with such id ${userId}`) }
+  if (!user) {
+    throw new NotFoundError(`User not found with such id ${userId}`);
+  }
   const rolesAndPermissions = await PermissionInteractor.getRolesAndPermissions(parseInt(userId));
   return {
     ...user,
-    rolesAndPermissions
-  }
-
-}
+    rolesAndPermissions,
+  };
+};
 
 export const updateUserProfile = async (userId: string, userProfileData: any) => {
   try {
@@ -99,9 +101,12 @@ export const updateUserProfile = async (userId: string, userProfileData: any) =>
       mothername: userProfileData.mothername,
       code: userProfileData.code,
       email: userProfileData.email,
-      phone: userProfileData.phone
-    }
-    const updatedProfile = await UserProfileRepository.updateUserProfile(userId, userProfileRequest);
+      phone: userProfileData.phone,
+    };
+    const updatedProfile = await UserProfileRepository.updateUserProfile(
+      userId,
+      userProfileRequest
+    );
     return updatedProfile;
   } catch (error) {
     logger.error(`Error updating user: ${error}`);

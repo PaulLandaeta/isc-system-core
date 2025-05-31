@@ -80,7 +80,9 @@ export const deleteStudent = async (studentId: number) => {
     const process = await GraduationService.getProcessByStudentId(studentId);
 
     if (process) {
-      throw new ConflictError('No se puede eliminar al estudiante: Existe un proceso de graduación asociado.');
+      throw new ConflictError(
+        'No se puede eliminar al estudiante: Existe un proceso de graduación asociado.'
+      );
     }
 
     await UserProfileService.deleteUser(studentId);

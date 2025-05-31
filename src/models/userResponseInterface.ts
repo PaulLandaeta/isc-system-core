@@ -1,4 +1,4 @@
-import { MenuResponse } from "src/types/menuTypes";
+import { MenuResponse } from 'src/types/menuTypes';
 interface UserResponse {
   id: number;
   username: string;

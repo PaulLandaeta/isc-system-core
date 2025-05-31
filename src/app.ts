@@ -18,7 +18,6 @@ import userProfileRouter from './routes/userProfileRoutes';
 import rolesRouter from './routes/rolesRoutes';
 import menuRoutes from './routes/menuRoutes';
 
-
 dotenv.config();
 
 const app: Application = express();
@@ -44,6 +43,5 @@ app.use('/api/interns', internsRouter);
 app.use('/api/user', userProfileRouter);
 app.use('/api/roles', rolesRouter);
 app.use('/api/', menuRoutes);
-
 
 export default app;

@@ -30,7 +30,7 @@ export const getPermissions = async (req: Request, res: Response) => {
 };
 
 export const getPermissionByID = async (req: Request, res: Response) => {
-  const id = parseInt(req.params.id)
+  const id = parseInt(req.params.id);
   try {
     const permission = await permissionInteractor.getPermissionByID(id);
     if (!permission) {

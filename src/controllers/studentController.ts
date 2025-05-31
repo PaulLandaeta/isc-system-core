@@ -25,7 +25,7 @@ export const createStudent = async (req: Request, res: Response) => {
   } catch (error) {
     if (error instanceof HttpError) {
       return res.status(error.statusCode).json({ error: error.message });
-    }    
+    }
     return res.status(500).json({ error: 'Internal server error' });
   }
 };

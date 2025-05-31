@@ -8,7 +8,7 @@ export const createInternInteractor = async (intern: Intern) => {
   try {
     const { total_hours, pending_hours, completed_hours, ...userData } = intern;
     const userRes = await UserService.createUser({ ...userData, role_id: UserRole.INTERN.id });
-    await StudentService.createStudent({ is_scholarship: true, id: userRes.id } as any)
+    await StudentService.createStudent({ is_scholarship: true, id: userRes.id } as any);
 
     const internInfo = {
       id: userRes.id,

@@ -3,9 +3,9 @@ import createUserRequest from '../dtos/createUserRequest';
 import createStudentRequest from '../dtos/createStudentRequest';
 import Student from '../models/studentInterface';
 import * as UserRepository from '../repositories/userRepository';
-import * as UserProfileRepository from '../repositories/userProfileRepository'
-import * as StudentRepository from '../repositories/studentRepository'
-import * as ProfessorRepository from '../repositories/professorRepository'
+import * as UserProfileRepository from '../repositories/userProfileRepository';
+import * as StudentRepository from '../repositories/studentRepository';
+import * as ProfessorRepository from '../repositories/professorRepository';
 import { buildLogger } from '../plugin/logger';
 const logger = buildLogger('studentsService');
 
@@ -19,7 +19,7 @@ export const getStudentByCode = async (userCode: number): Promise<Student | null
 
 export const getStudentByEmail = async (email: string): Promise<Student | null> => {
   return UserRepository.getUserByEmail(email);
-}
+};
 
 export const getStudentById = async (studentId: number): Promise<Student | null> => {
   return UserProfileRepository.getUserById(studentId);
@@ -35,7 +35,7 @@ export const createStudent = async (student: createStudentRequest): Promise<any 
   try {
     const studentRequest = {
       id: student.id,
-      is_scholarship: student.is_scholarship
+      is_scholarship: student.is_scholarship,
     };
     const newStudent = await StudentRepository.storeStudent(studentRequest);
     return newStudent;
@@ -48,10 +48,10 @@ export const createStudent = async (student: createStudentRequest): Promise<any 
 export const handleStudentUpdate = async (userId: string, userProfileData: any) => {
   try {
     await ProfessorRepository.deleteProfessor(userId);
-    const existingStudent = await StudentRepository.getStudentById(userId)
+    const existingStudent = await StudentRepository.getStudentById(userId);
     const studentData = {
       id: userId,
-      is_scholarship: (userProfileData.is_scholarship),
+      is_scholarship: userProfileData.is_scholarship,
     };
     if (existingStudent) {
       await StudentRepository.updateStudent(userId, studentData);
@@ -73,4 +73,4 @@ export const getStudentByGraduation = async () => {
     logger.error(`Error fetching students without graduation process: ${error}`);
     throw error;
   }
-}
+};

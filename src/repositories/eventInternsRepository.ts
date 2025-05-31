@@ -182,7 +182,7 @@ export const updateEventInternsRepository = async (
     const eventResponse = await db(tableName)
       .where('event_id', eventId)
       .where('intern_id', internId)
-      .update({...eventIntern, updated_at: new Date()})
+      .update({ ...eventIntern, updated_at: new Date() })
       .returning('*');
     return eventResponse;
   } catch (error) {

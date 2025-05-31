@@ -1,7 +1,7 @@
 import Permission from './permissionInterface';
 
 interface PermissionCategoryResponse {
-    [categoryName: string]: Permission[];
-  }
+  [categoryName: string]: Permission[];
+}
 
 export default PermissionCategoryResponse;

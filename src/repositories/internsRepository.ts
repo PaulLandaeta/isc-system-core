@@ -16,14 +16,14 @@ export const getSupervisor = async () => {
         'in.*',
         'e.id',
         'e.responsible_intern_id',
-        'e.title',
+        'e.title'
       );
     return infoIntern;
   } catch (error) {
     console.error('Error in InternsRepository.getAllDataInternsRepository', error);
     throw new Error('Error fetching Interns');
   }
-}
+};
 export const updateHoursInterns = async (
   internId: number,
   newHoursPending: number,
@@ -116,7 +116,7 @@ export const getListIntern = async () => {
         'in.total_hours',
         'in.pending_hours',
         'in.completed_hours'
-      )
+      );
     return infoIntern;
   } catch (error) {
     console.error('Error in InternsRepository.getRecordIntern', error);
@@ -139,7 +139,7 @@ export const getAllDataInternsRepository = async () => {
         'in.*',
         'e.id',
         'e.responsible_intern_id',
-        'e.title',
+        'e.title'
       );
     return infoIntern;
   } catch (error) {
