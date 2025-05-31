@@ -1,4 +1,5 @@
 import { Router } from 'express';
+
 import UserRole from '../constants/roles';
 import * as AdminController from '../controllers/adminController';
 import { checkUserAuth } from '../middlewares/checkUserAuth';

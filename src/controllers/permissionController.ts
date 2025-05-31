@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+
 import * as permissionInteractor from '../interactors/permissionsInteractor';
 import { handleError } from '../handlers/errorHandler';
 import { sendSuccess } from '../handlers/successHandler';

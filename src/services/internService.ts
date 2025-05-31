@@ -1,4 +1,4 @@
-import Intern from 'src/models/internInterface';
+import Intern from '../models/internInterface';
 import {
   updateHoursInterns,
   getInternsById,
@@ -10,14 +10,15 @@ import {
   getSupervisor,
   createInternRepo,
 } from '../repositories/internsRepository';
-import { createInternInteractor } from '../interactors/internInteractor';
 
 export const updateHours = async (internId: number, type: string, duration_hours: number) => {
   try {
     if (type === 'accepted') {
-      const { total_hours, pending_hours, completed_hours } = await getInternById(internId);
+      const { total_hours, pending_hours } = await getInternById(internId);
       var newPendingHours = pending_hours - duration_hours;
-      if (newPendingHours < 0) newPendingHours = 0;
+      if (newPendingHours < 0) {
+        newPendingHours = 0;
+      }
       const updateHoursIntern = await updateHoursInterns(
         internId,
         newPendingHours,
@@ -132,7 +133,7 @@ export const getAllDataInternsService = async () => {
         };
       }
 
-      const is_supervisor = responsible_intern_id == id_intern;
+      const is_supervisor = responsible_intern_id === id_intern;
 
       acc[id_intern].events.push({
         event_id: id,

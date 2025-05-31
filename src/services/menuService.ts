@@ -1,4 +1,4 @@
-import { MenuItem, MenuResponse } from '../types/menuTypes';
+import { MenuResponse } from '../types/menuTypes';
 import { getUserById } from '../repositories/userRepository';
 import { getMenuItemsByRoleId } from '../repositories/permissionRepository';
 

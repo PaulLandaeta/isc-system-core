@@ -1,4 +1,5 @@
 import { buildLogger } from '../plugin/logger';
+
 import db from './pg-connection';
 
 const logger = buildLogger('professorRepository');
@@ -84,9 +85,15 @@ export const getThesisSummaryByTutor = async (tutorId: string) => {
 
     result.forEach((row: any) => {
       const name = row.name?.toLowerCase();
-      if (name === 'tesis') summaryByType.thesis = Number(row.count);
-      if (name === 'proyecto de grado') summaryByType['degree project'] = Number(row.count);
-      if (name === 'trabajo dirigido') summaryByType['guided work'] = Number(row.count);
+      if (name === 'tesis') {
+        summaryByType.thesis = Number(row.count);
+      }
+      if (name === 'proyecto de grado') {
+        summaryByType['degree project'] = Number(row.count);
+      }
+      if (name === 'trabajo dirigido') {
+        summaryByType['guided work'] = Number(row.count);
+      }
     });
 
     return summaryByType;

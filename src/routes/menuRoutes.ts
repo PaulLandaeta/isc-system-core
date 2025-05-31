@@ -1,4 +1,5 @@
 import { Router } from 'express';
+
 import { getMenu } from '../controllers/menuController';
 import { checkUserAuth } from '../middlewares/checkUserAuth';
 

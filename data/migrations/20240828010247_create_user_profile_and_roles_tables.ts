@@ -1,6 +1,6 @@
 import type { Knex } from 'knex';
 
-const tableNameRolePermissionsAction= 'role_permissions_action';
+const tableNameRolePermissionsAction = 'role_permissions_action';
 const tableNameRoles = 'roles';
 const tableNamePermissions = 'permissions';
 
@@ -106,7 +106,7 @@ export async function up(knex: Knex): Promise<void> {
         .onDelete('CASCADE');
       table.timestamp('created_at').defaultTo(knex.fn.now(6));
       table.timestamp('updated_at').defaultTo(knex.fn.now(6));
-      });
+    });
 }
 
 export async function down(knex: Knex): Promise<void> {

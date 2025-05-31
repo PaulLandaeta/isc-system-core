@@ -9,17 +9,24 @@ import globals from 'globals';
 import unusedImports from 'eslint-plugin-unused-imports';
 import promise from 'eslint-plugin-promise';
 import sonarjs from 'eslint-plugin-sonarjs';
+import parser from '@typescript-eslint/parser';
+import typescriptPlugin from '@typescript-eslint/eslint-plugin';
 
 export default [
   {
     ...js.configs.recommended,
-    files: ['**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx'],
+    files: ['**/*.ts', '**/*.tsx'],
     ignores: ['*.json', 'Dockerfile', '*.conf', '*.yml', 'dist', 'node_modules', 'coverage'],
     languageOptions: {
-      ecmaVersion: 'latest',
-      sourceType: 'module',
+      parser,
+      parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+        project: './tsconfig.json',
+      },
       globals: {
         ...globals.node,
+        ...globals.jest,
       },
     },
     plugins: {
@@ -31,6 +38,7 @@ export default [
       security,
       jest,
       prettier: prettierPlugin,
+      '@typescript-eslint': typescriptPlugin,
     },
     rules: {
       ...airbnbBase.rules,
@@ -48,8 +56,15 @@ export default [
       'object-curly-spacing': ['error', 'always'],
       'no-inline-comments': 'error',
 
-      // Imports
-      'import/extensions': ['error', 'always', { js: 'always' }],
+      // Imports sin extensión
+      'import/extensions': [
+        'error',
+        'ignorePackages',
+        {
+          js: 'never',
+          ts: 'never',
+        },
+      ],
       'import/order': [
         'warn',
         {
@@ -57,7 +72,7 @@ export default [
           'newlines-between': 'always',
         },
       ],
-      'n/no-missing-import': ['error', { tryExtensions: ['.js', '.json'] }],
+      'n/no-missing-import': ['error', { tryExtensions: ['.js', '.ts', '.json'] }],
 
       // SonarJS
       'sonarjs/no-duplicate-string': 'warn',
@@ -82,31 +97,16 @@ export default [
         },
       ],
 
-      // ✅ Prettier rule
+      // Prettier
       'prettier/prettier': 'error',
       quotes: ['error', 'single', { avoidEscape: true }],
     },
     settings: {
       'import/resolver': {
         node: {
-          extensions: ['.js'],
+          extensions: ['.js', '.ts', '.json'],
         },
       },
-    },
-  },
-  {
-    files: ['**/*.test.js', '**/*.spec.js'],
-    languageOptions: {
-      globals: {
-        ...globals.jest,
-      },
-    },
-    rules: {
-      'jest/no-disabled-tests': 'warn',
-      'jest/no-focused-tests': 'error',
-      'jest/no-identical-title': 'error',
-      'jest/prefer-to-have-length': 'warn',
-      'jest/valid-expect': 'error',
     },
   },
 ];

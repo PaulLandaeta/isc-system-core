@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+
 import * as AdminInteractor from '../interactors/adminInteractor';
 import createUserRequest from '../dtos/createUserRequest';
 import genericUser from '../models/genericUser';

@@ -1,10 +1,11 @@
 import { Request, Response } from 'express';
+
 import { getMenuByRole } from '../services/menuService';
 
 export const getMenu = async (req: Request, res: Response) => {
   //const userId =  parseInt(req.params.id);
   try {
-    const userId = req.userId;
+    const { userId } = req;
 
     if (!userId) {
       return res.status(401).json({ error: 'Unauthorized' });

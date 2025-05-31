@@ -1,6 +1,6 @@
+import Intern from '../models/internInterface';
 import * as UserService from '../services/userService';
 import * as StudentService from '../services/studentService';
-import Intern from 'src/models/internInterface';
 import UserRole from '../constants/roles';
 import { createInternService } from '../services/internService';
 

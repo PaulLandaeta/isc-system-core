@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+
 import * as ProfessorInteractor from '../interactors/professorInteractor';
 import { buildLogger } from '../plugin/logger';
 import { handleError } from '../handlers/errorHandler';

@@ -8,7 +8,6 @@ import {
   storeProfessor,
 } from '../repositories/professorRepository';
 import { modalityMap } from '../constants/modalityMap';
-
 import { BadRequestError } from '../errors/badRequestError';
 import { HttpError } from '../errors/httpError';
 
