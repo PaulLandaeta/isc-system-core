@@ -6,5 +6,4 @@ const router = Router();
 
 router.get('/menu', checkUserAuth, getMenu);
 
-
 export default router;

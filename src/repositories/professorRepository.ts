@@ -138,19 +138,14 @@ export const getThesisStudentsByTutor = async (
 };
 
 export const findProcessByTutorId = async (tutorId: string) => {
-  return db('graduation_process')
-    .where('tutor_id', tutorId)
-    .first();
+  return db('graduation_process').where('tutor_id', tutorId).first();
 };
 
 export const getRolesCountByProfessor = async (professorId: string) => {
-  const resTutor = await db('graduation_process')
-    .where('tutor_id', professorId)
-    .count('*')
-    .first();
+  const resTutor = await db('graduation_process').where('tutor_id', professorId).count('*').first();
   const resReviewer = await db('graduation_process')
     .where('reviewer_id', professorId)
     .count('*')
     .first();
-  return { resTutor, resReviewer }
-}
+  return { resTutor, resReviewer };
+};
