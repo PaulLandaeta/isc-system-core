@@ -1,4 +1,5 @@
-import Intern from 'src/models/internInterface';
+import Intern from '../models/internInterface';
+
 import db from './pg-connection';
 
 const tableName = 'interns';

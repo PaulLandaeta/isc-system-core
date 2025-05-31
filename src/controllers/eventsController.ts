@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+
 import {
   getEventsService,
   getEventsByIdService,
@@ -7,7 +8,6 @@ import {
   deleteEventService,
   finishEventService,
 } from '../services/eventsService';
-
 import { sendCreated, sendSuccess } from '../handlers/successHandler';
 import { handleError } from '../handlers/errorHandler';
 

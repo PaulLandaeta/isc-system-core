@@ -3,7 +3,7 @@ import type { Knex } from 'knex';
 export const stagesTable = 'stages';
 
 export async function up(knex: Knex): Promise<void> {
-  await knex.schema.createTable(stagesTable, (table) => {
+  await knex.schema.createTable(stagesTable, table => {
     table.increments('id').primary();
     table.string('name').notNullable();
     table.boolean('disabled').defaultTo(false);

@@ -1,10 +1,11 @@
-import { HttpError } from '../errors/httpError';
 import { Request, Response } from 'express';
+
+import createStudentRequest from '../dtos/createStudentRequest';
+import { HttpError } from '../errors/httpError';
 import * as StudentInteractor from '../interactors/studentInteractor';
 import createUserRequest from '../dtos/createUserRequest';
 import { handleError } from '../handlers/errorHandler';
 import { sendCreated, sendSuccess } from '../handlers/successHandler';
-import createStudentRequest from 'src/dtos/createStudentRequest';
 
 export const getStudents = async (req: Request, res: Response) => {
   try {

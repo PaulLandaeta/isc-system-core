@@ -1,8 +1,9 @@
-import { login } from './loginInteractor';
 import * as UserService from '../services/userService';
 import * as AuthenticationService from '../services/authenticationService';
 import { generateToken } from '../utils/jwtUtility';
 import { AuthenticationError } from '../errors/authenticationError';
+
+import { login } from './loginInteractor';
 
 jest.mock('../services/userService');
 jest.mock('../services/authenticationService');

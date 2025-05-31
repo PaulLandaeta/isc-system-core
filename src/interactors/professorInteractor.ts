@@ -24,7 +24,7 @@ export const getProfessors = async () => {
 export const createProfessor = async (professorData: createProfessorRequest) => {
   try {
     logger.info('Creating professor with data:', { professorData });
-    const { degree, deparment, specialty, ...userData } = professorData;
+    const { ...userData } = professorData;
     const newUserProfile = await UserService.createUser({
       ...userData,
       role_id: UserRole.PROFESSOR.id,

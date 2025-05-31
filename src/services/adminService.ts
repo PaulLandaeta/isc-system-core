@@ -1,12 +1,13 @@
 import genericUser from '../models/genericUser';
 import * as UserRepository from '../repositories/userRepository';
 import { createUser } from '../repositories/adminRepository';
-import * as AuthenticationService from './authenticationService';
 import { buildLogger } from '../plugin/logger';
 import config from '../config/config';
 
+import * as AuthenticationService from './authenticationService';
+
 const logger = buildLogger('userService');
-const defaultUserPassword = config.defaultUserPassword;
+const { defaultUserPassword } = config;
 
 export const createUserService = async (user: genericUser) => {
   try {

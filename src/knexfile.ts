@@ -1,5 +1,6 @@
-import config from './config/config';
 import dotenv from 'dotenv';
+
+import config from './config/config';
 
 dotenv.config();
 const ssl = process.env.SSL === 'true';

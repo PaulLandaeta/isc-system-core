@@ -1,10 +1,7 @@
 import { Router } from 'express';
-import UserRole from '../constants/roles';
+
 import * as UserProfileController from '../controllers/userProfileController';
 import { checkUserAuth } from '../middlewares/checkUserAuth';
-import { requireRole } from '../middlewares/checkUserRole';
-import { validateBody } from '../middlewares/validateBodyMiddleware';
-import { createAdminSchema } from '../middlewares/schemas/createUserSchema';
 
 const router = Router();
 

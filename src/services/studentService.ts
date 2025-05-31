@@ -1,4 +1,3 @@
-import { getStudent } from './../controllers/studentController';
 import createUserRequest from '../dtos/createUserRequest';
 import createStudentRequest from '../dtos/createStudentRequest';
 import Student from '../models/studentInterface';

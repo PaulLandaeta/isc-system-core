@@ -42,7 +42,7 @@ export const createStudent = async (studentData: createStudentRequest) => {
       throw new HttpError(409, 'Ya existe un estudiante con este código.');
     }
 
-    const { is_scholarship, ...userData } = studentData;
+    const { ...userData } = studentData;
     const newStudent = await UserService.createUser(userData);
 
     if (!newStudent) {

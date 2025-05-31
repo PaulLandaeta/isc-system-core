@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+
 import {
   updateHours,
   getInternById,
@@ -8,7 +9,6 @@ import {
   getListInterns,
   getInternByUserId,
   getAllDataInternsService,
-  createInternService,
 } from '../services/internService';
 import { sendCreated, sendSuccess } from '../handlers/successHandler';
 import { handleError } from '../handlers/errorHandler';

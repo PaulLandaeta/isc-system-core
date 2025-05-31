@@ -2,15 +2,16 @@ import createProfessorRequest from '../dtos/createProfessorRequest';
 import * as UserProfileRepository from '../repositories/userProfileRepository';
 import * as UserRoleRepository from '../repositories/userRolesRepository';
 import * as PermissionInteractor from '../interactors/permissionsInteractor';
-import * as AuthenticationService from './authenticationService';
 import UserRole from '../constants/roles';
 import UserResponse from '../models/genericUserResponse';
 import { buildLogger } from '../plugin/logger';
 import { NotFoundError } from '../errors/notFoundError';
 import config from '../config/config';
 
+import * as AuthenticationService from './authenticationService';
+
 const logger = buildLogger('userProfileService');
-const defaultUserPassword = config.defaultUserPassword;
+const { defaultUserPassword } = config;
 
 export const createUserProfile = async (createUserProfileRequest: createProfessorRequest) => {
   try {

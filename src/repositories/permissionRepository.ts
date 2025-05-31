@@ -1,6 +1,7 @@
-import db from './pg-connection';
 import PermissionCategoryResponse from '../models/permissionCategoryResponseInterface';
 import PermissionCategory from '../models/PermissionCategoryInterface';
+
+import db from './pg-connection';
 const userProfileTable = 'user_profile';
 const userRolesTable = 'user_roles';
 const tablePermissions = 'permissions';

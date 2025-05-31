@@ -2,6 +2,7 @@ import UserRole from '../constants/roles';
 import createUserRequest from '../dtos/createUserRequest';
 import User from '../models/userInterface';
 import { buildLogger } from '../plugin/logger';
+
 import db from './pg-connection';
 
 const logger = buildLogger('userRepository');
@@ -65,7 +66,7 @@ export const createUser = async (userData: User) => {
     const maxIdValue = maxId?.max_id || 0;
 
     if (maxIdValue > 0) {
-      await db.raw(`SELECT setval(pg_get_serial_sequence('user_profile', 'id'), ?, true)`, [
+      await db.raw("SELECT setval(pg_get_serial_sequence('user_profile', 'id'), ?, true)", [
         maxIdValue,
       ]);
     }

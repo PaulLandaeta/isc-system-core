@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+
 import * as GraduationProcessInteractor from '../interactors/graduationInteractor';
 import createGraduationProcessRequest from '../dtos/createGraduationProcessRequest';
 import { handleError } from '../handlers/errorHandler';

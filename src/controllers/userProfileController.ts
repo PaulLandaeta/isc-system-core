@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+
 import * as userProfileInteractor from '../interactors/userProfileInteractor';
 import { sendCreated } from '../handlers/successHandler';
 import { sendSuccess } from '../handlers/successHandler';

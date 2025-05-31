@@ -1,6 +1,7 @@
 import UserResponse from '../models/genericUserResponse';
 import { userProfileInterface } from '../models/userProfile';
 import { buildLogger } from '../plugin/logger';
+
 import db from './pg-connection';
 
 const logger = buildLogger('professorRepository');

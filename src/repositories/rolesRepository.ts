@@ -2,6 +2,7 @@ import Rol from '../models/rol';
 import RolePermissions from '../models/rolePermissionInterface';
 import rolePermissionsRequest from '../models/rolePermissionRequestInterface';
 import RolePermissionsResponse from '../models/rolePermissionResponseInterface';
+
 import db from './pg-connection';
 
 const rolesTable = 'roles';

@@ -1,4 +1,5 @@
 import User from '../models/genericUserResponse';
+
 import db from './pg-connection';
 
 const userProfileTable = 'user_profile';
