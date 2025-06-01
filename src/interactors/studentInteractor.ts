@@ -8,6 +8,7 @@ import { NotFoundError } from '../errors/notFoundError';
 import { HttpError } from '../errors/httpError';
 import createStudentRequest from '../dtos/createStudentRequest';
 import { ConflictError } from '../errors/conflictError';
+import UserRole from '../constants/roles';
 
 const studentRole = 1;
 
@@ -42,8 +43,15 @@ export const createStudent = async (studentData: createStudentRequest) => {
       throw new HttpError(409, 'Ya existe un estudiante con este código.');
     }
 
-    const { ...userData } = studentData;
-    const newStudent = await UserService.createUser(userData);
+    const newStudent = await UserService.createUser({
+      name: studentData.name,
+      lastname: studentData.lastname,
+      email: studentData.email,
+      code: studentData.code,
+      phone: studentData.phone,
+      mothername: studentData.mothername,
+      role_id: UserRole.STUDENT.id,
+    });
 
     if (!newStudent) {
       throw new HttpError(500, 'Error al crear el estudiante');
