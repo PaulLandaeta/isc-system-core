@@ -2,6 +2,7 @@ import Rol from '../models/rol';
 import RolePermissions from '../models/rolePermissionInterface';
 import rolePermissionsRequest from '../models/rolePermissionRequestInterface';
 import RolePermissionsResponse from '../models/rolePermissionResponseInterface';
+
 import db from './pg-connection';
 
 const rolesTable = 'roles';
@@ -9,12 +10,10 @@ const rolePermissionsTableMainMenu = 'role_permissions';
 const actionsTable = 'role_permissions_action';
 const permissionsTable = 'permissions';
 
-
 interface ExtendedRolePermissions extends RolePermissions {
   permission_path?: string;
   menu_order?: number;
 }
-
 
 export const getRoles = async () => {
   try {
@@ -26,16 +25,21 @@ export const getRoles = async () => {
         `${rolePermissionsTableMainMenu}.menu_order`
       )
       .from(rolesTable)
-      .leftJoin(rolePermissionsTableMainMenu, `${rolesTable}.id`, `${rolePermissionsTableMainMenu}.role_id`)
-      .leftJoin(permissionsTable, `${rolePermissionsTableMainMenu}.permission_id`, `${permissionsTable}.id`)
+      .leftJoin(
+        rolePermissionsTableMainMenu,
+        `${rolesTable}.id`,
+        `${rolePermissionsTableMainMenu}.role_id`
+      )
+      .leftJoin(
+        permissionsTable,
+        `${rolePermissionsTableMainMenu}.permission_id`,
+        `${permissionsTable}.id`
+      )
       .where(`${permissionsTable}.type`, 'page')
       .orderBy('created_at', 'asc');
 
     const actionRoles = await db
-      .select(
-        `${rolesTable}.*`,
-        `${permissionsTable}.name as permission_name`
-      )
+      .select(`${rolesTable}.*`, `${permissionsTable}.name as permission_name`)
       .from(rolesTable)
       .leftJoin(actionsTable, `${rolesTable}.id`, `${actionsTable}.role_id`)
       .leftJoin(permissionsTable, `${actionsTable}.permission_id`, `${permissionsTable}.id`)
@@ -143,7 +147,6 @@ const validatePermissionInput = async (ides: rolePermissionsRequest) => {
   return { type: permission.type, role, permission };
 };
 
-
 export const addPermission = async (ides: rolePermissionsRequest): Promise<RolePermissions> => {
   try {
     const { type, role, permission } = await validatePermissionInput(ides);
@@ -155,11 +158,11 @@ export const addPermission = async (ides: rolePermissionsRequest): Promise<RoleP
       ...(type === 'page' && { menu_order: ides.menu_order }),
     };
 
-    await db.transaction(async (trx) => {
+    await db.transaction(async trx => {
       await trx(targetTable)
-      .where('role_id', ides.role_id)
-      .where('permission_id', ides.permission_id)
-      .delete();
+        .where('role_id', ides.role_id)
+        .where('permission_id', ides.permission_id)
+        .delete();
       await trx(targetTable).insert(insertData);
     });
 
@@ -175,7 +178,9 @@ export const addPermission = async (ides: rolePermissionsRequest): Promise<RoleP
   }
 };
 
-export const removePermission = async (ides: rolePermissionsRequest): Promise<RolePermissions | null> => {
+export const removePermission = async (
+  ides: rolePermissionsRequest
+): Promise<RolePermissions | null> => {
   try {
     const { type, role, permission } = await validatePermissionInput(ides);
     const targetTable = type === 'page' ? rolePermissionsTableMainMenu : actionsTable;

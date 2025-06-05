@@ -1,8 +1,8 @@
 import * as UserProfileService from '../services/userProfileService';
 import * as UserRoleService from '../services/userRoleService';
-import * as ProfessorService from '../services/professorService'
-import * as StudentService from '../services/studentService'
-import { NotFoundError } from "../errors/notFoundError";
+import * as ProfessorService from '../services/professorService';
+import * as StudentService from '../services/studentService';
+import { NotFoundError } from '../errors/notFoundError';
 
 export const deleteUser = async (userId: string) => {
   try {
@@ -45,16 +45,18 @@ export const createUser = async (userData: any) => {
       throw new Error('Error creating user');
     }
     const { id } = newUser;
-    const { isStudent ,roles } = userData;
+    const { isStudent, roles } = userData;
     const userRole = await UserRoleService.createUserRoles(id, roles);
     if (!userRole) {
       throw new Error('Error creating the user roles');
     }
     const combinedData = { ...userData, id };
 
-    if(isStudent){
-     await StudentService.createStudent(combinedData)
-    }else{ await ProfessorService.createProfessorService(combinedData); }
+    if (isStudent) {
+      await StudentService.createStudent(combinedData);
+    } else {
+      await ProfessorService.createProfessorService(combinedData);
+    }
 
     return newUser;
   } catch (error) {
@@ -63,7 +65,7 @@ export const createUser = async (userData: any) => {
   }
 };
 
-export const updateUser = async (userId: string, userProfileData:any) => {
+export const updateUser = async (userId: string, userProfileData: any) => {
   try {
     const updatedUserProfile = await UserProfileService.updateUserProfile(userId, userProfileData);
     if (userProfileData.isStudent) {

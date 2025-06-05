@@ -1,5 +1,6 @@
-import { runMigrations } from '../src/config/migrate';
 import dotenv from 'dotenv';
+
+import { runMigrations } from '../src/config/migrate';
 
 dotenv.config();
 

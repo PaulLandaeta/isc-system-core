@@ -1,9 +1,10 @@
 import knex from 'knex';
-import config from '../config/config';
 import dotenv from 'dotenv';
 
+import config from '../config/config';
+
 dotenv.config();
-const ssl = process.env.SSL === 'true'
+const ssl = process.env.SSL === 'true';
 const { database } = config;
 
 const db = knex({
@@ -14,7 +15,7 @@ const db = knex({
     user: database.user,
     password: database.password,
     port: Number(database.port) || 5466,
-    ssl: ssl ? true : false
+    ssl: ssl ? true : false,
   },
 });
 

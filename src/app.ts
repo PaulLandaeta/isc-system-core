@@ -17,7 +17,6 @@ import permissionRouter from './routes/permissionRouters';
 import userProfileRouter from './routes/userProfileRoutes';
 import rolesRouter from './routes/rolesRoutes';
 
-
 dotenv.config();
 
 const app: Application = express();

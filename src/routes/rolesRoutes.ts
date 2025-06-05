@@ -1,4 +1,5 @@
 import { Router } from 'express';
+
 import { checkUserAuth } from '../middlewares/checkUserAuth';
 import * as RolesController from '../controllers/rolesController';
 import { validateBody } from '../middlewares/validateBodyMiddleware';

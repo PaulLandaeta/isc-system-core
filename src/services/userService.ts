@@ -1,13 +1,15 @@
 import User from '../models/userInterface';
 import * as UserRepository from '../repositories/userRepository';
-import * as AuthenticationService from './authenticationService';
 import { buildLogger } from '../plugin/logger';
 import config from '../config/config';
 import createUserRequest from '../dtos/createUserRequest';
 import roles from '../constants/roles';
+import { ConflictError } from '../errors/conflictError';
+
+import * as AuthenticationService from './authenticationService';
 
 const logger = buildLogger('userService');
-const defaultUserPassword = config.defaultUserPassword;
+const { defaultUserPassword } = config;
 
 export const findByEmail = async (email: string): Promise<User> => {
   return UserRepository.getUserByEmail(email);
@@ -17,24 +19,25 @@ export const createUser = async (user: createUserRequest) => {
   try {
     const existingUser = await UserRepository.getUserByEmail(user.email);
     if (existingUser) {
-      throw new Error('User with this email already exists');
+      throw new ConflictError('User with this email already exists');
     }
 
-    const existingUserWithCode = await UserRepository.getStudentByCode(Number(user.code));
+    const existingUserWithCode = await UserRepository.getUserByCode(user.code);
     if (existingUserWithCode) {
-      throw new Error('User with this code already exists');
+      throw new ConflictError('User with this code already exists');
     }
+
     logger.debug('Attempting to create a new User');
     const hashedPassword = await AuthenticationService.hashPassword(defaultUserPassword);
     return await UserRepository.createUser({
       ...user,
       password: hashedPassword,
       username: user.code + user.lastname,
-      role_id: roles.STUDENT.id,
+      role_id: user.role_id ? user.role_id : roles.STUDENT.id,
     });
   } catch (error) {
-    console.log('Error creating User');
-    throw Error('Error creating User');
+    console.error('Error in userService.createUser: Error creating User');
+    throw error;
   }
 };
 

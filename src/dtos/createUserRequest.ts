@@ -5,6 +5,7 @@ interface createUserRequest {
   code: string;
   email: string;
   phone: string;
+  role_id?: number;
 }
 
 export default createUserRequest;

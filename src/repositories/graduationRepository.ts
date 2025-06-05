@@ -1,5 +1,6 @@
 import { DefenseDetail } from '../models/defenseDetailInterface';
 import GraduationProcess from '../models/graduationProcessInterface';
+
 import db from './pg-connection';
 
 const tableName = 'graduation_process';
@@ -101,25 +102,21 @@ export const createDefense = async (processId: number, defenseData: DefenseDetai
 
 export const updateDefense = async (defenseId: number, updatedData: Partial<DefenseDetail>) => {
   try {
-    const updatedRows = await db('defense_details')
-      .where({ id: defenseId })
-      .update(updatedData);
-      
+    const updatedRows = await db('defense_details').where({ id: defenseId }).update(updatedData);
+
     if (updatedRows === 0) {
       throw new Error('Defense not found or no change made');
     }
-    
-    return await getDefenseById(defenseId); 
+
+    return await getDefenseById(defenseId);
   } catch (error) {
     console.error('Error in GraduationProcessRepository.updateDefense:', error);
-    throw new Error('Error updating defense'); 
+    throw new Error('Error updating defense');
   }
 };
 export const getDefenseById = async (defenseId: number) => {
   try {
-    const defense = await db('defense_details')
-      .where({ id: defenseId })
-      .first();
+    const defense = await db('defense_details').where({ id: defenseId }).first();
     return defense;
   } catch (error) {
     console.error('Error in GraduationProcessRepository.getDefenseById:', error);
@@ -136,5 +133,25 @@ export const getDefense = async (processId: number, type: string) => {
   } catch (error) {
     console.error('Error in GraduationProcessRepository.getDefense:', error);
     throw new Error('Error fetching defense');
+  }
+};
+
+export const getProcessByStudentId = async (studentId: number) => {
+  try {
+    const process = await db(tableName).where({ student_id: studentId }).first();
+    return process;
+  } catch (error) {
+    console.error('Error in GraduationProcessRepository.getProcessByStudentId:', error);
+    throw new Error('Error fetching Process by student ID');
+  }
+};
+
+export const getProcessByName = async (projectName: string) => {
+  try {
+    const process = await db(tableName).where({ project_name: projectName }).first();
+    return process;
+  } catch (error) {
+    console.error('Error in GraduationProcessRepository.getProcessByName:', error);
+    throw new Error('Error fetching Process by name');
   }
 };

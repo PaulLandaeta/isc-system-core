@@ -7,7 +7,7 @@ export const seed = async (knex: Knex): Promise<void> => {
   await knex(eventTable).insert([
     {
       id: 1,
-      responsible_intern_id: 1,
+      responsible_intern_id: 16,
       title: 'Event 1',
       description: 'Description for event 1',
       location: 'Location 1',
@@ -23,7 +23,7 @@ export const seed = async (knex: Knex): Promise<void> => {
     },
     {
       id: 2,
-      responsible_intern_id: 2,
+      responsible_intern_id: 17,
       title: 'Event 2',
       description: 'Description for event 2',
       location: 'Location 2',
@@ -39,7 +39,7 @@ export const seed = async (knex: Knex): Promise<void> => {
     },
     {
       id: 3,
-      responsible_intern_id: 3,
+      responsible_intern_id: 18,
       title: 'Event 3',
       description: 'Description for event 3',
       location: 'Location 3',
@@ -57,19 +57,19 @@ export const seed = async (knex: Knex): Promise<void> => {
 
   await knex(eventInternTable).insert([
     {
-      intern_id: 1,
+      intern_id: 16,
       event_id: 1,
       type: 'accepted',
       worked_hours: 20,
     },
     {
-      intern_id: 2,
+      intern_id: 17,
       event_id: 2,
       type: 'pending',
       worked_hours: 20,
     },
     {
-      intern_id: 3,
+      intern_id: 18,
       event_id: 3,
       type: 'reserve',
       worked_hours: 20,

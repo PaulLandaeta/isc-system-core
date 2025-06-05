@@ -1,4 +1,5 @@
 import EventInterns from '../models/eventsInternsInterface';
+
 import db from './pg-connection';
 
 const tableName = 'events_interns';
@@ -45,8 +46,8 @@ export const getEventInformation = async () => {
       .leftJoin('interns as i', 'ei.intern_id', 'i.id')
       .select(
         'e.*',
-        db.raw(`COUNT(CASE WHEN ei.type = 'accepted' THEN 1 END) as accepted_interns`),
-        db.raw(`COUNT(CASE WHEN ei.type = 'pending' THEN 1 END) as pending_interns`)
+        db.raw("COUNT(CASE WHEN ei.type = 'accepted' THEN 1 END) as accepted_interns"),
+        db.raw("COUNT(CASE WHEN ei.type = 'pending' THEN 1 END) as pending_interns")
       )
       .groupBy('e.id');
 
@@ -182,7 +183,7 @@ export const updateEventInternsRepository = async (
     const eventResponse = await db(tableName)
       .where('event_id', eventId)
       .where('intern_id', internId)
-      .update({...eventIntern, updated_at: new Date()})
+      .update({ ...eventIntern, updated_at: new Date() })
       .returning('*');
     return eventResponse;
   } catch (error) {
