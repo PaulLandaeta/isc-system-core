@@ -1,22 +1,31 @@
-name: Deploy to Render on Develop Push
+name: Deploy Backend to Render on Develop Push
+
+permissions:
+  contents: write
 
 on:
-  push:
-    branches:
-      - develop
+  workflow_run:
+    workflows: ["backend-tests"]
+    types:
+      - completed
 
 jobs:
   deploy-develop:
     name: Deploy to Render (Develop)
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     environment:
       name: develop-deploy
     steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: develop
       - name: Trigger develop deploy on Render
         run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
 
   deploy-qa:
     name: Deploy to Render (QA)
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     needs: deploy-develop
     runs-on: ubuntu-latest
     environment:

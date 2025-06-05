@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+
 import * as GraduationProcessInteractor from '../interactors/graduationInteractor';
 import createGraduationProcessRequest from '../dtos/createGraduationProcessRequest';
 import { handleError } from '../handlers/errorHandler';
@@ -78,7 +79,7 @@ export const createDefenseController = async (req: Request, res: Response) => {
 };
 
 export const updateDefenseController = async (req: Request, res: Response) => {
-  const defenseId = parseInt(req.params.id); 
+  const defenseId = parseInt(req.params.id);
   const updatedData = req.body;
 
   try {

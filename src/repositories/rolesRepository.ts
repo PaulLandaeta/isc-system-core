@@ -96,7 +96,9 @@ export const createRol = async (rolData: Rol) => {
   }
 };
 
+
 export const editRol = async (rolData: Rol, id: number) => {
+
   try {
     const editedRol = await db(rolesTable).where('id', id).update(rolData).returning('*');
     return editedRol;
@@ -143,32 +145,34 @@ const validatePermissionInput = async (ides: rolePermissionsRequest) => {
   return { type: permission.type, role, permission };
 };
 
-
-export const addPermission = async (ides: rolePermissionsRequest): Promise<RolePermissions> => {
+export const addPermission = async (permissions: rolePermissionsRequest[]): Promise<RolePermissions[]> => {
   try {
-    const { type, role, permission } = await validatePermissionInput(ides);
-    const targetTable = type === 'page' ? rolePermissionsTableMainMenu : actionsTable;
-
-    const insertData: rolePermissionsRequest = {
-      role_id: ides.role_id,
-      permission_id: ides.permission_id,
-      ...(type === 'page' && { menu_order: ides.menu_order }),
-    };
+    const results: RolePermissions[] = [];
 
     await db.transaction(async (trx) => {
-      await trx(targetTable)
-      .where('role_id', ides.role_id)
-      .where('permission_id', ides.permission_id)
-      .delete();
-      await trx(targetTable).insert(insertData);
+      for (const perm of permissions) {
+        const { type, role, permission } = await validatePermissionInput(perm);
+        const targetTable = type === 'page' ? rolePermissionsTableMainMenu : actionsTable;
+        const insertData = {
+          role_id: perm.role_id,
+          permission_id: perm.permission_id,
+          ...(type === 'page' && { menu_order: perm.menu_order }),
+        };
+        await trx(targetTable)
+          .where('role_id', perm.role_id)
+          .where('permission_id', perm.permission_id)
+          .delete();
+        await trx(targetTable).insert(insertData);
+        results.push({
+          id: role.id,
+          name: role.name,
+          disabled: role.disabled,
+          permission_name: permission.permission_name,
+        });
+      }
     });
 
-    return {
-      id: role.id,
-      name: role.name,
-      disabled: role.disabled,
-      permission_name: permission.permission_name,
-    };
+    return results;
   } catch (error) {
     console.error(error);
     throw error;

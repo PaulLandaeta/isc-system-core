@@ -1,11 +1,11 @@
-import * as UserService from '../services/userService';
-
 import { buildLogger } from '../plugin/logger';
 import { NotFoundError } from '../errors/notFoundError';
+import { ConflictError } from '../errors/conflictError';
 import createProfessorRequest from '../dtos/createProfessorRequest';
 import { createProfessorService } from '../services/professorService';
-import * as userProfileService from '../services/userProfileService';
+import * as UserService from '../services/userService';
 import { BadRequestError } from '../errors/badRequestError';
+import UserRole from '../constants/roles';
 const logger = buildLogger('professorInteractor');
 
 export const getProfessors = async () => {
@@ -24,22 +24,28 @@ export const getProfessors = async () => {
 export const createProfessor = async (professorData: createProfessorRequest) => {
   try {
     logger.info('Creating professor with data:', { professorData });
-    const newUserProfile = await userProfileService.createUserProfile(professorData);
+    const newUserProfile = await UserService.createUser({
+      name: professorData.name,
+      lastname: professorData.lastname,
+      email: professorData.email,
+      code: professorData.code,
+      phone: professorData.phone,
+      mothername: professorData.mothername,
+      role_id: UserRole.PROFESSOR.id,
+    });
     const { id } = newUserProfile;
     professorData.id = id;
+
     const newProfessor = await createProfessorService(professorData);
     return newProfessor;
   } catch (error) {
     console.error('Error in createProfessor interactor:', error);
-    {
-    }
-    if (error instanceof BadRequestError) {
+    if (error instanceof BadRequestError || error instanceof ConflictError) {
       throw error;
     } else {
       throw new Error('Error creating the professor');
     }
   }
-
 };
 
 export const getProfessorById = async (id: string) => {

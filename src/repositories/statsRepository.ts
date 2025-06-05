@@ -1,4 +1,5 @@
 import { buildLogger } from '../plugin/logger';
+
 import db from './pg-connection';
 
 const logger = buildLogger('statsRepository');
