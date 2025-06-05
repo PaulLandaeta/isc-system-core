@@ -1,4 +1,5 @@
 import nodemailer, { Transporter } from 'nodemailer';
+
 import config from '../../config/config';
 import { MailerPlugin, MailOptions } from '../../types/mailerTypes';
 
@@ -16,7 +17,7 @@ const transporter: Transporter = nodemailer.createTransport({
 });
 
 export const nodemailerPlugin: MailerPlugin = {
-  sendMail: async ({ to, recipientName, subject, text, html }: MailOptions): Promise<void> => {
+  sendMail: async ({ to, subject, text, html }: MailOptions): Promise<void> => {
     const mailOptions = {
       from: mailer.emailUser,
       to,
@@ -31,5 +32,5 @@ export const nodemailerPlugin: MailerPlugin = {
     } catch (error) {
       console.error('Error al enviar el correo:', error);
     }
-  }
+  },
 };

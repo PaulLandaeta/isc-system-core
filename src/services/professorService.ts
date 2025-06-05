@@ -2,9 +2,12 @@ import createProfessorRequest from '../dtos/createProfessorRequest';
 import * as ProfessorRepository from '../repositories/professorRepository';
 import * as StudentRepository from '../repositories/studentRepository';
 import { buildLogger } from '../plugin/logger';
-import { deleteProfessor, findProcessByTutorId, storeProfessor } from '../repositories/professorRepository';
+import {
+  deleteProfessor,
+  findProcessByTutorId,
+  storeProfessor,
+} from '../repositories/professorRepository';
 import { modalityMap } from '../constants/modalityMap';
-
 import { BadRequestError } from '../errors/badRequestError';
 import { HttpError } from '../errors/httpError';
 
@@ -115,10 +118,7 @@ export const getThesisStudentsService = async (
       type: normalizedType,
     };
 
-    const students = await ProfessorRepository.getThesisStudentsByTutor(
-      tutorId,
-      normalizedFilters
-    );
+    const students = await ProfessorRepository.getThesisStudentsByTutor(tutorId, normalizedFilters);
 
     const summaryByType = await ProfessorRepository.getThesisSummaryByTutor(tutorId);
 
@@ -128,9 +128,9 @@ export const getThesisStudentsService = async (
       summaryByType: summaryByType,
       rolesCount: {
         tutor: resTutor ? resTutor.count : 0,
-        reviewer: resReviewer ? resReviewer.count : 0
+        reviewer: resReviewer ? resReviewer.count : 0,
       },
-      students: students
+      students: students,
     };
   } catch (error) {
     logger.error(`Error in getThesisStudentsService: ${error}`);

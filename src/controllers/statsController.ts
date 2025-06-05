@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import * as StastInteractor from '../interactors/statsInteractor';
+
 import { sendSuccess } from '../handlers/successHandler';
 import { handleError } from '../handlers/errorHandler';
 

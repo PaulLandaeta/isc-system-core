@@ -1,14 +1,15 @@
 import User from '../models/userInterface';
 import * as UserRepository from '../repositories/userRepository';
-import * as AuthenticationService from './authenticationService';
 import { buildLogger } from '../plugin/logger';
 import config from '../config/config';
 import createUserRequest from '../dtos/createUserRequest';
 import roles from '../constants/roles';
 import { ConflictError } from '../errors/conflictError';
 
+import * as AuthenticationService from './authenticationService';
+
 const logger = buildLogger('userService');
-const defaultUserPassword = config.defaultUserPassword;
+const { defaultUserPassword } = config;
 
 export const findByEmail = async (email: string): Promise<User> => {
   return UserRepository.getUserByEmail(email);

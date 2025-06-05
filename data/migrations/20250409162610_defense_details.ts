@@ -3,9 +3,15 @@ import type { Knex } from 'knex';
 const defenseDetailsTable = 'defense_details';
 
 export async function up(knex: Knex): Promise<void> {
-  await knex.schema.createTable(defenseDetailsTable, (table) => {
+  await knex.schema.createTable(defenseDetailsTable, table => {
     table.increments('id').primary();
-    table.integer('graduation_process_id').unsigned().notNullable().references('id').inTable('graduation_process').onDelete('CASCADE');
+    table
+      .integer('graduation_process_id')
+      .unsigned()
+      .notNullable()
+      .references('id')
+      .inTable('graduation_process')
+      .onDelete('CASCADE');
     table.enum('type', ['internal', 'external']).notNullable();
     table.integer('president').unsigned().nullable().references('id').inTable('professors');
     table.integer('first_juror').unsigned().nullable().references('id').inTable('professors');

@@ -1,4 +1,5 @@
 import { Router } from 'express';
+
 import * as ModalityController from '../controllers/modalityController';
 import { checkUserAuth } from '../middlewares/checkUserAuth';
 

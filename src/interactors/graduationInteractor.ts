@@ -40,14 +40,16 @@ export const createGraduationProcess = async (
 ) => {
   const user = await getUserByCode(graduationProcess.student_code);
 
-  if (!user || user.role_id !== UserRole.STUDENT.id) {
-    throw new BadRequestError("El usuario no existe o no es un estudiante");
+  const validRoles = [UserRole.STUDENT.id, UserRole.INTERN.id];
+
+  if (!user || !validRoles.includes(user.role_id)) {
+    throw new BadRequestError('El usuario no existe o no es un estudiante');
   }
 
-  const process = await GraduationProcessService.getProcessByName(graduationProcess.project_name)
+  const process = await GraduationProcessService.getProcessByName(graduationProcess.project_name);
 
   if (process) {
-    throw new ConflictError('Ya existe un proceso con el mismo nombre')
+    throw new ConflictError('Ya existe un proceso con el mismo nombre');
   }
 
   const newGraduationProcess: NewGraduationProcess = {
@@ -59,7 +61,6 @@ export const createGraduationProcess = async (
 
   return await GraduationProcessService.createGraduationProcess(newGraduationProcess);
 };
-
 
 export const getGraduationProcesses = async () => {
   const graduationProcesses = await GraduationProcessService.getGraduationProcesses();

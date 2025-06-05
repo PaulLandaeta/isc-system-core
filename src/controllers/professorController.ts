@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+
 import * as ProfessorInteractor from '../interactors/professorInteractor';
 import { buildLogger } from '../plugin/logger';
 import { handleError } from '../handlers/errorHandler';
@@ -63,14 +64,10 @@ export const deleteProfessorController = async (req: Request, res: Response) => 
     sendSuccess(res, professor, 'Professor deleted successfully');
   } catch (error) {
     if (error instanceof HttpError) {
-      return res
-        .status(error.statusCode)
-        .json({ error: error.message });
+      return res.status(error.statusCode).json({ error: error.message });
     }
     logger.error(`deleteProfessorController: ${error}`);
-    return res
-      .status(500)
-      .json({ error: 'Error interno del servidor' });
+    return res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 

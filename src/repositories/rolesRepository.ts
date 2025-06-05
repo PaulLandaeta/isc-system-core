@@ -2,6 +2,7 @@ import Rol from '../models/rol';
 import RolePermissions from '../models/rolePermissionInterface';
 import rolePermissionsRequest from '../models/rolePermissionRequestInterface';
 import RolePermissionsResponse from '../models/rolePermissionResponseInterface';
+
 import db from './pg-connection';
 
 const rolesTable = 'roles';
@@ -9,12 +10,10 @@ const rolePermissionsTableMainMenu = 'role_permissions';
 const actionsTable = 'role_permissions_action';
 const permissionsTable = 'permissions';
 
-
 interface ExtendedRolePermissions extends RolePermissions {
   permission_path?: string;
   menu_order?: number;
 }
-
 
 export const getRoles = async () => {
   try {
@@ -26,16 +25,21 @@ export const getRoles = async () => {
         `${rolePermissionsTableMainMenu}.menu_order`
       )
       .from(rolesTable)
-      .leftJoin(rolePermissionsTableMainMenu, `${rolesTable}.id`, `${rolePermissionsTableMainMenu}.role_id`)
-      .leftJoin(permissionsTable, `${rolePermissionsTableMainMenu}.permission_id`, `${permissionsTable}.id`)
+      .leftJoin(
+        rolePermissionsTableMainMenu,
+        `${rolesTable}.id`,
+        `${rolePermissionsTableMainMenu}.role_id`
+      )
+      .leftJoin(
+        permissionsTable,
+        `${rolePermissionsTableMainMenu}.permission_id`,
+        `${permissionsTable}.id`
+      )
       .where(`${permissionsTable}.type`, 'page')
       .orderBy('created_at', 'asc');
 
     const actionRoles = await db
-      .select(
-        `${rolesTable}.*`,
-        `${permissionsTable}.name as permission_name`
-      )
+      .select(`${rolesTable}.*`, `${permissionsTable}.name as permission_name`)
       .from(rolesTable)
       .leftJoin(actionsTable, `${rolesTable}.id`, `${actionsTable}.role_id`)
       .leftJoin(permissionsTable, `${actionsTable}.permission_id`, `${permissionsTable}.id`)
@@ -96,9 +100,7 @@ export const createRol = async (rolData: Rol) => {
   }
 };
 
-
 export const editRol = async (rolData: Rol, id: number) => {
-
   try {
     const editedRol = await db(rolesTable).where('id', id).update(rolData).returning('*');
     return editedRol;
@@ -148,7 +150,6 @@ const validatePermissionInput = async (ides: rolePermissionsRequest) => {
 export const addPermission = async (permissions: rolePermissionsRequest[]): Promise<RolePermissions[]> => {
   try {
     const results: RolePermissions[] = [];
-
     await db.transaction(async (trx) => {
       for (const perm of permissions) {
         const { type, role, permission } = await validatePermissionInput(perm);
@@ -179,7 +180,9 @@ export const addPermission = async (permissions: rolePermissionsRequest[]): Prom
   }
 };
 
-export const removePermission = async (ides: rolePermissionsRequest): Promise<RolePermissions | null> => {
+export const removePermission = async (
+  ides: rolePermissionsRequest
+): Promise<RolePermissions | null> => {
   try {
     const { type, role, permission } = await validatePermissionInput(ides);
     const targetTable = type === 'page' ? rolePermissionsTableMainMenu : actionsTable;

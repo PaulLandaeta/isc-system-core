@@ -1,6 +1,7 @@
 import UserResponse from '../models/genericUserResponse';
 import { userProfileInterface } from '../models/userProfile';
 import { buildLogger } from '../plugin/logger';
+
 import db from './pg-connection';
 
 const logger = buildLogger('professorRepository');
@@ -37,15 +38,15 @@ export const getUserById = async (userId: number) => {
   }
 };
 
-export const getAllUsers = async(): Promise<UserResponse[] | null> => {
-  try{
+export const getAllUsers = async (): Promise<UserResponse[] | null> => {
+  try {
     const users = await db(TABLE_NAME as 'user');
     return users;
-  }catch(error){
+  } catch (error) {
     console.log('Error getting all users', error);
-    throw error
+    throw error;
   }
-}
+};
 
 export const updateUserProfile = async (userId: string, userProfileData: any) => {
   try {

@@ -8,7 +8,6 @@ const updateTrigger = 'trg_roles_after_update';
 const deleteTrigger = 'trg_roles_after_delete';
 
 export async function up(knex: Knex): Promise<void> {
-
   const exists = await knex.schema.hasTable(auditTable);
   if (!exists) {
     await knex.schema.createTable(auditTable, t => {
@@ -73,5 +72,4 @@ export async function down(knex: Knex): Promise<void> {
   await knex.raw(`DROP TRIGGER IF EXISTS ${updateTrigger} ON ${rolesTable}`);
   await knex.raw(`DROP TRIGGER IF EXISTS ${deleteTrigger} ON ${rolesTable}`);
   await knex.raw(`DROP FUNCTION IF EXISTS ${auditFunction}()`);
-
- }
+}

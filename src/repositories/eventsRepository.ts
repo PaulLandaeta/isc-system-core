@@ -1,5 +1,6 @@
-import db from './pg-connection';
 import Event from '../models/eventInterface';
+
+import db from './pg-connection';
 
 const tableName = 'events';
 
