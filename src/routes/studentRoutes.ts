@@ -6,6 +6,7 @@ import { validateBody } from '../middlewares/validateBodyMiddleware';
 import { createStudentSchema } from '../middlewares/schemas/createUserSchema';
 import { validateParams } from '../middlewares/validateParamsMiddleware';
 import { studentCodeSchema } from '../middlewares/schemas/studenCodeSchema';
+import { studentSquema } from '../middlewares/schemas/updateStudentSquema';
 
 const router = Router();
 
@@ -23,6 +24,6 @@ router.route('/:id').delete(checkUserAuth, StudentController.deleteStudent);
 
 router.route('/:id').get(checkUserAuth, StudentController.getStudent);
 
-router.route('/:id').put(checkUserAuth, StudentController.updateStudent);
+router.route('/:id').put(checkUserAuth, validateBody(studentSquema), StudentController.updateStudent);
 
 export default router;
