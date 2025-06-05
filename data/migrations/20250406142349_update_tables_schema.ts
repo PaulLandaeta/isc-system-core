@@ -35,11 +35,11 @@ export async function up(knex: Knex): Promise<void> {
 }
 
 export async function down(knex: Knex): Promise<void> {
-  await knex.schema.alterTable('user_roles', table => {
+  await knex.schema.alterTable('user_roles', (table) => {
     table.dropColumn('created_at');
     table.dropColumn('updated_at');
   });
-  await knex.schema.alterTable('knex_migrations', table => {
+  await knex.schema.alterTable('knex_migrations', (table) => {
     table.dropColumn('created_at');
     table.dropColumn('updated_at');
   });
@@ -47,19 +47,19 @@ export async function down(knex: Knex): Promise<void> {
     table.dropColumn('created_at');
     table.dropColumn('updated_at');
   });
-  await knex.schema.alterTable('students', table => {
+  await knex.schema.alterTable('students', (table) => {
     table.dropColumn('created_at');
     table.dropColumn('updated_at');
   });
-  await knex.schema.alterTable('professors', table => {
+  await knex.schema.alterTable('professors', (table) => {
     table.dropColumn('created_at');
     table.dropColumn('updated_at');
   });
-  await knex.schema.alterTable('permission_categories', table => {
+  await knex.schema.alterTable('permission_categories', (table) => {
     table.dropColumn('created_at');
     table.dropColumn('updated_at');
   });
-  await knex.schema.alterTable('role_permissions', table => {
+  await knex.schema.alterTable('role_permissions', (table) => {
     table.dropColumn('menu_order');
     table.dropColumn('created_at');
     table.dropColumn('updated_at');

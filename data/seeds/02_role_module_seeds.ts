@@ -4,6 +4,7 @@ const rolesTable = 'roles';
 const permissionCategoriesTable = 'permission_categories';
 const permissionsTable = 'permissions';
 const rolesPermissionsTable = 'role_permissions';
+const rolePermissionsActionTable = 'role_permissions_action';
 
 export const seed = async (knex: Knex): Promise<void> => {
   await knex(rolesTable).insert([
@@ -405,5 +406,34 @@ export const seed = async (knex: Knex): Promise<void> => {
     { role_id: 2, permission_id: 14, menu_order: 14 },
     { role_id: 2, permission_id: 15, menu_order: 15 },
     { role_id: 2, permission_id: 16, menu_order: 16 },
+  ]);
+  await knex(rolePermissionsActionTable).insert([
+    { role_id: 1, permission_id: 3 },
+    { role_id: 2, permission_id: 3 },
+    { role_id: 1, permission_id: 5 },
+    { role_id: 2, permission_id: 5 },
+    { role_id: 1, permission_id: 7 },
+    { role_id: 3, permission_id: 9 },
+    { role_id: 4, permission_id: 9 },
+    { role_id: 1, permission_id: 10 },
+    { role_id: 1, permission_id: 11 },
+    { role_id: 1, permission_id: 13 },
+    { role_id: 2, permission_id: 13 },
+    { role_id: 1, permission_id: 14 },
+    { role_id: 2, permission_id: 14 },
+    { role_id: 1, permission_id: 15 },
+    { role_id: 2, permission_id: 15 },
+    { role_id: 2, permission_id: 17 },
+    { role_id: 1, permission_id: 20 },
+    { role_id: 1, permission_id: 21 },
+    { role_id: 1, permission_id: 22 },
+    { role_id: 1, permission_id: 28 },
+    { role_id: 2, permission_id: 28 },
+    { role_id: 5, permission_id: 28 },
+    { role_id: 6, permission_id: 28 },
+    { role_id: 1, permission_id: 29 },
+    { role_id: 2, permission_id: 29 },
+    { role_id: 5, permission_id: 29 },
+    { role_id: 6, permission_id: 29 },
   ]);
 };
