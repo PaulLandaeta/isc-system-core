@@ -73,7 +73,7 @@ export const disableRol = async (id: number) => {
   }
 };
 
-export const addPermission = async (ides: rolePermissionsRequest) => {
+export const addPermission = async (ides: rolePermissionsRequest[]) => {
   try {
     const rolePermission = await RolesRepository.addPermission(ides);
     return rolePermission;
