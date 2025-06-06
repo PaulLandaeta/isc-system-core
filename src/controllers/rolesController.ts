@@ -68,7 +68,7 @@ export const disableRol = async (req: Request, res: Response) => {
 };
 
 export const addPermission = async (req: Request, res: Response) => {
-  const ides: rolePermissionsRequest = req.body;
+  const ides: rolePermissionsRequest[] = req.body;
   try {
     const rolePermission = await RolesInteractor.addPermission(ides);
     if (!rolePermission) {
