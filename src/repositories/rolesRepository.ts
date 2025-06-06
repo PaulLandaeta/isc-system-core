@@ -148,7 +148,6 @@ const validatePermissionInput = async (ides: rolePermissionsRequest) => {
 export const addPermission = async (permissions: rolePermissionsRequest[]): Promise<RolePermissions[]> => {
   try {
     const results: RolePermissions[] = [];
-
     await db.transaction(async (trx) => {
       for (const perm of permissions) {
         const { type, role, permission } = await validatePermissionInput(perm);

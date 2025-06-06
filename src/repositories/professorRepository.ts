@@ -5,7 +5,7 @@ import db from './pg-connection';
 const logger = buildLogger('professorRepository');
 
 const TABLE_NAME = 'professors';
-interface professorInterface {
+  interface professorInterface {
   id: string;
   degree: string;
   department: string;
@@ -24,14 +24,19 @@ export const storeProfessor = async (professor: professorInterface) => {
   }
 };
 export const getProfessorById = async (userId: string) => {
-  try {
-    const professor = await db(TABLE_NAME).where('id', userId).first();
-    return professor;
-  } catch (error) {
-    logger.error(`Error fetching professor by id: ${error}`);
-    throw error;
-  }
+    try {
+        const professor = await db(TABLE_NAME)
+          .where('id', userId)
+          .where('disabled', false)
+          .first();
+        return professor;
+      } catch (error) {
+        logger.error('Error fetching professor by id');
+        throw error;
+      }
 };
+    
+
 export const updateProfessor = async (userId: string, professorData: any) => {
   try {
     const updatedProfessor = await db(TABLE_NAME)
@@ -47,11 +52,11 @@ export const updateProfessor = async (userId: string, professorData: any) => {
 
 export const deleteProfessor = async (id: string) => {
   try {
-    const professorDeleted = await db(TABLE_NAME).where('id', id).delete().returning('*');
-    return professorDeleted;
+    const professorUpdated = await db(TABLE_NAME).where('id', id).update({ disabled: true }).returning('*');
+    return professorUpdated;
   } catch (error) {
     console.error('Error in professorRepository.deleteProfessor:', error);
-    throw new Error('Error deleting Professor');
+    throw new Error('Error updating Professor disabled status');
   }
 };
 
@@ -146,6 +151,17 @@ export const getThesisStudentsByTutor = async (
 
 export const findProcessByTutorId = async (tutorId: string) => {
   return db('graduation_process').where('tutor_id', tutorId).first();
+};
+
+export const getProfessors = async () => {
+  try {
+    const professors = await db('professor')
+      .where({ disabled: false }); 
+    return professors;
+  } catch (error) {
+    console.error('Error fetching professors:', error);
+    throw error;
+  }
 };
 
 export const getRolesCountByProfessor = async (professorId: string) => {

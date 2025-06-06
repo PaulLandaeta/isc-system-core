@@ -21,7 +21,7 @@ const knexConfig: { [key: string]: import('knex').Knex.Config } = {
       directory: '../data/migrations',
     },
     seeds: {
-      directory: './data/seeds',
+      directory: '../data/seeds',
     },
   },
   staging: {
