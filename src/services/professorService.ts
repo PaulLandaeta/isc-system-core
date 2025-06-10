@@ -2,15 +2,20 @@ import createProfessorRequest from '../dtos/createProfessorRequest';
 import * as ProfessorRepository from '../repositories/professorRepository';
 import * as StudentRepository from '../repositories/studentRepository';
 import { buildLogger } from '../plugin/logger';
-import { deleteProfessor, findProcessByTutorId, storeProfessor } from '../repositories/professorRepository';
+import {
+  deleteProfessor,
+  findProcessByTutorId,
+  storeProfessor,
+} from '../repositories/professorRepository';
 import { modalityMap } from '../constants/modalityMap';
-
 import { BadRequestError } from '../errors/badRequestError';
 import { HttpError } from '../errors/httpError';
 
 const logger = buildLogger('professorsService');
 
-export const createProfessorService = async (professor: createProfessorRequest): Promise<any | null> => {
+export const createProfessorService = async (
+  professor: createProfessorRequest
+): Promise<any | null> => {
   try {
     const existingProfessor = await ProfessorRepository.getProfessorByCode(professor.code);
     if (existingProfessor) {
@@ -113,16 +118,19 @@ export const getThesisStudentsService = async (
       type: normalizedType,
     };
 
-    const students = await ProfessorRepository.getThesisStudentsByTutor(
-      tutorId,
-      normalizedFilters
-    );
+    const students = await ProfessorRepository.getThesisStudentsByTutor(tutorId, normalizedFilters);
 
-    const summary = await ProfessorRepository.getThesisSummaryByTutor(tutorId);
+    const summaryByType = await ProfessorRepository.getThesisSummaryByTutor(tutorId);
+
+    const { resTutor, resReviewer } = await ProfessorRepository.getRolesCountByProfessor(tutorId);
 
     return {
-      summaryByType: summary,
-      students: students
+      summaryByType: summaryByType,
+      rolesCount: {
+        tutor: resTutor ? resTutor.count : 0,
+        reviewer: resReviewer ? resReviewer.count : 0,
+      },
+      students: students,
     };
   } catch (error) {
     logger.error(`Error in getThesisStudentsService: ${error}`);

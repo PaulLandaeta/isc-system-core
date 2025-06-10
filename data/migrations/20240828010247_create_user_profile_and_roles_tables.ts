@@ -1,6 +1,6 @@
 import type { Knex } from 'knex';
 
-const tableNameRolePermissionsAction= 'role_permissions_action';
+const tableNameRolePermissionsAction = 'role_permissions_action';
 const tableNameRoles = 'roles';
 const tableNamePermissions = 'permissions';
 

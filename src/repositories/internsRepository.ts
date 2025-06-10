@@ -1,11 +1,12 @@
-import Intern from 'src/models/internInterface';
+import Intern from '../models/internInterface';
+
 import db from './pg-connection';
 
 const tableName = 'interns';
-export const getSupervisor = async() => {
+export const getSupervisor = async () => {
   try {
     const infoIntern = await db(`${tableName} as in`)
-      .join('user_profile as up', 'in.user_profile_id', 'up.id')
+      .join('user_profile as up', 'in.id', 'up.id')
       .join('events as e', 'in.id', 'e.responsible_intern_id')
       .select(
         'up.name',
@@ -16,14 +17,14 @@ export const getSupervisor = async() => {
         'in.*',
         'e.id',
         'e.responsible_intern_id',
-        'e.title',
+        'e.title'
       );
     return infoIntern;
   } catch (error) {
     console.error('Error in InternsRepository.getAllDataInternsRepository', error);
     throw new Error('Error fetching Interns');
   }
-}
+};
 export const updateHoursInterns = async (
   internId: number,
   newHoursPending: number,
@@ -50,9 +51,9 @@ export const updateHoursInterns = async (
 export const getInternsByUserId = async (userId: number) => {
   try {
     const infoIntern = await db(`${tableName} as in`)
-      .join('user_profile as up', 'in.user_profile_id', 'up.id')
+      .join('user_profile as up', 'in.id', 'up.id')
       .select('up.*', 'in.id as id_intern', 'in.*')
-      .where('in.user_profile_id', userId)
+      .where('in.id', userId)
       .first();
     return infoIntern;
   } catch (error) {
@@ -62,8 +63,8 @@ export const getInternsByUserId = async (userId: number) => {
 };
 export const getInternsById = async (internId: number) => {
   try {
-    const event = await db(tableName).where('id', internId).first();
-    return event;
+    const interns = await db(tableName).where('id', internId).first();
+    return interns;
   } catch (error) {
     console.error('Error in InternsRepository.getInternsById', error);
     throw new Error('Error fetching Interns');
@@ -92,7 +93,7 @@ export const getRecordIntern = async (internId: number) => {
 export const getInformationIntern = async (internId: number) => {
   try {
     const infoIntern = await db(`${tableName} as in`)
-      .join('user_profile as up', 'in.user_profile_id', 'up.id')
+      .join('user_profile as up', 'in.id', 'up.id')
       .select('up.*', 'in.*')
       .where('in.id', internId)
       .first();
@@ -106,8 +107,17 @@ export const getInformationIntern = async (internId: number) => {
 export const getListIntern = async () => {
   try {
     const infoIntern = await db(`${tableName} as in`)
-      .join('user_profile as up', 'in.user_profile_id', 'up.id')
-      .select('up.*', 'in.id as id_intern', 'in.*');
+      .join('user_profile as u', 'in.id', 'u.id')
+      .select(
+        'u.id',
+        'u.code',
+        db.raw("CONCAT(u.name, ' ', u.lastname, ' ', u.mothername) as name"),
+        'u.email',
+        'u.phone',
+        'in.total_hours',
+        'in.pending_hours',
+        'in.completed_hours'
+      );
     return infoIntern;
   } catch (error) {
     console.error('Error in InternsRepository.getRecordIntern', error);
@@ -118,7 +128,7 @@ export const getListIntern = async () => {
 export const getAllDataInternsRepository = async () => {
   try {
     const infoIntern = await db(`${tableName} as in`)
-      .join('user_profile as up', 'in.user_profile_id', 'up.id')
+      .join('user_profile as up', 'in.id', 'up.id')
       .join('events_interns as ei', 'in.id', 'ei.intern_id')
       .join('events as e', 'ei.event_id', 'e.id')
       .select(
@@ -130,7 +140,7 @@ export const getAllDataInternsRepository = async () => {
         'in.*',
         'e.id',
         'e.responsible_intern_id',
-        'e.title',
+        'e.title'
       );
     return infoIntern;
   } catch (error) {

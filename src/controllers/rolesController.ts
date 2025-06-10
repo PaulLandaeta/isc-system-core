@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+
 import { handleError } from '../handlers/errorHandler';
 import { sendSuccess } from '../handlers/successHandler';
 import * as RolesInteractor from '../interactors/rolesInteractor';
@@ -67,7 +68,7 @@ export const disableRol = async (req: Request, res: Response) => {
 };
 
 export const addPermission = async (req: Request, res: Response) => {
-  const ides: rolePermissionsRequest = req.body;
+  const ides: rolePermissionsRequest[] = req.body;
   try {
     const rolePermission = await RolesInteractor.addPermission(ides);
     if (!rolePermission) {

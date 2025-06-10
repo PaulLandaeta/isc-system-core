@@ -1,4 +1,5 @@
 import { Router } from 'express';
+
 import * as GraduationController from '../controllers/graduationController';
 import { checkUserAuth } from '../middlewares/checkUserAuth';
 import { validateParams } from '../middlewares/validateParamsMiddleware';

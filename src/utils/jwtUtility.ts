@@ -1,11 +1,12 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
+
 import config from '../config/config';
 
 const JWT_SECRET = config.jwt.tokenSecret;
 
 const generateToken = (userId: number, roles?: string[]) => {
   const payload = {
-    exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24, // Token expiry set to 24 hours
+    exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24,
     id: userId,
     roles,
   };

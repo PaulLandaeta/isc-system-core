@@ -1,4 +1,3 @@
-import { Dayjs } from 'dayjs';
 import User from './userInterface';
 
 interface Intern extends User {
@@ -7,8 +6,6 @@ interface Intern extends User {
   total_hours: number;
   pending_hours: number;
   completed_hours: number;
-  created_at: Dayjs;
-  updated_at: Dayjs;
 }
 
 export default Intern

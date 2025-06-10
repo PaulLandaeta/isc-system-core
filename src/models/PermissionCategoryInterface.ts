@@ -1,5 +1,5 @@
 interface PermissionCategory {
-  name:string;
+  name: string;
   id: number;
   category_name: string;
 }

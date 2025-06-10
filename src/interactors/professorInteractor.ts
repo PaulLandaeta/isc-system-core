@@ -38,9 +38,8 @@ export const createProfessor = async (professorData: createProfessorRequest) => 
     console.error('Error in createProfessor interactor:', error);
     throw error;
   }
-
 };
-//
+
 export const getProfessorById = async (id: string) => {
   logger.debug('Fetching professor by id:', { id });
   try {

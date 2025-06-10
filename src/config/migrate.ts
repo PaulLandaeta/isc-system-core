@@ -1,4 +1,5 @@
 import knex, { Knex } from 'knex';
+
 import knexConfig from '../knexfile';
 import { buildLogger } from '../plugin/logger';
 

@@ -6,5 +6,5 @@ export interface MenuItem {
   
   export interface MenuResponse {
     role: string;
-    menu: MenuItem[]; // TODO
+    menu: MenuItem[];
   }

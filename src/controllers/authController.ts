@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+
 import * as LoginInteractor from '../interactors/loginInteractor';
 import * as  MenuInteractor from '../interactors/menuInteractor';
 import * as PermissionsInteractor from '../interactors/permissionsInteractor';

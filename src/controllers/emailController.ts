@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+
 import * as EmailInteractor from '../interactors/emailInteractor';
 import { handleError } from '../handlers/errorHandler';
 import { sendSuccess } from '../handlers/successHandler';

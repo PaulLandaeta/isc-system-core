@@ -10,6 +10,7 @@ import {
   getEventInformation,
   updateEventInternsRepository,
 } from '../repositories/eventInternsRepository';
+
 import { getEventsByIdService } from './eventsService';
 
 export const getEventIntern = async (eventId: number) => {

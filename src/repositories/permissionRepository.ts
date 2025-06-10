@@ -1,8 +1,8 @@
-import db from './pg-connection';
 import PermissionCategoryResponse from '../models/permissionCategoryResponseInterface';
 import  PermissionResult from '../models/PermissionResultInterface';
 import Permission from '../models/permissionInterface';
 import PermissionCategory from '../models/PermissionCategoryInterface';
+import db from './pg-connection';
 
 export default PermissionResult;
 
@@ -14,6 +14,7 @@ const rolePermissionsActionTable = 'role_permissions_action';
 
 interface QueryResult {
   name: string;
+  id: number;
 }
 
 export const getRoleAndPermissions = async (id: number) => {
@@ -55,23 +56,29 @@ export const getRoleAndPermissions = async (id: number) => {
       .leftJoin('permissions', 'role_permissions.permission_id', 'permissions.id')
       .where('user_roles.user_id', id)
       .andWhere('roles.disabled', false);
-      
-    const combinedRolesAndPermissionsRaw = [...profileRolesAndPermissions, ...userRolesAndPermissions];
+
+    const combinedRolesAndPermissionsRaw = [
+      ...profileRolesAndPermissions,
+      ...userRolesAndPermissions,
+    ];
 
     const rolesAndPermissions = combinedRolesAndPermissionsRaw.reduce((acc, row) => {
-      const { role_name, role_id, 
-        permission_id, 
-        permission_name, 
-        permission_description, 
-        permission_display_name, 
-        permission_path, 
+      const {
+        role_name,
+        role_id,
+        permission_id,
+        permission_name,
+        permission_description,
+        permission_display_name,
+        permission_path,
         permission_sort,
-        permission_disabled } = row;
-      
+        permission_disabled,
+      } = row;
+
       if (!acc[role_id]) {
         acc[role_id] = {
           role_name: role_name,
-          permissions: [] 
+          permissions: [],
         };
       }
       if (permission_id && !permission_disabled) {
@@ -81,7 +88,7 @@ export const getRoleAndPermissions = async (id: number) => {
           description: permission_description,
           display_name: permission_display_name,
           path: permission_path,
-          sort: permission_sort
+          sort: permission_sort,
         });
       }
 
@@ -100,7 +107,11 @@ export const getPermissions = async () => {
     const permissions = await db
       .select(`${tablePermissions}.*`, `${permissionCategoryTable}.name as category_name`)
       .from(tablePermissions)
-      .innerJoin(permissionCategoryTable, `${tablePermissions}.category_id`, `${permissionCategoryTable}.id`)
+      .innerJoin(
+        permissionCategoryTable,
+        `${tablePermissions}.category_id`,
+        `${permissionCategoryTable}.id`
+      )
       .orderBy(`${permissionCategoryTable}.name`, 'asc');
 
     const categorizedPermissions: PermissionCategoryResponse = {};
@@ -121,7 +132,7 @@ export const getPermissions = async () => {
 export const getActionPermissions = async (userId: number): Promise<Permission[]> => {
   try {
     const actionPermissions = await db
-      .select(`${tablePermissions}.name`)
+      .select(`${tablePermissions}.name`, `${tablePermissions}.id`)
       .from(userRolesTable)
       .innerJoin(rolePermissionsActionTable, `${userRolesTable}.role_id`, `${rolePermissionsActionTable}.role_id`)
       .innerJoin(tablePermissions, `${rolePermissionsActionTable}.permission_id`, `${tablePermissions}.id`)
@@ -129,6 +140,7 @@ export const getActionPermissions = async (userId: number): Promise<Permission[]
       
     const permissions: Permission[] = actionPermissions.map((permission: QueryResult) => ({
       name: permission.name,
+      id: permission.id,
     }));
 
     return permissions;
@@ -137,12 +149,11 @@ export const getActionPermissions = async (userId: number): Promise<Permission[]
     throw error;
   }
 };
-
 export const getPermissionByID = async (id: number) => {
   try {
-    const permission = db(tablePermissions).where('id',id).returning('*');
+    const permission = db(tablePermissions).where('id', id).returning('*');
     return permission;
-  } catch (error){
+  } catch (error) {
     console.error('Error in GenericRoleRepository.getPermissionByID:', error);
     throw new Error('Error fetching Permission');
   }
