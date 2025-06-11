@@ -68,6 +68,12 @@ export const createUser = async (req: Request, res: Response) => {
 export const updateUser = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+
+    if (isNotID(id)) {
+      handleError(res, new BadRequestError("El ID debe ser un número entero"))
+      return
+    }
+    
     const userProfileData: createUserRequest = req.body;
     const user = await userProfileInteractor.updateUser(id, userProfileData);
     sendSuccess(res, user, 'User was updated successfully');
