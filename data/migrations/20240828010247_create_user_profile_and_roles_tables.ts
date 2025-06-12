@@ -46,11 +46,6 @@ export async function up(knex: Knex): Promise<void> {
         .onDelete('CASCADE');
       table.primary(['role_id', 'permission_id']);
     })
-    .createTable('careers', function(table) {
-      table.increments('id').primary();
-      table.string('name').notNullable().unique();
-      table.timestamps(true, true);
-    }) 
     .createTable('user_profile', function (table) {
       table.increments('id').primary();
       table.string('username').notNullable().unique();
@@ -60,12 +55,6 @@ export async function up(knex: Knex): Promise<void> {
       table.string('password').notNullable();
       table.string('email').notNullable().unique();
       table.string('phone').notNullable();
-      table
-      .integer('career_id')
-      .unsigned()
-      .references('id')
-      .inTable('careers')
-      .onDelete('CASCADE');
       table.integer('role_id').unsigned().references('id').inTable('roles').onDelete('SET NULL');
       table.timestamps(true, true);
     })
@@ -129,6 +118,5 @@ export async function down(knex: Knex): Promise<void> {
     .dropTableIfExists('role_permissions')
     .dropTableIfExists('permissions')
     .dropTableIfExists('roles')
-    .dropTableIfExists('careers')
     .dropTableIfExists(tableNameRolePermissionsAction);
 }
