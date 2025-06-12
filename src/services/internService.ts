@@ -14,8 +14,15 @@ import {
 export const updateHours = async (internId: number, type: string, duration_hours: number) => {
   try {
     if (type === 'accepted') {
-      const { total_hours, pending_hours } = await getInternById(internId);
-      var newPendingHours = pending_hours - duration_hours;
+      if (duration_hours <= 0) {
+        throw new Error('Hours must be a positive number');
+      }
+      const { total_hours, pending_hours, completed_hours } = await getInternById(internId);
+
+      if (completed_hours + duration_hours > total_hours) {
+        throw new Error('Intern has already completed the required hours');
+      }
+      let newPendingHours = pending_hours - duration_hours;
       if (newPendingHours < 0) {
         newPendingHours = 0;
       }
@@ -28,7 +35,7 @@ export const updateHours = async (internId: number, type: string, duration_hours
     }
   } catch (error) {
     console.error('Error in InternsService.updateHours', error);
-    throw new Error('Error fetching Update Hours Intern');
+    throw error;
   }
 };
 
