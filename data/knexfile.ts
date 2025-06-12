@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+
 import config from '../src/config/config';
 
 dotenv.config();

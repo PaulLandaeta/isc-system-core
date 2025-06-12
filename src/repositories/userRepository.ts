@@ -75,11 +75,10 @@ export const createUser = async (userData: User) => {
 
     return newUser;
   } catch (error) {
-    console.error(error);  
+    console.error(error);
     throw error;
   }
 };
-
 
 export const getProfessors = async () => {
   try {
@@ -200,11 +199,7 @@ export const getUserById = async (userId: number) => {
     const user = await db('user_profile as u')
       .join('roles as r', 'u.role_id', '=', 'r.id')
       .where('u.id', userId)
-      .select(
-        'u.id',
-        'u.role_id',
-        'r.name as role'
-      )
+      .select('u.id', 'u.role_id', 'r.name as role')
       .first();
     return user || null;
   } catch (error) {

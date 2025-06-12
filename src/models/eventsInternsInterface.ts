@@ -1,4 +1,4 @@
-import { Dayjs } from "dayjs";
+import { Dayjs } from 'dayjs';
 
 interface EventInterns {
   id_intern: number;
@@ -11,4 +11,4 @@ interface EventInterns {
   updated_at: Dayjs;
 }
 
-export default EventInterns
+export default EventInterns;
