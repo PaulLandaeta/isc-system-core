@@ -68,12 +68,15 @@ export const createUser = async (userData: any) => {
 export const updateUser = async (userId: string, userProfileData: any) => {
   try {
     const updatedUserProfile = await UserProfileService.updateUserProfile(userId, userProfileData);
+
     if (userProfileData.isStudent) {
       await StudentService.handleStudentUpdate(userId, userProfileData);
-    } else {
+    } else if (userProfileData.degree && userProfileData.department && userProfileData.specialty) {
       await ProfessorService.handleProfessorUpdate(userId, userProfileData);
     }
+
     await UserProfileService.updateUserRoles(userId, userProfileData.roles);
+
     return updatedUserProfile;
   } catch (error) {
     console.error('Error updating user:', error);
