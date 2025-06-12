@@ -39,6 +39,12 @@ export const updateHoursController = async (req: Request, res: Response) => {
 export const getInternsByUserId = async (req: Request, res: Response) => {
   try {
     const { user_id } = req.params;
+
+    if (isNotID(user_id)) {
+      handleError(res, new BadRequestError("El ID debe ser un número entero"))
+      return
+    }
+
     const intern = await getInternByUserId(parseInt(user_id, 10));
 
     if (!intern) {
