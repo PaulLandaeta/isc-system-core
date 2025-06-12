@@ -94,6 +94,11 @@ export const getMyEventsInternController = async (req: Request, res: Response) =
   try {
     const { intern_id } = req.params;
     const events = await getMyEventsInternService(parseInt(intern_id, 10));
+    const numericId = parseInt(intern_id, 10);
+    const intern = await getInternById(numericId);
+    if (!intern) {
+      return res.status(404).json({ message: 'Intern not found' });
+    }
     if (!events) {
       return res.status(404).json({ success: false, message: 'Interns process not found' });
     }
