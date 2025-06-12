@@ -4,13 +4,7 @@ import * as userProfileInteractor from '../interactors/userProfileInteractor';
 import { sendCreated } from '../handlers/successHandler';
 import { sendSuccess } from '../handlers/successHandler';
 import { handleError } from '../handlers/errorHandler';
-import { BadRequestError } from '../errors/badRequestError';
 import createUserRequest from '../dtos/createUserRequest';
-
-const isNotID = (userIdString: string) => {
-  const userIdNumber = Number(userIdString);
-  return isNaN(userIdNumber) || userIdNumber<0 || userIdNumber%1!==0
-}
 
 export const deleteUser = async (req: Request, res: Response) => {
   const userId = req.params.id;
@@ -39,12 +33,6 @@ export const getAllUsers = async (req: Request, res: Response) => {
 export const getUser = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-
-    if (isNotID(id)) {
-      handleError(res, new BadRequestError("El ID debe ser un número entero"))
-      return
-    }
-
     const user = await userProfileInteractor.getUser(id);
     sendSuccess(res, user, 'User was obtained successfully');
   } catch (error) {
@@ -68,12 +56,6 @@ export const createUser = async (req: Request, res: Response) => {
 export const updateUser = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-
-    if (isNotID(id)) {
-      handleError(res, new BadRequestError("El ID debe ser un número entero"))
-      return
-    }
-    
     const userProfileData: createUserRequest = req.body;
     const user = await userProfileInteractor.updateUser(id, userProfileData);
     sendSuccess(res, user, 'User was updated successfully');
