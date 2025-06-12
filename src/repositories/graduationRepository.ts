@@ -111,12 +111,14 @@ export const updateDefense = async (defenseId: number, updatedData: Partial<Defe
     return await getDefenseById(defenseId);
   } catch (error) {
     console.error('Error in GraduationProcessRepository.updateDefense:', error);
-    throw new Error('Error updating defense');
+    throw new Error('Error updating defense'); 
   }
 };
 export const getDefenseById = async (defenseId: number) => {
   try {
-    const defense = await db('defense_details').where({ id: defenseId }).first();
+    const defense = await db('defense_details')
+      .where({ id: defenseId })
+      .first();
     return defense;
   } catch (error) {
     console.error('Error in GraduationProcessRepository.getDefenseById:', error);

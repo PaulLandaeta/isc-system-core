@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 
 import * as LoginInteractor from '../interactors/loginInteractor';
+import * as  MenuInteractor from '../interactors/menuInteractor';
 import * as PermissionsInteractor from '../interactors/permissionsInteractor';
 import { sendSuccess } from '../handlers/successHandler';
 import { handleError } from '../handlers/errorHandler';
@@ -14,11 +15,14 @@ const login = async (req: Request, res: Response) => {
     if (typeof resLogin === 'string') {
       throw new AuthenticationError(resLogin);
     }
-    // TODO: use when all permissions are set
-    const roles_permissions = await PermissionsInteractor.getRolesAndPermissions(resLogin.id);
+    // const roles_permissions = await PermissionsInteractor.getRolesAndPermissions(resLogin.id);
+    const menu = await MenuInteractor.getMenuForUser(resLogin.id);
+    const permission = await PermissionsInteractor.getActionPermissions(resLogin.id);
     const result = {
-      ...resLogin,
-      roles_permissions,
+    ...resLogin,
+    // roles_permissions,
+    menu,
+    permission
     };
     sendSuccess(res, result, 'Successfully logged in');
   } catch (error) {

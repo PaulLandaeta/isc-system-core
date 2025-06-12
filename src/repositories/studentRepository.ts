@@ -1,7 +1,7 @@
 import { buildLogger } from '../plugin/logger';
-import { HttpError } from '../errors/httpError';
-
 import db from './pg-connection';
+import { HttpError } from '../errors/httpError';
+import UserRole from '../constants/roles';
 
 const logger = buildLogger('studentRepository');
 

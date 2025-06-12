@@ -1,3 +1,4 @@
+import { getStudentByGraduation as fetchStudentsByGraduation } from './../repositories/studentRepository';
 import * as StudentService from '../services/studentService';
 import * as UserService from '../services/userService';
 import * as UserProfileService from '../services/userProfileService';
