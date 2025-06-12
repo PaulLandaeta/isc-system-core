@@ -54,8 +54,27 @@ export const getUser = async (req: Request, res: Response) => {
   }
 };
 
+const isValidUserInfo = (req: Request) => {
+  const { name, lastname, mothername, code, email, phone } = req.body
+  const regexNames = /^[a-zA-Z]{4,}$/;
+  const regexMail = /^[a-zA-Z0-9]{4,32}@[a-zA-Z]{1,10}\.[a-zA-Z]{1,4}$/;
+  const regexPhoneNumber = /^[0-9]{7,12}$/
+  const regexCode = /^[0-9]{4,6}$/
+
+  return regexNames.test(name) &&
+    regexNames.test(lastname) &&
+    regexNames.test(mothername) &&
+    regexMail.test(email) &&
+    regexCode.test(code) &&
+    regexPhoneNumber.test(phone)
+}
+
 export const createUser = async (req: Request, res: Response) => {
   try {
+    if (!isValidUserInfo(req)) {
+      handleError(res, new BadRequestError("Campos con información no válida"))
+      return
+    }
     const userData: createUserRequest = req.body;
     const newUser = await userProfileInteractor.createUser(userData);
     sendCreated(res, newUser, 'User created successfully');
