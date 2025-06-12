@@ -8,4 +8,4 @@ interface Intern extends User {
   completed_hours: number;
 }
 
-export default Intern
+export default Intern;

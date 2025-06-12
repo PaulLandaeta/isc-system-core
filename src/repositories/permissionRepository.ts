@@ -1,21 +1,11 @@
 import PermissionCategoryResponse from '../models/permissionCategoryResponseInterface';
-import  PermissionResult from '../models/PermissionResultInterface';
-import Permission from '../models/permissionInterface';
 import PermissionCategory from '../models/PermissionCategoryInterface';
+
 import db from './pg-connection';
-
-export default PermissionResult;
-
 const userProfileTable = 'user_profile';
 const userRolesTable = 'user_roles';
-const tablePermissions = 'permissions'
-const permissionCategoryTable = 'permission_categories';
-const rolePermissionsActionTable = 'role_permissions_action';
-
-interface QueryResult {
-  name: string;
-  id: number;
-}
+const tablePermissions = 'permissions';
+const permissionCatgeoryTable = 'permission_categories';
 
 export const getRoleAndPermissions = async (id: number) => {
   try {
@@ -105,14 +95,14 @@ export const getRoleAndPermissions = async (id: number) => {
 export const getPermissions = async () => {
   try {
     const permissions = await db
-      .select(`${tablePermissions}.*`, `${permissionCategoryTable}.name as category_name`)
+      .select(`${tablePermissions}.*`, `${permissionCatgeoryTable}.name as category_name`)
       .from(tablePermissions)
       .innerJoin(
-        permissionCategoryTable,
+        permissionCatgeoryTable,
         `${tablePermissions}.category_id`,
-        `${permissionCategoryTable}.id`
+        `${permissionCatgeoryTable}.id`
       )
-      .orderBy(`${permissionCategoryTable}.name`, 'asc');
+      .orderBy(`${permissionCatgeoryTable}.name`, 'asc');
 
     const categorizedPermissions: PermissionCategoryResponse = {};
     permissions.forEach((permission: PermissionCategory) => {
@@ -129,26 +119,6 @@ export const getPermissions = async () => {
   }
 };
 
-export const getActionPermissions = async (userId: number): Promise<Permission[]> => {
-  try {
-    const actionPermissions = await db
-      .select(`${tablePermissions}.name`, `${tablePermissions}.id`)
-      .from(userRolesTable)
-      .innerJoin(rolePermissionsActionTable, `${userRolesTable}.role_id`, `${rolePermissionsActionTable}.role_id`)
-      .innerJoin(tablePermissions, `${rolePermissionsActionTable}.permission_id`, `${tablePermissions}.id`)
-      .where(`${userRolesTable}.user_id`, userId);
-      
-    const permissions: Permission[] = actionPermissions.map((permission: QueryResult) => ({
-      name: permission.name,
-      id: permission.id,
-    }));
-
-    return permissions;
-  } catch (error) {
-    console.error('Error fetching action permissions:', error);
-    throw error;
-  }
-};
 export const getPermissionByID = async (id: number) => {
   try {
     const permission = db(tablePermissions).where('id', id).returning('*');
@@ -164,11 +134,7 @@ export const getMenuItemsByRoleId = async (roleId: number) => {
     const permissions = await db('role_permissions as rp')
       .join('permissions as p', 'p.id', 'rp.permission_id')
       .where('rp.role_id', roleId)
-      .select(
-        'p.display_name as name',
-        'p.path',
-        'rp.menu_order'
-      )
+      .select('p.display_name as name', 'p.path', 'rp.menu_order')
       .orderBy('rp.menu_order', 'asc');
     return permissions;
   } catch (error) {

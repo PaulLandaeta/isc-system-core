@@ -62,7 +62,6 @@ export const createGraduationProcess = async (
   return await GraduationProcessService.createGraduationProcess(newGraduationProcess);
 };
 
-
 export const getGraduationProcesses = async () => {
   const graduationProcesses = await GraduationProcessService.getGraduationProcesses();
   if (!graduationProcesses) {
