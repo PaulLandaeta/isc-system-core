@@ -48,6 +48,15 @@ export const createRol = async (req: Request, res: Response) => {
 };
 
 export const editRol = async (req: Request, res: Response) => {
+  const regexID = /^[0-9]{1,8}$/
+  if (!regexID.test(req.params.id)) {
+    handleError(res, new BadRequestError("El ID debe ser un número entero positivo"))
+    return
+  }
+  if (!isValidRoleData(req)) {
+    handleError(res, new BadRequestError("Datos inválidos, no ingrese números ni caracteres especiales"))
+    return
+  }
   const rolToEdit: Rol = req.body;
   const id: number = parseInt(req.params.id);
   try {
