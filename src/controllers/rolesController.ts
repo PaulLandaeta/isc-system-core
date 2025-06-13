@@ -5,6 +5,13 @@ import { sendSuccess } from '../handlers/successHandler';
 import * as RolesInteractor from '../interactors/rolesInteractor';
 import Rol from '../models/rol';
 import rolePermissionsRequest from '../models/rolePermissionRequestInterface';
+import { BadRequestError } from '../errors/badRequestError';
+
+const isValidRoleData = (req: Request) => {
+  const regex = /^[a-zA-Z]{4,16}$/
+  const {name, category} = req.body
+  return regex.test(name) && regex.test(category)
+}
 
 export const getRoles = async (req: Request, res: Response) => {
   const rolName = req.body.name;
@@ -22,6 +29,10 @@ export const getRoles = async (req: Request, res: Response) => {
 };
 
 export const createRol = async (req: Request, res: Response) => {
+  if (!isValidRoleData(req)) {
+    handleError(res, new BadRequestError("Datos inválidos, no ingrese números ni caracteres especiales"))
+    return
+  }
   const newRol: Rol = req.body;
   try {
     const rol = await RolesInteractor.createRol(newRol);
