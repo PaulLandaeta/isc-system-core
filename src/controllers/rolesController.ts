@@ -87,7 +87,10 @@ export const removePermission = async (req: Request, res: Response) => {
   try {
     const rolePermission = await RolesInteractor.removePermission(ides);
     if (!rolePermission) {
-      return res.status(404).json({ success: false, message: 'can not delet rol' });
+      return res.status(404).json({
+        success: false,
+        message: 'No se puede eliminar el permiso: el rol o la relación con el permiso no existe.',
+      });
     }
     sendSuccess(res, rolePermission, 'permission attach successfully');
   } catch (error) {
