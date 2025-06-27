@@ -9,7 +9,7 @@ export const getEventInterns = async (eventId: number) => {
     const listEventInterns = await db('events as e')
       .leftJoin(`${tableName} as ei`, 'ei.event_id', 'e.id')
       .leftJoin('interns as i', 'ei.intern_id', 'i.id')
-      .leftJoin('user_profile as up', 'i.user_profile_id', 'up.id')
+      .leftJoin('user_profile as up', 'i.id', 'up.id')
       .select(
         'e.id as id_events',
         'e.*',
