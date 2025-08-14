@@ -6,6 +6,7 @@ import { sendSuccess } from '../handlers/successHandler';
 import { handleError } from '../handlers/errorHandler';
 import createUserRequest from '../dtos/createUserRequest';
 
+
 export const deleteUser = async (req: Request, res: Response) => {
   const userId = req.params.id;
 
@@ -59,6 +60,18 @@ export const updateUser = async (req: Request, res: Response) => {
     const userProfileData: createUserRequest = req.body;
     const user = await userProfileInteractor.updateUser(id, userProfileData);
     sendSuccess(res, user, 'User was updated successfully');
+  } catch (error) {
+    if (error instanceof Error) {
+      handleError(res, error);
+    }
+  }
+};
+
+export const getPublicProfileById = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const profile = await userProfileInteractor.fetchStudentProfile(id);
+    sendSuccess(res, profile, 'Profile obtained successfully');
   } catch (error) {
     if (error instanceof Error) {
       handleError(res, error);

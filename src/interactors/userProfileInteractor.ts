@@ -3,7 +3,14 @@ import * as UserRoleService from '../services/userRoleService';
 import * as ProfessorService from '../services/professorService';
 import * as StudentService from '../services/studentService';
 import { NotFoundError } from '../errors/notFoundError';
+//
+import { StudentProfileResponseDTO } from '../dtos/studentProfileResponse';
+import { getUserProfilePublicById } from '../repositories/userProfileRepository';
 
+export const fetchStudentProfile = async (id: string): Promise<StudentProfileResponseDTO | null> => {
+  return await getUserProfilePublicById(id);
+};
+//
 export const deleteUser = async (userId: string) => {
   try {
     const user = await UserProfileService.getUserById(userId);

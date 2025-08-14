@@ -5,10 +5,23 @@ import * as PermissionInteractor from '../interactors/permissionsInteractor';
 import UserRole from '../constants/roles';
 import UserResponse from '../models/genericUserResponse';
 import { buildLogger } from '../plugin/logger';
-import { NotFoundError } from '../errors/notFoundError';
 import config from '../config/config';
 
 import * as AuthenticationService from './authenticationService';
+
+// 
+import { StudentProfileResponseDTO } from '../dtos/studentProfileResponse';
+import { getUserProfilePublicById } from '../repositories/userProfileRepository';
+import { NotFoundError } from '../errors/notFoundError';
+
+export const getPublicProfileById = async (userId: string): Promise<StudentProfileResponseDTO> => {
+  const profile = await getUserProfilePublicById(userId);
+  if (!profile) {
+    throw new NotFoundError(`Profile not found for id ${userId}`);
+  }
+  return profile;
+};
+//
 
 const logger = buildLogger('userProfileService');
 const { defaultUserPassword } = config;
