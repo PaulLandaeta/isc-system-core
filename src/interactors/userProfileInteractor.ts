@@ -45,11 +45,7 @@ export const createUser = async (userData: any) => {
       throw new Error('Error creating user');
     }
     const { id } = newUser;
-    const { isStudent, roles } = userData;
-    const userRole = await UserRoleService.createUserRoles(id, roles);
-    if (!userRole) {
-      throw new Error('Error creating the user roles');
-    }
+    const { isStudent } = userData;
     const combinedData = { ...userData, id };
 
     if (isStudent) {
