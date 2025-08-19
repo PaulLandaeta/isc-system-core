@@ -155,3 +155,13 @@ export const getProcessByName = async (projectName: string) => {
     throw new Error('Error fetching Process by name');
   }
 };
+
+export const getProcessByTutorId = async (tutorId: string) => {
+  try {
+    const processes = await db(tableName).where({ tutor_id: tutorId });
+    return processes;
+  } catch (error) {
+    console.error('Error in GraduationProcessRepository.getProcessByTutorId:', error);
+    throw new Error('Error fetching Process by tutor ID');
+  }
+};

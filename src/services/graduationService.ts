@@ -55,3 +55,7 @@ export const getProcessByStudentId = async (studentId: number) => {
 export const getProcessByName = async (projectName: string) => {
   return GraduationProcessRepository.getProcessByName(projectName);
 };
+
+export const getProcessByTutorId = async (tutorId: string) => {
+  return GraduationProcessRepository.getProcessByTutorId(tutorId);
+}
