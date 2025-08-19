@@ -3,6 +3,7 @@ import * as UserRoleService from '../services/userRoleService';
 import * as ProfessorService from '../services/professorService';
 import * as StudentService from '../services/studentService';
 import { NotFoundError } from '../errors/notFoundError';
+import db from '../repositories/pg-connection';
 
 export const deleteUser = async (userId: string) => {
   try {
@@ -11,7 +12,28 @@ export const deleteUser = async (userId: string) => {
     if (!user) {
       throw new NotFoundError('User not found');
     }
-
+    if (user.role_id === 1) {
+      const error = new Error("You cannot delete users with the 'admin' role. This role is protected.");
+      (error as any).statusCode = 403;
+      throw error;
+    }
+    if (user.role_id === 2) {
+      await db('graduation_process')
+        .where({ tutor_id: userId })
+        .update({ tutor_id: null });
+    
+      await db('graduation_process')
+        .where({ reviewer_id: userId })
+        .update({ reviewer_id: null });
+    
+      await db('professors').where({ id: userId }).delete();
+    }
+    if (user.role_id === 3) {
+      await db('graduation_process')
+        .where({ student_id: userId }).delete();
+      
+      await db('students').where({ id: userId }).delete();
+    }
     await UserProfileService.deleteUser(parseInt(userId));
     await UserRoleService.deleteUserRole(userId);
   } catch (error) {
@@ -45,11 +67,7 @@ export const createUser = async (userData: any) => {
       throw new Error('Error creating user');
     }
     const { id } = newUser;
-    const { isStudent, roles } = userData;
-    const userRole = await UserRoleService.createUserRoles(id, roles);
-    if (!userRole) {
-      throw new Error('Error creating the user roles');
-    }
+    const { isStudent } = userData;
     const combinedData = { ...userData, id };
 
     if (isStudent) {

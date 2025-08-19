@@ -9,6 +9,7 @@ import { deleteProfessorService } from '../services/professorService';
 import { getThesisStudentsService } from '../services/professorService';
 import { BadRequestError } from '../errors/badRequestError';
 import { HttpError } from '../errors/httpError';
+import { ProfessorProfileResponseDTO } from 'src/dtos/professorProfileResponse';
 
 const logger = buildLogger('professorController');
 
@@ -102,3 +103,42 @@ export const getThesisStudentsController = async (req: Request, res: Response) =
     }
   }
 };
+
+export const getProfessorProfileController = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  try {
+    const data = await ProfessorInteractor.getProfessorProfile(id);
+    const tutorias: any[] = [];
+
+    data.graduationData.forEach((tutoria: any) => {
+      const row = {
+        id: tutoria.id,
+        id_estudiante: tutoria.student_id,
+        nombre_proyecto: tutoria.project_name,
+        semestre: tutoria.period,
+        hasSeminarEnroll: tutoria.seminar_enrollment || false,
+        hasTutorLetter: tutoria.tutor_letter || false,
+        hasTutorApproval: tutoria.tutor_approval || false,
+        hasReviewerLetter: tutoria.reviewer_letter || false,
+        hasReviewerApproval: tutoria.reviewer_approval || false,
+      }
+      tutorias.push(row);
+    });
+
+    const response: ProfessorProfileResponseDTO = {
+      name: data.name,
+      lastname: data.lastname,
+      mothername: data.mothername,
+      phone: data.phone,
+      email: data.email,
+      tutorias: tutorias,
+    }
+
+    sendSuccess(res, response, 'Perfil del profesor obtenido correctamente');
+  } catch (error) {
+    logger.error(`Error in getProfessorProfileController for id ${id}: ${error}`);
+    if (error instanceof Error) {
+      handleError(res, error);
+    }
+  }
+}
