@@ -15,4 +15,9 @@ router.get(
   checkUserAuth,
   ProfessorController.getThesisStudentsController
 );
+router.get(
+  '/profile/:id',
+  checkUserAuth,
+  ProfessorController.getProfessorProfileController
+);
 export default router;

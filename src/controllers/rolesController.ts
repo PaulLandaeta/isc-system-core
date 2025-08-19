@@ -12,6 +12,7 @@ const isValidRoleData = (req: Request) => {
   const {name, category} = req.body
   return regex.test(name) && regex.test(category)
 }
+const regexRoleID = /^[0-9]+$/
 
 export const getRoles = async (req: Request, res: Response) => {
   const rolName = req.body.name;
@@ -73,6 +74,11 @@ export const editRol = async (req: Request, res: Response) => {
 };
 
 export const disableRol = async (req: Request, res: Response) => {
+  if (!regexRoleID.test(req.params.id)) {
+    handleError(res, new BadRequestError("El ID debe ser un número entero positivo"))
+    return
+  }
+  
   const id: number = parseInt(req.params.id);
   try {
     const disabledRol = await RolesInteractor.disableRol(id);
