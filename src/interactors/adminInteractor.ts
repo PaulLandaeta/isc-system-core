@@ -10,6 +10,7 @@ export const createAdmin = async (studentData: createUserRequest) => {
     const newStudent = await createUser({
       ...studentData,
       role_id: studentData.role_id ?? 1,
+
     });
     if (!newStudent) {
       throw new Error('Error creating the admin');
