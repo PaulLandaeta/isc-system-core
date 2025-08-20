@@ -102,3 +102,15 @@ export const updateUser = async (req: Request, res: Response) => {
     }
   }
 };
+
+export const getPublicProfileById = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const profile = await userProfileInteractor.fetchStudentProfile(id);
+    sendSuccess(res, profile, 'Profile obtained successfully');
+  } catch (error) {
+    if (error instanceof Error) {
+      handleError(res, error);
+    }
+  }
+};

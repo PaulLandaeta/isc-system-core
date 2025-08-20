@@ -1,10 +1,12 @@
 import UserResponse from '../models/genericUserResponse';
 import { userProfileInterface } from '../models/userProfile';
 import { buildLogger } from '../plugin/logger';
+import { StudentProfileResponseDTO } from '../dtos/studentProfileResponse';
+
 
 import db from './pg-connection';
 
-const logger = buildLogger('professorRepository');
+const logger = buildLogger('userProfileRepository');
 
 const TABLE_NAME = 'user_profile';
 
@@ -66,6 +68,38 @@ export const updateUserProfileRole = async (userId: string, roleId: number) => {
     await db(TABLE_NAME).where('id', userId).update({ role_id: roleId });
   } catch (error) {
     console.log('Error updating user profile role:', error);
+    throw error;
+  }
+};
+
+
+export const getUserProfilePublicById = async (userId: string): Promise<StudentProfileResponseDTO | null> => {
+  try {
+    const row = await db(`${TABLE_NAME} as up`)
+      .leftJoin('roles as r', 'r.id', 'up.role_id')
+      .select(
+        'up.id',
+        'up.name',
+        db.raw(`'' as career`),   
+        'up.phone',
+        'up.email',
+        db.raw(`COALESCE(r.name, 'unknown') as role`)
+      )
+      .where('up.id', userId)
+      .first();
+
+    if (!row) return null;
+
+    return {
+      id: String(row.id),
+      name: row.name,
+      career: row.career,
+      phone: row.phone,
+      email: row.email,
+      role: row.role,
+    };
+  } catch (error) {
+    console.error('Error fetching public user profile by id:', error);
     throw error;
   }
 };

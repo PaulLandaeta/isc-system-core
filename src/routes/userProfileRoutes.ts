@@ -15,4 +15,5 @@ router.route('/').get(checkUserAuth, UserProfileController.getAllUsers);
 router.route('/:id').get(checkUserAuth, UserProfileController.getUser);
 router.route('/').post(checkUserAuth, UserProfileController.createUser);
 router.route('/:id').put(checkUserAuth, UserProfileController.updateUser);
+router.get('/profile/:id', checkUserAuth, UserProfileController.getPublicProfileById);
 export default router;

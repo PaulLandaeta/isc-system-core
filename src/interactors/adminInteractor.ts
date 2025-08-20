@@ -9,7 +9,6 @@ export const createAdmin = async (studentData: createUserRequest) => {
   try {
     const newStudent = await createUser({
       ...studentData,
-
       role_id: studentData.role_id ?? 1,
 
     });

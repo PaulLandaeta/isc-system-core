@@ -22,3 +22,4 @@ export const deleteUserRole = async (userId: string) => {
     throw error;
   }
 };
+
