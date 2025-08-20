@@ -10,6 +10,11 @@ import * as RolesService from '../services/rolesService';
 
 import { BadRequestError } from '../errors/badRequestError';
 
+const isValidRoleData = (req: Request) => {
+  const regex = /^[a-zA-Z]{4,16}$/
+  const {name, category} = req.body
+  return regex.test(name) && regex.test(category)
+}
 const regexRoleID = /^[0-9]+$/
 
 
@@ -29,6 +34,10 @@ export const getRoles = async (req: Request, res: Response) => {
 };
 
 export const createRol = async (req: Request, res: Response) => {
+  if (!isValidRoleData(req)) {
+    handleError(res, new BadRequestError("Datos inválidos, no ingrese números ni caracteres especiales"))
+    return
+  }
   const newRol: Rol = req.body;
   try {
     const rol = await RolesInteractor.createRol(newRol);
@@ -44,6 +53,15 @@ export const createRol = async (req: Request, res: Response) => {
 };
 
 export const editRol = async (req: Request, res: Response) => {
+  const regexID = /^[0-9]{1,8}$/
+  if (!regexID.test(req.params.id)) {
+    handleError(res, new BadRequestError("El ID debe ser un número entero positivo"))
+    return
+  }
+  if (!isValidRoleData(req)) {
+    handleError(res, new BadRequestError("Datos inválidos, no ingrese números ni caracteres especiales"))
+    return
+  }
   const rolToEdit: Rol = req.body;
   const id: number = parseInt(req.params.id);
   try {
