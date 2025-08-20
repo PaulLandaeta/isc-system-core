@@ -7,4 +7,5 @@ export interface userProfileInterface {
   password: string;
   mothername?: string;
   phone: string;
+  role_id: number;
 }

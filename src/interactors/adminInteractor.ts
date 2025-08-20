@@ -9,7 +9,9 @@ export const createAdmin = async (studentData: createUserRequest) => {
   try {
     const newStudent = await createUser({
       ...studentData,
-      role_id: studentData.role_id ?? adminRole,
+
+      role_id: studentData.role_id ?? 1,
+
     });
     if (!newStudent) {
       throw new Error('Error creating the admin');
@@ -53,7 +55,10 @@ export const createUser = async (userData: genericUser) => {
       throw new Error('El teléfono debe tener entre 7 y 10 dígitos numéricos.');
     }
 
-    const newUser = await createUserService(userData);
+    const newUser = await createUserService({
+      ...userData,
+      role_id: userData.role_id ?? 1,
+    });
 
     if (!newUser) {
       throw new Error('Error creating the User');
