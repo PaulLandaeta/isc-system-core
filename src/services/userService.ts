@@ -74,6 +74,6 @@ export const getProfessorById = async (id: string) => {
     return professor;
   } catch (error) {
     console.error('Error in getProfessorById interactor:', error);
-    throw new Error('Error fetching the professor');
+    throw error;
   }
 };
