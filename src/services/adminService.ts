@@ -24,6 +24,6 @@ export const createUserService = async (user: genericUser) => {
     });
   } catch (error) {
     console.log('Error creating User');
-    throw Error('Error creating User');
+    throw error;
   }
 };
