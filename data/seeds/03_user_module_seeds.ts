@@ -10,6 +10,7 @@ export const seed = async (knex: Knex): Promise<void> => {
   await knex(userProfileTable).insert([
     {
       id: 1,
+      username: 'admin',
       name: 'Jhonny',
       lastname: 'Cabezas',
       mothername: 'Gomez',
@@ -21,6 +22,7 @@ export const seed = async (knex: Knex): Promise<void> => {
     },
     {
       id: 2,
+      username: 'professor',
       name: 'Alexis',
       lastname: 'Marechal',
       mothername: 'Marin',
@@ -33,6 +35,7 @@ export const seed = async (knex: Knex): Promise<void> => {
 
     {
       id: 21,
+      username: 'EmmaDev',
       name: 'Emma',
       lastname: 'Silva',
       mothername: 'Campos',
@@ -44,6 +47,7 @@ export const seed = async (knex: Knex): Promise<void> => {
     },
     {
       id: 22,
+      username: 'TomiTech',
       name: 'Tomás',
       lastname: 'Muñoz',
       mothername: 'Riquelme',
@@ -55,6 +59,7 @@ export const seed = async (knex: Knex): Promise<void> => {
     },
     {
       id: 23,
+      username: 'IsaCloud',
       name: 'Isabela',
       lastname: 'Cáceres',
       mothername: 'Peña',
@@ -66,6 +71,7 @@ export const seed = async (knex: Knex): Promise<void> => {
     },
     {
       id: 24,
+      username: 'FranSoft',
       name: 'Francisco',
       lastname: 'Ortega',
       mothername: 'Reyes',
@@ -77,6 +83,7 @@ export const seed = async (knex: Knex): Promise<void> => {
     },
     {
       id: 6,
+      username: 'ZeinTonconi',
       name: 'Zein',
       lastname: 'Tonconi',
       mothername: 'Mendoza',
@@ -88,6 +95,7 @@ export const seed = async (knex: Knex): Promise<void> => {
     },
     {
       id: 7,
+      username: 'Maridela',
       name: 'Mariana',
       lastname: 'Del',
       mothername: 'Arroyo',
@@ -99,6 +107,7 @@ export const seed = async (knex: Knex): Promise<void> => {
     },
     {
       id: 8,
+      username: 'TotoCae',
       name: 'Camilo',
       lastname: 'Zuleta',
       mothername: 'Wolff',
@@ -111,6 +120,7 @@ export const seed = async (knex: Knex): Promise<void> => {
 
     {
       id: 9,
+      username: 'LunaMar',
       name: 'María',
       lastname: 'López',
       mothername: 'Ramírez',
@@ -122,6 +132,7 @@ export const seed = async (knex: Knex): Promise<void> => {
     },
     {
       id: 10,
+      username: 'JaviPro',
       name: 'Javier',
       lastname: 'Martínez',
       mothername: 'Gómez',
@@ -133,6 +144,7 @@ export const seed = async (knex: Knex): Promise<void> => {
     },
     {
       id: 11,
+      username: 'ValeChill',
       name: 'Valentina',
       lastname: 'Pérez',
       mothername: 'Morales',
@@ -144,6 +156,7 @@ export const seed = async (knex: Knex): Promise<void> => {
     },
     {
       id: 12,
+      username: 'AndresZeta',
       name: 'Andrés',
       lastname: 'Zamora',
       mothername: 'Cárdenas',
@@ -155,6 +168,7 @@ export const seed = async (knex: Knex): Promise<void> => {
     },
     {
       id: 13,
+      username: 'CrisWave',
       name: 'Cristina',
       lastname: 'Fernández',
       mothername: 'Díaz',
@@ -166,6 +180,7 @@ export const seed = async (knex: Knex): Promise<void> => {
     },
     {
       id: 14,
+      username: 'NicoDev',
       name: 'Nicolás',
       lastname: 'Gutiérrez',
       mothername: 'Salinas',
@@ -177,6 +192,7 @@ export const seed = async (knex: Knex): Promise<void> => {
     },
     {
       id: 15,
+      username: 'SofiCode',
       name: 'Sofía',
       lastname: 'Rojas',
       mothername: 'Delgado',
@@ -189,6 +205,7 @@ export const seed = async (knex: Knex): Promise<void> => {
 
     {
       id: 3,
+      username: 'intern',
       name: 'INTERN-ACME',
       lastname: 'Marechal',
       mothername: 'Marin',
@@ -201,6 +218,7 @@ export const seed = async (knex: Knex): Promise<void> => {
 
     {
       id: 16,
+      username: 'LeoByte',
       name: 'Leandro',
       lastname: 'Castro',
       mothername: 'Villalobos',
@@ -212,6 +230,7 @@ export const seed = async (knex: Knex): Promise<void> => {
     },
     {
       id: 17,
+      username: 'AnaSpark',
       name: 'Ana',
       lastname: 'Torres',
       mothername: 'Mendoza',
@@ -223,6 +242,7 @@ export const seed = async (knex: Knex): Promise<void> => {
     },
     {
       id: 18,
+      username: 'DiegoNet',
       name: 'Diego',
       lastname: 'Ramírez',
       mothername: 'Lagos',
@@ -234,6 +254,7 @@ export const seed = async (knex: Knex): Promise<void> => {
     },
     {
       id: 19,
+      username: 'ClauUX',
       name: 'Claudia',
       lastname: 'Navarro',
       mothername: 'Paredes',
@@ -245,6 +266,7 @@ export const seed = async (knex: Knex): Promise<void> => {
     },
     {
       id: 20,
+      username: 'FedeFlow',
       name: 'Federico',
       lastname: 'Herrera',
       mothername: 'Soto',
@@ -257,6 +279,7 @@ export const seed = async (knex: Knex): Promise<void> => {
 
     {
       id: 4,
+      username: 'director',
       name: 'DIRECTOR-ACME',
       lastname: 'Marechal',
       mothername: 'Marin',
@@ -268,6 +291,7 @@ export const seed = async (knex: Knex): Promise<void> => {
     },
     {
       id: 5,
+      username: 'supervisor',
       name: 'SUPERVISOR-ACME',
       lastname: 'Marechal',
       mothername: 'Marin',
