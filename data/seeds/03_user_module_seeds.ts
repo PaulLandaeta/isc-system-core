@@ -17,7 +17,7 @@ export const seed = async (knex: Knex): Promise<void> => {
       password: '$2a$10$qv1IXHI4lhio8vJGS6O1UuIzTqTpdHY9dz5gyA9D5PFb1pGxJv3Kq',
       email: 'admin@gmail.com',
       phone: '77665544',
-      role_id: 1,
+      rc_id: 1,
       code: '77577',
     },
     {
@@ -29,7 +29,7 @@ export const seed = async (knex: Knex): Promise<void> => {
       password: '$2a$10$qv1IXHI4lhio8vJGS6O1UuIzTqTpdHY9dz5gyA9D5PFb1pGxJv3Kq',
       email: 'alexismarechal@upb.edu',
       phone: '78945612',
-      role_id: 2,
+      rc_id: 2,
       code: '77586',
     },
 
@@ -42,7 +42,7 @@ export const seed = async (knex: Knex): Promise<void> => {
       password: '$2a$10$qv1IXHI4lhio8vJGS6O1UuIzTqTpdHY9dz5gyA9D5PFb1pGxJv3Kq',
       email: 'emma.silva@gmail.com',
       phone: '45678912',
-      role_id: 2,
+      rc_id: 2,
       code: '45785',
     },
     {
@@ -54,7 +54,7 @@ export const seed = async (knex: Knex): Promise<void> => {
       password: '$2a$10$qv1IXHI4lhio8vJGS6O1UuIzTqTpdHY9dz5gyA9D5PFb1pGxJv3Kq',
       email: 'tomas.munoz@gmail.com',
       phone: '78962541',
-      role_id: 2,
+      rc_id: 2,
       code: '37482',
     },
     {
@@ -66,7 +66,7 @@ export const seed = async (knex: Knex): Promise<void> => {
       password: '$2a$10$qv1IXHI4lhio8vJGS6O1UuIzTqTpdHY9dz5gyA9D5PFb1pGxJv3Kq',
       email: 'isabela.caceres@gmail.com',
       phone: '78945632',
-      role_id: 2,
+      rc_id: 2,
       code: '54670',
     },
     {
@@ -78,7 +78,7 @@ export const seed = async (knex: Knex): Promise<void> => {
       password: '$2a$10$qv1IXHI4lhio8vJGS6O1UuIzTqTpdHY9dz5gyA9D5PFb1pGxJv3Kq',
       email: 'francisco.ortega@gmail.com',
       phone: '45612378',
-      role_id: 2,
+      rc_id: 2,
       code: '12894',
     },
     {
@@ -90,7 +90,7 @@ export const seed = async (knex: Knex): Promise<void> => {
       password: '$2a$10$qv1IXHI4lhio8vJGS6O1UuIzTqTpdHY9dz5gyA9D5PFb1pGxJv3Kq',
       email: 'zeintonconi@gmail.com',
       phone: '78936985',
-      role_id: 3,
+      rc_id: 3,
       code: '78945',
     },
     {
@@ -102,7 +102,7 @@ export const seed = async (knex: Knex): Promise<void> => {
       password: '$2a$10$qv1IXHI4lhio8vJGS6O1UuIzTqTpdHY9dz5gyA9D5PFb1pGxJv3Kq',
       email: 'marimar@gmail.com',
       phone: '17485296',
-      role_id: 3,
+      rc_id: 3,
       code: '45645',
     },
     {
@@ -114,7 +114,7 @@ export const seed = async (knex: Knex): Promise<void> => {
       password: '$2a$10$qv1IXHI4lhio8vJGS6O1UuIzTqTpdHY9dz5gyA9D5PFb1pGxJv3Kq',
       email: 'camilo@gmail.com',
       phone: '67119291',
-      role_id: 3,
+      rc_id: 3,
       code: '77277',
     },
 
@@ -127,7 +127,7 @@ export const seed = async (knex: Knex): Promise<void> => {
       password: '$2a$10$qv1IXHI4lhio8vJGS6O1UuIzTqTpdHY9dz5gyA9D5PFb1pGxJv3Kq',
       email: 'maria.lopez@gmail.com',
       phone: '95175359',
-      role_id: 3,
+      rc_id: 3,
       code: '48329',
     },
     {
@@ -139,7 +139,7 @@ export const seed = async (knex: Knex): Promise<void> => {
       password: '$2a$10$qv1IXHI4lhio8vJGS6O1UuIzTqTpdHY9dz5gyA9D5PFb1pGxJv3Kq',
       email: 'javier.martinez@gmail.com',
       phone: '85246713',
-      role_id: 3,
+      rc_id: 3,
       code: '29574',
     },
     {
@@ -151,7 +151,7 @@ export const seed = async (knex: Knex): Promise<void> => {
       password: '$2a$10$qv1IXHI4lhio8vJGS6O1UuIzTqTpdHY9dz5gyA9D5PFb1pGxJv3Kq',
       email: 'valentina.perez@gmail.com',
       phone: '78925864',
-      role_id: 3,
+      rc_id: 3,
       code: '13785',
     },
     {
@@ -163,7 +163,7 @@ export const seed = async (knex: Knex): Promise<void> => {
       password: '$2a$10$qv1IXHI4lhio8vJGS6O1UuIzTqTpdHY9dz5gyA9D5PFb1pGxJv3Kq',
       email: 'andres.zamora@gmail.com',
       phone: '47895162',
-      role_id: 3,
+      rc_id: 3,
       code: '66014',
     },
     {
@@ -175,7 +175,7 @@ export const seed = async (knex: Knex): Promise<void> => {
       password: '$2a$10$qv1IXHI4lhio8vJGS6O1UuIzTqTpdHY9dz5gyA9D5PFb1pGxJv3Kq',
       email: 'cristina.fernandez@gmail.com',
       phone: '25865430',
-      role_id: 3,
+      rc_id: 3,
       code: '52963',
     },
     {
@@ -187,7 +187,7 @@ export const seed = async (knex: Knex): Promise<void> => {
       password: '$2a$10$qv1IXHI4lhio8vJGS6O1UuIzTqTpdHY9dz5gyA9D5PFb1pGxJv3Kq',
       email: 'nicolas.gutierrez@gmail.com',
       phone: '78541203',
-      role_id: 3,
+      rc_id: 3,
       code: '84271',
     },
     {
@@ -199,7 +199,7 @@ export const seed = async (knex: Knex): Promise<void> => {
       password: '$2a$10$qv1IXHI4lhio8vJGS6O1UuIzTqTpdHY9dz5gyA9D5PFb1pGxJv3Kq',
       email: 'sofia.rojas@gmail.com',
       phone: '15995145',
-      role_id: 3,
+      rc_id: 3,
       code: '31986',
     },
 
@@ -212,7 +212,7 @@ export const seed = async (knex: Knex): Promise<void> => {
       password: '$2a$10$qv1IXHI4lhio8vJGS6O1UuIzTqTpdHY9dz5gyA9D5PFb1pGxJv3Kq',
       email: 'intern@gmail.com',
       phone: '78935745',
-      role_id: 4,
+      rc_id: 3,
       code: '12345',
     },
 
@@ -225,7 +225,7 @@ export const seed = async (knex: Knex): Promise<void> => {
       password: '$2a$10$qv1IXHI4lhio8vJGS6O1UuIzTqTpdHY9dz5gyA9D5PFb1pGxJv3Kq',
       email: 'leandro.castro@gmail.com',
       phone: '78946502',
-      role_id: 4,
+      rc_id: 3,
       code: '14783',
     },
     {
@@ -237,7 +237,7 @@ export const seed = async (knex: Knex): Promise<void> => {
       password: '$2a$10$qv1IXHI4lhio8vJGS6O1UuIzTqTpdHY9dz5gyA9D5PFb1pGxJv3Kq',
       email: 'ana.torres@gmail.com',
       phone: '74103568',
-      role_id: 4,
+      rc_id: 3,
       code: '98640',
     },
     {
@@ -249,7 +249,7 @@ export const seed = async (knex: Knex): Promise<void> => {
       password: '$2a$10$qv1IXHI4lhio8vJGS6O1UuIzTqTpdHY9dz5gyA9D5PFb1pGxJv3Kq',
       email: 'diego.ramirez@gmail.com',
       phone: '45625895',
-      role_id: 4,
+      rc_id: 3,
       code: '30152',
     },
     {
@@ -261,7 +261,7 @@ export const seed = async (knex: Knex): Promise<void> => {
       password: '$2a$10$qv1IXHI4lhio8vJGS6O1UuIzTqTpdHY9dz5gyA9D5PFb1pGxJv3Kq',
       email: 'claudia.navarro@gmail.com',
       phone: '25896314',
-      role_id: 4,
+      rc_id: 3,
       code: '77420',
     },
     {
@@ -273,7 +273,7 @@ export const seed = async (knex: Knex): Promise<void> => {
       password: '$2a$10$qv1IXHI4lhio8vJGS6O1UuIzTqTpdHY9dz5gyA9D5PFb1pGxJv3Kq',
       email: 'federico.herrera@gmail.com',
       phone: '45602532',
-      role_id: 4,
+      rc_id: 3,
       code: '65891',
     },
 
@@ -286,7 +286,7 @@ export const seed = async (knex: Knex): Promise<void> => {
       password: '$2a$10$qv1IXHI4lhio8vJGS6O1UuIzTqTpdHY9dz5gyA9D5PFb1pGxJv3Kq',
       email: 'director@gmail.com',
       phone: '78902587',
-      role_id: 5,
+      rc_id: 2,
       code: '12594',
     },
     {
@@ -298,7 +298,7 @@ export const seed = async (knex: Knex): Promise<void> => {
       password: '$2a$10$qv1IXHI4lhio8vJGS6O1UuIzTqTpdHY9dz5gyA9D5PFb1pGxJv3Kq',
       email: 'supervisor@gmail.com',
       phone: '77777777',
-      role_id: 6,
+      rc_id: 3,
       code: '56478',
     },
   ]);
