@@ -5,40 +5,39 @@ const emailLowerIndex = 'idx_user_profile_email_lower';
 const sessionFunction = 'fn_get_user_session_by_email';
 
 export async function up(knex: Knex): Promise<void> {
-  // Índice para búsqueda case-insensitive por email
   await knex.raw(`
     create index if not exists ${emailLowerIndex}
     on ${usersTable}(lower(email));
   `);
 
-  // Función para obtener datos de sesión por email
   await knex.raw(`
-    create or replace function ${sessionFunction}(p_email text)
+    create function ${sessionFunction}(p_email text)
     returns table (
-      "user" jsonb,
+      user_id       int,
+      user_email    text,
+      user_role_id  int,
       password_hash text,
-      permissions jsonb,
-      menu jsonb
+      permissions   jsonb,
+      menu          jsonb
     )
     language sql
     stable
     as $$
       with u as (
         select
-          id,
-          email,
-          role_id,
-          password
+          id       as user_id,
+          email    as user_email,
+          role_id  as user_role_id,
+          password as password_hash
         from ${usersTable}
         where lower(email) = lower(p_email)
         limit 1
       )
       select
-        -- Exponemos un objeto user sin la contraseña
-        (to_jsonb(u) - 'password') as "user",
-        -- Mapeamos password -> password_hash para el backend (bcrypt)
-        u.password as password_hash,
-        -- Por ahora, permisos y menú vacíos hasta integrar la FN real
+        u.user_id,
+        u.user_email,
+        u.user_role_id,
+        u.password_hash,
         '[]'::jsonb as permissions,
         '[]'::jsonb as menu
       from u;
