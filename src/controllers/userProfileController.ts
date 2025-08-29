@@ -68,9 +68,10 @@ const isValidUserInfo = (req: Request) => {
     regexNames.test(mothername) &&
     regexMail.test(email) &&
     regexCode.test(code) &&
-    regexPhoneNumber.test(phone);
+    regexPhoneNumber.test(phone)
   );
 };
+
 
 export const createUser = async (req: Request, res: Response) => {
   try {
