@@ -11,6 +11,6 @@ const router = Router();
 
 router.route('/login').post(validateBody(loginSchema), login);
 
-router.route('/mePermissions/:id').get(validateParams(paramIdSchema), mePermissions)
+router.route('/mePermissions/:id').get(checkUserAuth, validateParams(paramIdSchema), mePermissions)
 
 export default router;
