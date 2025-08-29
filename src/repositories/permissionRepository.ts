@@ -142,3 +142,12 @@ export const getMenuItemsByRoleId = async (roleId: number) => {
     throw new Error('Error fetching menu items');
   }
 };
+
+export const getUserPermissionsAndMenu = async (userId: number) => {
+  const result = await db.raw(
+    'SELECT * FROM get_user_permissions_and_menu(?)',
+    [userId]
+  );
+  const data = result.rows?.[0].get_user_permissions_and_menu
+  return data
+}

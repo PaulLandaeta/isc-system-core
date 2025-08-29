@@ -2,12 +2,13 @@ import { Request, Response } from 'express';
 
 import * as LoginInteractor from '../interactors/loginInteractor';
 import * as PermissionsInteractor from '../interactors/permissionsInteractor';
+import * as AuthInteractor from '../interactors/authInteractor';
 import { sendSuccess } from '../handlers/successHandler';
 import { handleError } from '../handlers/errorHandler';
 import { AuthenticationError } from '../errors/authenticationError';
 import UserResponse from '../models/userResponseInterface';
 
-const login = async (req: Request, res: Response) => {
+export const login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
     const resLogin: string | UserResponse = await LoginInteractor.login(email, password);
@@ -28,4 +29,14 @@ const login = async (req: Request, res: Response) => {
   }
 };
 
-export default login;
+export const mePermissions = async (req: Request, res: Response) => {
+  try {
+    const id = parseInt(req.params.id)
+    const permissions = await AuthInteractor.getUserPermissionsAndMenu(id);
+    sendSuccess(res, permissions, 'Permissions and Menu retrieved successfully')
+  } catch (error) {
+    if (error instanceof Error) {
+      handleError(res, error);
+    }
+  }
+}
