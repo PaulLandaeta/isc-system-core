@@ -9,7 +9,6 @@ export async function up(knex: Knex): Promise<void> {
     BEGIN
       WITH user_perms AS (
         SELECT DISTINCT
-          p.id AS permission_id,
           p.description,
           a.name AS action_name,
           pc.display_name AS category_name,
@@ -24,10 +23,8 @@ export async function up(knex: Knex): Promise<void> {
       perms AS (
         SELECT jsonb_agg(
           jsonb_build_object(
-            'permission_id', permission_id,
             'description', description,
-            'action_name', action_name,
-            'category_name', category_name
+            'permission', action_name || ':' || category_name
           )
         ) AS permissions
         FROM user_perms
@@ -36,10 +33,8 @@ export async function up(knex: Knex): Promise<void> {
       menu AS (
         SELECT jsonb_agg(
           jsonb_build_object(
-            'permission_id', permission_id,
             'description', description,
-            'action_name', action_name,
-            'category_name', category_name,
+            'permission', action_name || ':' || category_name,
             'menu_order', menu_order
           )
         ) AS menu
