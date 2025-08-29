@@ -5,18 +5,13 @@ const emailLowerIndex = 'idx_user_profile_email_lower';
 const sessionFunction = 'fn_get_user_session_by_email';
 
 export async function up(knex: Knex): Promise<void> {
-  // Índice para búsqueda case-insensitive por email
   await knex.raw(`
     create index if not exists ${emailLowerIndex}
     on ${usersTable}(lower(email));
   `);
 
-  // Drop primero por si existiera con otra firma
-  await knex.raw(`drop function if exists ${sessionFunction}(text);`);
-
-  // Firma SIN role_id (ya no existe en user_profile)
   await knex.raw(`
-    create function ${sessionFunction}(p_email text)
+    create or replace function ${sessionFunction}(p_email text)
     returns table (
       user_id        int,
       user_email     text,
