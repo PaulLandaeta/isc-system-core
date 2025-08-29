@@ -3,8 +3,13 @@ import { userProfileInterface } from '../models/userProfile';
 import { buildLogger } from '../plugin/logger';
 import { StudentProfileResponseDTO } from '../dtos/studentProfileResponse';
 
-
 import db from './pg-connection';
+
+export async function getUserSessionByEmail(email: string) {
+  const sql = 'select * from public.fn_get_user_session_by_email(?) limit 1';
+  const { rows } = await db.raw(sql, [email]);
+  return rows?.[0] ?? null;
+}
 
 const logger = buildLogger('userProfileRepository');
 
@@ -72,23 +77,26 @@ export const updateUserProfileRole = async (userId: string, roleId: number) => {
   }
 };
 
-
-export const getUserProfilePublicById = async (userId: string): Promise<StudentProfileResponseDTO | null> => {
+export const getUserProfilePublicById = async (
+  userId: string
+): Promise<StudentProfileResponseDTO | null> => {
   try {
     const row = await db(`${TABLE_NAME} as up`)
       .leftJoin('roles as r', 'r.id', 'up.role_id')
       .select(
         'up.id',
         'up.name',
-        db.raw(`'' as career`),   
+        db.raw("'' as career"),
         'up.phone',
         'up.email',
-        db.raw(`COALESCE(r.name, 'unknown') as role`)
+        db.raw("COALESCE(r.name, 'unknown') as role")
       )
       .where('up.id', userId)
       .first();
 
-    if (!row) return null;
+    if (!row) {
+      return null;
+    }
 
     return {
       id: String(row.id),

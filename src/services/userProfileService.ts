@@ -6,13 +6,13 @@ import UserRole from '../constants/roles';
 import UserResponse from '../models/genericUserResponse';
 import { buildLogger } from '../plugin/logger';
 import config from '../config/config';
-
-import * as AuthenticationService from './authenticationService';
-
-// 
 import { StudentProfileResponseDTO } from '../dtos/studentProfileResponse';
 import { getUserProfilePublicById } from '../repositories/userProfileRepository';
 import { NotFoundError } from '../errors/notFoundError';
+
+import * as AuthenticationService from './authenticationService';
+
+//
 
 export const getPublicProfileById = async (userId: string): Promise<StudentProfileResponseDTO> => {
   const profile = await getUserProfilePublicById(userId);
@@ -22,6 +22,47 @@ export const getPublicProfileById = async (userId: string): Promise<StudentProfi
   return profile;
 };
 //
+
+// NUEVO
+import bcrypt from 'bcryptjs';
+
+import { getUserSessionByEmail } from '../repositories/userProfileRepository';
+
+export type LoginResult = {
+  user: {
+    id: number;
+    email: string;
+    username: string;
+    name: string;
+    lastname: string;
+  };
+  permissions: unknown[];
+  menu: unknown[];
+};
+
+export const loginByEmail = async (email: string, plainPassword: string): Promise<LoginResult> => {
+  const row = await getUserSessionByEmail(email);
+  if (!row) {
+    throw new Error('INVALID_CREDENTIALS');
+  }
+
+  const ok = await bcrypt.compare(plainPassword, row.password_hash);
+  if (!ok) {
+    throw new Error('INVALID_CREDENTIALS');
+  }
+
+  return {
+    user: {
+      id: row.user_id,
+      email: row.user_email,
+      username: row.user_username,
+      name: row.user_name,
+      lastname: row.user_lastname,
+    },
+    permissions: row.permissions ?? [],
+    menu: row.menu ?? [],
+  };
+};
 
 const logger = buildLogger('userProfileService');
 const { defaultUserPassword } = config;
