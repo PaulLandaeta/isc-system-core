@@ -12,28 +12,31 @@ export const findByEmail = async (email: string): Promise<User> => {
   return UserRepository.getUserByEmail(email);
 };
 
+// userService.ts - CORREGIR
 export const createUser = async (user: createUserRequest) => {
   try {
-    console.log(user, "yiaaa")
-    // TODO: valid the user does not exist with the email or code
     const existingUser = await UserRepository.getUserByEmail(user.email);
     if (existingUser) {
       throw new Error('User with this email already exists');
     }
 
-    const existingUserWithCode = await UserRepository.getStudentByCode(Number(user.code));
+    const existingUserWithCode = await UserRepository.getUserByCode(Number(user.code));
     if (existingUserWithCode) {
       throw new Error('User with this code already exists');
     }
+
     logger.debug('Attempting to create a new User');
     const hashedPassword = await AuthenticationService.hashPassword(defaultUserPassword);
-    return await UserRepository.createUser({
+
+    const newUser = await UserRepository.createUser({
       ...user,
       password: hashedPassword,
       username: user.code + user.name + user.lastname,
     });
+    logger.info('User created successfully', { userId: newUser.id });
+    return newUser;
   } catch (error) {
-    console.log('Error creating User');
+    console.log('Error creating User:', error);
     throw Error('Error creating User');
   }
 };

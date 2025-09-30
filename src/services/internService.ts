@@ -14,8 +14,8 @@ import { createInternInteractor } from '../interactors/internInteractor';
 export const updateHours = async (internId: number, type: string, duration_hours: number) => {
   try {
     if (type === 'accepted') {
-      const { total_hours, pending_hours, completed_hours } = await getInternById(internId);
-      var newPendingHours = pending_hours - duration_hours;
+      const { total_hours, pending_hours } = await getInternById(internId);
+      let newPendingHours = pending_hours - duration_hours;
       if (newPendingHours < 0) newPendingHours = 0;
       const updateHoursIntern = await updateHoursInterns(
         internId,
@@ -111,13 +111,13 @@ export const getAllDataInternsService = async () => {
     const eventComplete = await getSupervisor();
     const interns = await getAllDataInternsRepository();
 
-    const unionEventIntern = [...eventComplete,...interns]
+    const unionEventIntern = [...eventComplete, ...interns];
 
     const groupedInterns = unionEventIntern.reduce((acc, item) => {
-      const {id, id_intern, responsible_intern_id, name, lastname, mothername } = item;
+      const { id, id_intern, responsible_intern_id, name, lastname, mothername } = item;
 
       if (!acc[id_intern]) {
-        acc[id_intern] = {  
+        acc[id_intern] = {
           id: id_intern,
           name: name,
           lastname: lastname,
@@ -146,11 +146,9 @@ export const getAllDataInternsService = async () => {
         is_supervisor: is_supervisor,
       });
 
-
       return acc;
     }, []);
     return Object.values(groupedInterns);
-
   } catch (error) {
     console.error('Error in InternsService.getAllDataInternsService:', error);
     throw new Error('Error fetching Interns');
@@ -159,7 +157,7 @@ export const getAllDataInternsService = async () => {
 
 export const createInternService = async (intern: Intern) => {
   try {
-    const newIntern = createInternInteractor(intern);
+    const newIntern = await createInternInteractor(intern);
     return newIntern;
   } catch (error) {
     console.error('Error in internsService.createInternService:', error);

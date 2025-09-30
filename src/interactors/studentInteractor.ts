@@ -1,11 +1,11 @@
 import * as StudentService from '../services/studentService';
 import * as UserService from '../services/userService';
-import * as UserProfileService from '../services/userProfileService'
+import * as UserProfileService from '../services/userProfileService';
 import * as UserRoleService from '../services/userRoleService';
 import createUserRequest from '../dtos/createUserRequest';
 import { NotFoundError } from '../errors/notFoundError';
 
-const studentRole = 1;
+const studentRole = 3;
 
 export const getStudents = async () => {
   const students = await StudentService.getStudents();
@@ -38,7 +38,12 @@ export const createStudent = async (studentData: createUserRequest) => {
       throw new Error('Estudiante con este código ya existe.');
     }
 
-    const newStudent = await UserService.createUser(studentData);
+    const userData = {
+      ...studentData,
+      role_id: studentRole,
+    };
+
+    const newStudent = await UserService.createUser(userData);
 
     if (!newStudent) {
       throw new Error('Error creating the student');

@@ -63,7 +63,7 @@ export const getStudentByCode = async (userCode: number) => {
 
 export const createUser = async (userData: User) => {
   try {
-    const [newUser] = await db('user_profile').insert(userData).returning('id');
+    const [newUser] = await db('user_profile').insert(userData).returning('*');
     return newUser;
   } catch (error) {
     console.error(error);

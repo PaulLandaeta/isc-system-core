@@ -16,7 +16,9 @@ export const createInternInteractor = async (intern: Intern) => {
     if (existingUserWithCode) {
       throw new Error('Estudiante con este código ya existe.');
     }
-    const role = await getRoles(intern.roles?.[0] ?? 'intern');
+
+    const internRoleId = 4;
+
     const user = {
       username: intern.username,
       name: intern.name,
@@ -26,7 +28,7 @@ export const createInternInteractor = async (intern: Intern) => {
       email: intern.email,
       code: intern.code,
       phone: intern.phone,
-      role_id: role[0].id,
+      role_id: internRoleId,
     };
     const userRes = await UserService.createUser(user);
     const internInfo = {
