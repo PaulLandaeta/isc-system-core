@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 
 import * as ProfessorInteractor from '../interactors/professorInteractor';
 import { buildLogger } from '../plugin/logger';
@@ -32,14 +32,29 @@ export const getProfessorsController = async (req: Request, res: Response) => {
   }
 };
 
-export const createProfessor = async (req: Request, res: Response) => {
+export const createProfessor = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const professorData: createProfessorRequest = req.body;
+
+    const codeValue = professorData.code;
+    if (typeof codeValue !== 'string' && typeof codeValue !== 'number') {
+      throw new BadRequestError('Código inválido. Debe ser numérico.');
+    }
+
+    const codeStr = String(codeValue);
+    if (!/^[0-9]+$/.test(codeStr)) {
+      throw new BadRequestError('Código inválido. Debe contener únicamente dígitos (0-9).');
+    }
+
+    professorData.code = codeStr;
+
     const newProfessor = await ProfessorInteractor.createProfessor(professorData);
     sendCreated(res, { profesor: newProfessor }, 'Professor created successfully');
   } catch (error) {
     if (error instanceof Error) {
       handleError(res, error);
+    } else {
+      return next(error);
     }
   }
 };
