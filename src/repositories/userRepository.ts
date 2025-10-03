@@ -21,6 +21,20 @@ export const getUserByEmail = async (email: string) => {
   }
 };
 
+export const getUserByPhone = async (phone: string) => {
+  try {
+    const user = await db('user_profile as u')
+      .where('u.phone', phone)
+      .join('roles as r', 'u.role_id', '=', 'r.id')
+      .first('u.*', db.raw('array_agg(r.name) as roles'))
+      .groupBy('u.id');
+    return user || null;
+  } catch (error) {
+    console.error('Error fetching user by phone:', error);
+    throw error;
+  }
+};
+
 export const getStudents = async () => {
   try {
     const students = await db('user_profile as u')
@@ -111,12 +125,7 @@ export const getProfessors = async () => {
     throw Error('Error fetching professors');
   }
 };
-/**
- * Update user data
- * @param userId User id
- * @param userData User data
- * @returns Updated user data
- */
+
 export const updateUser = async (userId: number, userData: createUserRequest) => {
   try {
     const allowedFields = {
@@ -145,11 +154,6 @@ export const getUserByRol = async (rolId: number) => {
   }
 };
 
-/**
- * Get professor by id
- * @param id Professor id
- * @returns Professor data
- */
 export const getProfessorById = async (id: string) => {
   try {
     const professor = await db('professors as p')

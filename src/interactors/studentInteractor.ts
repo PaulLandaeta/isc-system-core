@@ -1,3 +1,4 @@
+// src/interactors/studentInteractor.ts
 import * as StudentService from '../services/studentService';
 import * as UserService from '../services/userService';
 import * as UserProfileService from '../services/userProfileService';
@@ -41,6 +42,13 @@ export const createStudent = async (studentData: createStudentRequest) => {
     const existingUserWithCode = await StudentService.getStudentByCode(Number(studentData.code));
     if (existingUserWithCode) {
       throw new HttpError(409, 'Ya existe un estudiante con este código.');
+    }
+
+    if (studentData.phone) {
+      const existingUserWithPhone = await StudentService.getStudentByPhone(studentData.phone);
+      if (existingUserWithPhone) {
+        throw new HttpError(400, 'El número de teléfono ya está registrado.');
+      }
     }
 
     const newStudent = await UserService.createUser({
@@ -122,10 +130,18 @@ export const updateStudent = async (studentId: number, studentData: createUserRe
       throw new NotFoundError('Student not found');
     }
 
+    if (studentData.phone) {
+      const userWithPhone = await StudentService.getStudentByPhone(studentData.phone);
+      if (userWithPhone && Number(userWithPhone.id) !== Number(studentId)) {
+        throw new HttpError(400, 'El número de teléfono ya está registrado.');
+      }
+    }
+
     const updatedStudent = await StudentService.updateUser(studentId, studentData);
     return updatedStudent;
   } catch (error) {
     console.error('Error updating student:', error);
+    if (error instanceof HttpError) throw error;
     throw new Error('Error updating student');
   }
 };
