@@ -10,7 +10,10 @@ const updateGraduationProcessSchema = Joi.object({
   modality_id: Joi.number().integer().optional().messages({
     'number.base': 'Modality ID must be an integer',
   }),
-  project_name: Joi.string().optional(),
+  project_name: Joi.string().max(255).optional().messages({
+    'string.base': 'Project name must be a string',
+    'string.max': 'Project name cannot exceed 255 characters',
+  }),
   period: Joi.string().optional(),
   date_seminar_enrollment: Joi.date().allow(null).optional().messages({
     'date.base': 'Date of seminar enrollment must be a valid date or null',
