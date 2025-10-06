@@ -9,7 +9,7 @@ import { deleteProfessorService } from '../services/professorService';
 import { getThesisStudentsService } from '../services/professorService';
 import { BadRequestError } from '../errors/badRequestError';
 import { HttpError } from '../errors/httpError';
-import { ProfessorProfileResponseDTO } from 'src/dtos/professorProfileResponse';
+import { ProfessorProfileResponseDTO } from '../../src/dtos/professorProfileResponse';
 
 const logger = buildLogger('professorController');
 
@@ -136,7 +136,7 @@ export const getProfessorProfileController = async (req: Request, res: Response)
         hasTutorApproval: tutoria.tutor_approval || false,
         hasReviewerLetter: tutoria.reviewer_letter || false,
         hasReviewerApproval: tutoria.reviewer_approval || false,
-      }
+      };
       tutorias.push(row);
     });
 
@@ -147,7 +147,7 @@ export const getProfessorProfileController = async (req: Request, res: Response)
       phone: data.phone,
       email: data.email,
       tutorias: tutorias,
-    }
+    };
 
     sendSuccess(res, response, 'Perfil del profesor obtenido correctamente');
   } catch (error) {
@@ -156,4 +156,4 @@ export const getProfessorProfileController = async (req: Request, res: Response)
       handleError(res, error);
     }
   }
-}
+};
