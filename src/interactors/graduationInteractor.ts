@@ -9,6 +9,8 @@ import UserRole from '../constants/roles';
 import { getUserByCode } from '../repositories/userRepository';
 import { ConflictError } from '../errors/conflictError';
 
+const projectNameRegex = /^[A-Za-z0-9À-ÖØ-öø-ÿÑñ\s\-_]+$/;
+
 export const getGraduationProcessById = async (processId: number) => {
   const process = await GraduationProcessService.getGraduationProcessById(processId);
 
@@ -24,6 +26,33 @@ export const updateGraduationProcess = async (
   updatedData: Partial<GraduationProcess>
 ) => {
   try {
+    if (updatedData.project_name !== undefined && updatedData.project_name !== null) {
+      if (typeof updatedData.project_name !== 'string') {
+        throw new BadRequestError('Project name must be a string');
+      }
+      const name = updatedData.project_name.trim();
+
+      if (name.length === 0) {
+        throw new BadRequestError('Project name cannot be empty');
+      }
+
+      if (name.length < 5) {
+        throw new BadRequestError('Project name must have at least 5 characters');
+      }
+
+      if (name.length > 255) {
+        throw new BadRequestError('Project name cannot exceed 255 characters');
+      }
+
+      if (!projectNameRegex.test(name)) {
+        throw new BadRequestError(
+          'Project name contains invalid characters. Only letters, numbers, spaces, hyphens and underscores are allowed'
+        );
+      }
+
+      updatedData.project_name = name;
+    }
+
     const updatedGraduationProcess = await GraduationProcessService.updateGraduationProcess(
       processId,
       updatedData
@@ -31,6 +60,9 @@ export const updateGraduationProcess = async (
     return updatedGraduationProcess;
   } catch (error) {
     console.error('Error in GraduationProcessService.updateGraduationProcess:', error);
+    if (error instanceof BadRequestError || error instanceof NotFoundError || error instanceof ConflictError) {
+      throw error;
+    }
     throw new Error('Error updating Graduation Process');
   }
 };

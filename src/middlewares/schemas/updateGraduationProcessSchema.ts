@@ -1,5 +1,7 @@
 import Joi from 'joi';
 
+const projectNameRegex = /^[A-Za-z0-9À-ÖØ-öø-ÿÑñ\s\-_]+$/;
+
 const updateGraduationProcessSchema = Joi.object({
   student_id: Joi.number().integer().optional().messages({
     'number.base': 'Student ID must be an integer',
@@ -10,12 +12,20 @@ const updateGraduationProcessSchema = Joi.object({
   modality_id: Joi.number().integer().optional().messages({
     'number.base': 'Modality ID must be an integer',
   }),
-  project_name: Joi.string().trim().min(5).max(255).optional().messages({
-    'string.base': 'Project name must be a string',
-    'string.empty': 'Project name is required and cannot be empty',
-    'string.min': 'Project name must have at least 5 characters',
-    'string.max': 'Project name cannot exceed 255 characters',
-  }),
+  project_name: Joi.string()
+    .trim()
+    .min(5)
+    .max(255)
+    .pattern(projectNameRegex)
+    .optional()
+    .messages({
+      'string.base': 'Project name must be a string',
+      'string.empty': 'Project name is required and cannot be empty',
+      'string.min': 'Project name must have at least 5 characters',
+      'string.max': 'Project name cannot exceed 255 characters',
+      'string.pattern.base':
+        'Project name contains invalid characters. Only letters, numbers, spaces, hyphens and underscores are allowed',
+    }),
   period: Joi.string().optional(),
   date_seminar_enrollment: Joi.date().allow(null).optional().messages({
     'date.base': 'Date of seminar enrollment must be a valid date or null',
