@@ -18,8 +18,8 @@ export const storeStudent = async (student: studentInterface) => {
     }
     return newStudent;
   } catch (error: any) {
-    if (error.code === '23505') {
-      throw new HttpError(409, 'Ya existe un estudiante con ese código o correo');
+    if (error && error.code === '23505') {
+      throw new HttpError(400, 'Valor duplicado: código, correo o teléfono ya registrado.');
     }
     logger.error(`Error creating student: ${error}`);
     throw error;
