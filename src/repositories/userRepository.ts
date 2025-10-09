@@ -2,7 +2,6 @@ import UserRole from '../constants/roles';
 import createUserRequest from '../dtos/createUserRequest';
 import User from '../models/userInterface';
 import { buildLogger } from '../plugin/logger';
-
 import db from './pg-connection';
 
 const logger = buildLogger('userRepository');
@@ -53,6 +52,7 @@ export const getStudents = async () => {
     throw error;
   }
 };
+
 export const getStudentByCode = async (userCode: number) => {
   try {
     const student = await db('user_profile as u')
@@ -115,7 +115,8 @@ export const getProfessors = async () => {
           SELECT COUNT(*) FROM graduation_process gp WHERE gp.reviewer_id = p.id
         ) as reviewer_count`)
       )
-      .join('user_profile as up', 'p.id', '=', 'up.id');
+      .join('user_profile as up', 'p.id', '=', 'up.id')
+      .where('p.disabled', false);
 
     logger.info('Professors fetched successfully with tutorias and revisiones.');
     logger.debug(`Fetched professors: ${JSON.stringify(professors)}`);
@@ -170,6 +171,7 @@ export const getProfessorById = async (id: string) => {
       )
       .join('user_profile as up', 'p.id', '=', 'up.id')
       .where('up.id', id)
+      .andWhere('p.disabled', false)
       .first();
     return professor;
   } catch (error) {
@@ -177,6 +179,7 @@ export const getProfessorById = async (id: string) => {
     throw new Error(`Unable to retrieve professor with id: ${id}`);
   }
 };
+
 export const getUserByCode = async (userCode: string) => {
   try {
     const student = await db('user_profile as u')

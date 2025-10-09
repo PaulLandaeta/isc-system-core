@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from 'express';
-
 import * as ProfessorInteractor from '../interactors/professorInteractor';
 import { buildLogger } from '../plugin/logger';
 import { handleError } from '../handlers/errorHandler';
@@ -76,8 +75,8 @@ export const getProfessorById = async (req: Request, res: Response) => {
 export const deleteProfessorController = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const professor = await deleteProfessorService(id);
-    sendSuccess(res, professor, 'Professor deleted successfully');
+    await deleteProfessorService(id);
+    return res.status(204).send();
   } catch (error) {
     if (error instanceof HttpError) {
       return res.status(error.statusCode).json({ error: error.message });
