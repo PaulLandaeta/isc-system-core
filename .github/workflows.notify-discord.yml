@@ -1,0 +1,27 @@
+name: Notify Discord on PR
+
+on:
+  pull_request:
+    types: [opened, reopened, ready_for_review]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send message to Discord
+        uses: Ilshidur/action-discord@master
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        with:
+          args: |
+            🚀 **Nuevo Pull Request** 🚀
+
+            📜 **Repositorio:** isc-system-core
+            📝 **PR ID:** #${{ github.event.pull_request.number }}
+            📢 **Título del PR:** ${{ github.event.pull_request.title }}
+            🔗 **URL del PR:** ${{ github.event.pull_request.html_url }}
+            🔀 **Branch origin:** ${{ github.event.pull_request.head.ref }}
+            🔀 **Branch destiny:** ${{ github.event.pull_request.base.ref }}
+            🔍 **Cambios:** [Ver Cambios](${{ github.event.pull_request.html_url }})
+
+            ¡Revisa la sección de Pull Requests del repositorio!
