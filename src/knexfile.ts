@@ -1,5 +1,9 @@
+import dotenv from 'dotenv';
+
 import config from './config/config';
 
+dotenv.config();
+const ssl = process.env.SSL === 'true';
 const { database } = config;
 
 const knexConfig: { [key: string]: import('knex').Knex.Config } = {
@@ -11,13 +15,13 @@ const knexConfig: { [key: string]: import('knex').Knex.Config } = {
       user: database.user,
       password: database.password,
       port: Number(database.port as string) || 5432,
-      ssl: false,
+      ssl: ssl ? { rejectUnauthorized: false } : false,
     },
     migrations: {
-      directory: './data/migrations',
+      directory: '../data/migrations',
     },
     seeds: {
-      directory: './data/seeds',
+      directory: '../data/seeds',
     },
   },
   staging: {

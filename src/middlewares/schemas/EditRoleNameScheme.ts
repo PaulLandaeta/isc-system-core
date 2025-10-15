@@ -5,4 +5,3 @@ export const roleNameScheme = Joi.object({
     'any.required': 'Name is required.',
   }),
 });
-

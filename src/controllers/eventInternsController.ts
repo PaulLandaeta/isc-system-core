@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+
 import {
   getEventIntern,
   registerIntern,
@@ -12,12 +13,28 @@ import {
 } from '../services/eventInternsService';
 import { sendCreated, sendSuccess } from '../handlers/successHandler';
 import { handleError } from '../handlers/errorHandler';
-
+import { getInternsById } from '../repositories/internsRepository';
 
 export const getEventInternController = async (req: Request, res: Response) => {
   try {
-    const { id_evento, id_becario} = req.params;
-    const result = await getEventsInternById(parseInt(id_evento, 10), parseInt(id_becario, 10));
+    const { id_evento, id_becario } = req.params;
+    const eventId = parseInt(id_evento, 10);
+    const internId = parseInt(id_becario, 10);
+    const intern = await getInternsById(internId);
+
+    if (!intern) {
+      return res.status(404).json({
+        success: false,
+        message: 'Becario no encontrado.',
+      });
+    }
+    const result = await getEventsInternById(eventId, internId);
+    if (!result) {
+      return res.status(404).json({
+        success: false,
+        message: 'El becario no está vinculado a este evento.',
+      });
+    }
     sendSuccess(res, result, 'Event_Interns process retrieved successfully');
   } catch (error) {
     if (error instanceof Error) {
@@ -25,7 +42,6 @@ export const getEventInternController = async (req: Request, res: Response) => {
     }
   }
 };
-
 
 export const getEventInternsController = async (req: Request, res: Response) => {
   try {

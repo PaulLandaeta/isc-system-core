@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+
 import { verifyToken } from '../utils/jwtUtility';
 
 export const checkUserAuth = (req: Request, res: Response, next: NextFunction) => {

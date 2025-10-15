@@ -1,4 +1,5 @@
 import { Router } from 'express';
+
 import UserRole from '../constants/roles';
 import * as AdminController from '../controllers/adminController';
 import { checkUserAuth } from '../middlewares/checkUserAuth';
@@ -16,12 +17,11 @@ router
     validateBody(createAdminSchema),
     AdminController.createAdmin
   );
-  router
-  .route('/')
-  .post(
-    checkUserAuth,
-    // requireRole([UserRole.ADMIN.name]),
-    AdminController.createUser
-  );
+router.route('/').post(
+  checkUserAuth,
+  // requireRole([UserRole.ADMIN.name]),
+  validateBody(createAdminSchema),
+  AdminController.createUser
+);
 
 export default router;

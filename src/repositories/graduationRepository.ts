@@ -1,5 +1,6 @@
 import { DefenseDetail } from '../models/defenseDetailInterface';
 import GraduationProcess from '../models/graduationProcessInterface';
+
 import db from './pg-connection';
 
 const tableName = 'graduation_process';
@@ -7,9 +8,12 @@ const tableName = 'graduation_process';
 export const getGraduationProcessById = async (id: number) => {
   try {
     const graduationProcess = await db(`${tableName} as gp`)
-      .join('users as student', 'gp.student_id', 'student.id')
-      .leftJoin('users as tutor', 'gp.tutor_id', 'tutor.id')
-      .leftJoin('users as reviewer', 'gp.reviewer_id', 'reviewer.id')
+      .join('students as st', 'gp.student_id', 'st.id')
+      .join('user_profile as student', 'st.id', 'student.id')
+      .leftJoin('professors as pt', 'gp.tutor_id', 'pt.id')
+      .leftJoin('user_profile as tutor', 'pt.id', 'tutor.id')
+      .leftJoin('professors as pr', 'gp.reviewer_id', 'pr.id')
+      .leftJoin('user_profile as reviewer', 'pr.id', 'reviewer.id')
       .join('modalities', 'gp.modality_id', 'modalities.id')
       .select(
         db.raw(
@@ -21,9 +25,9 @@ export const getGraduationProcessById = async (id: number) => {
         ),
         'student.name as student_name',
         'tutor.name as tutor_name',
-        'tutor.degree as tutor_degree',
+        'pt.degree as tutor_degree',
         'reviewer.name as reviewer_name',
-        'reviewer.degree as reviewer_degree',
+        'pr.degree as reviewer_degree',
         'modalities.name as modality_name',
         'gp.*'
       )
@@ -73,10 +77,10 @@ export const getGraduationProcesses = async () => {
         'gp.period as period',
         'gp.id'
       )
-      .join('users as u', 'u.id', '=', 'gp.student_id')
+      .join('user_profile as u', 'u.id', '=', 'gp.student_id')
       .join('modalities as m', 'm.id', '=', 'gp.modality_id')
-      .leftJoin('users as tutor', 'tutor.id', '=', 'gp.tutor_id')
-      .leftJoin('users as reviewer', 'reviewer.id', '=', 'gp.reviewer_id');
+      .leftJoin('user_profile as tutor', 'tutor.id', '=', 'gp.tutor_id')
+      .leftJoin('user_profile as reviewer', 'reviewer.id', '=', 'gp.reviewer_id');
     return students;
   } catch (error) {
     console.error(error);
@@ -99,13 +103,24 @@ export const createDefense = async (processId: number, defenseData: DefenseDetai
 export const updateDefense = async (defenseId: number, updatedData: Partial<DefenseDetail>) => {
   try {
     const updatedRows = await db('defense_details').where({ id: defenseId }).update(updatedData);
+
     if (updatedRows === 0) {
       throw new Error('Defense not found or no change made');
     }
-    return await db('defenseDetail').where({ id: defenseId }).first();
+
+    return await getDefenseById(defenseId);
   } catch (error) {
     console.error('Error in GraduationProcessRepository.updateDefense:', error);
     throw new Error('Error updating defense');
+  }
+};
+export const getDefenseById = async (defenseId: number) => {
+  try {
+    const defense = await db('defense_details').where({ id: defenseId }).first();
+    return defense;
+  } catch (error) {
+    console.error('Error in GraduationProcessRepository.getDefenseById:', error);
+    throw new Error('Error fetching defense by ID');
   }
 };
 
@@ -118,5 +133,35 @@ export const getDefense = async (processId: number, type: string) => {
   } catch (error) {
     console.error('Error in GraduationProcessRepository.getDefense:', error);
     throw new Error('Error fetching defense');
+  }
+};
+
+export const getProcessByStudentId = async (studentId: number) => {
+  try {
+    const process = await db(tableName).where({ student_id: studentId }).first();
+    return process;
+  } catch (error) {
+    console.error('Error in GraduationProcessRepository.getProcessByStudentId:', error);
+    throw new Error('Error fetching Process by student ID');
+  }
+};
+
+export const getProcessByName = async (projectName: string) => {
+  try {
+    const process = await db(tableName).where({ project_name: projectName }).first();
+    return process;
+  } catch (error) {
+    console.error('Error in GraduationProcessRepository.getProcessByName:', error);
+    throw new Error('Error fetching Process by name');
+  }
+};
+
+export const getProcessByTutorId = async (tutorId: string) => {
+  try {
+    const processes = await db(tableName).where({ tutor_id: tutorId });
+    return processes;
+  } catch (error) {
+    console.error('Error in GraduationProcessRepository.getProcessByTutorId:', error);
+    throw new Error('Error fetching Process by tutor ID');
   }
 };

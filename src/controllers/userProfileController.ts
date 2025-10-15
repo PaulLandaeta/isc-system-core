@@ -1,9 +1,16 @@
 import { Request, Response } from 'express';
-import * as userProfileInteractor from '../interactors/userProfileInteractor'
+
+import * as userProfileInteractor from '../interactors/userProfileInteractor';
 import { sendCreated } from '../handlers/successHandler';
 import { sendSuccess } from '../handlers/successHandler';
 import { handleError } from '../handlers/errorHandler';
+import { BadRequestError } from '../errors/badRequestError';
 import createUserRequest from '../dtos/createUserRequest';
+
+const isNotID = (userIdString: string) => {
+  const userIdNumber = Number(userIdString);
+  return isNaN(userIdNumber) || userIdNumber<0 || userIdNumber%1!==0
+}
 
 export const deleteUser = async (req: Request, res: Response) => {
   const userId = req.params.id;
@@ -32,6 +39,12 @@ export const getAllUsers = async (req: Request, res: Response) => {
 export const getUser = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+
+    if (isNotID(id)) {
+      handleError(res, new BadRequestError("El ID debe ser un número entero"))
+      return
+    }
+
     const user = await userProfileInteractor.getUser(id);
     sendSuccess(res, user, 'User was obtained successfully');
   } catch (error) {
@@ -41,8 +54,27 @@ export const getUser = async (req: Request, res: Response) => {
   }
 };
 
+const isValidUserInfo = (req: Request) => {
+  const { name, lastname, mothername, code, email, phone } = req.body
+  const regexNames = /^[a-zA-Z]{4,}$/;
+  const regexMail = /^[a-zA-Z0-9]{4,32}@[a-zA-Z]{1,10}\.[a-zA-Z]{1,4}$/;
+  const regexPhoneNumber = /^[0-9]{7,12}$/
+  const regexCode = /^[0-9]{4,6}$/
+
+  return regexNames.test(name) &&
+    regexNames.test(lastname) &&
+    regexNames.test(mothername) &&
+    regexMail.test(email) &&
+    regexCode.test(code) &&
+    regexPhoneNumber.test(phone)
+}
+
 export const createUser = async (req: Request, res: Response) => {
   try {
+    if (!isValidUserInfo(req)) {
+      handleError(res, new BadRequestError("Campos con información no válida"))
+      return
+    }
     const userData: createUserRequest = req.body;
     const newUser = await userProfileInteractor.createUser(userData);
     sendCreated(res, newUser, 'User created successfully');
@@ -55,9 +87,27 @@ export const createUser = async (req: Request, res: Response) => {
 export const updateUser = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+
+    if (isNotID(id)) {
+      handleError(res, new BadRequestError("El ID debe ser un número entero"))
+      return
+    }
+    
     const userProfileData: createUserRequest = req.body;
     const user = await userProfileInteractor.updateUser(id, userProfileData);
     sendSuccess(res, user, 'User was updated successfully');
+  } catch (error) {
+    if (error instanceof Error) {
+      handleError(res, error);
+    }
+  }
+};
+
+export const getPublicProfileById = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const profile = await userProfileInteractor.fetchStudentProfile(id);
+    sendSuccess(res, profile, 'Profile obtained successfully');
   } catch (error) {
     if (error instanceof Error) {
       handleError(res, error);

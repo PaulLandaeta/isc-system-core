@@ -2,15 +2,29 @@ import createProfessorRequest from '../dtos/createProfessorRequest';
 import * as UserProfileRepository from '../repositories/userProfileRepository';
 import * as UserRoleRepository from '../repositories/userRolesRepository';
 import * as PermissionInteractor from '../interactors/permissionsInteractor';
-import * as AuthenticationService from './authenticationService';
 import UserRole from '../constants/roles';
 import UserResponse from '../models/genericUserResponse';
 import { buildLogger } from '../plugin/logger';
-import { NotFoundError } from '../errors/notFoundError';
 import config from '../config/config';
 
+import * as AuthenticationService from './authenticationService';
+
+// 
+import { StudentProfileResponseDTO } from '../dtos/studentProfileResponse';
+import { getUserProfilePublicById } from '../repositories/userProfileRepository';
+import { NotFoundError } from '../errors/notFoundError';
+
+export const getPublicProfileById = async (userId: string): Promise<StudentProfileResponseDTO> => {
+  const profile = await getUserProfilePublicById(userId);
+  if (!profile) {
+    throw new NotFoundError(`Profile not found for id ${userId}`);
+  }
+  return profile;
+};
+//
+
 const logger = buildLogger('userProfileService');
-const defaultUserPassword = config.defaultUserPassword;
+const { defaultUserPassword } = config;
 
 export const createUserProfile = async (createUserProfileRequest: createProfessorRequest) => {
   try {
@@ -35,7 +49,6 @@ export const createUserProfile = async (createUserProfileRequest: createProfesso
   }
 };
 
-
 export const deleteUser = async (userId: number) => {
   try {
     logger.debug(`Attempting to delete user with id: ${userId}`);
@@ -54,7 +67,9 @@ export const getUserById = async (userId: string): Promise<UserResponse | null> 
 export const getAllUsers = async (): Promise<UserResponse[] | null> => {
   try {
     const users = await UserProfileRepository.getAllUsers();
-    if (!users) { throw new NotFoundError('Users not found') }
+    if (!users) {
+      throw new NotFoundError('Users not found');
+    }
 
     const usersWithRolesAndPermissions = await Promise.all(
       users.map(async (user: any) => {
@@ -82,14 +97,15 @@ export const getAllUsers = async (): Promise<UserResponse[] | null> => {
 
 export const getUser = async (userId: string): Promise<UserResponse | null> => {
   const user = await UserProfileRepository.getUserById(parseInt(userId));
-  if (!user) { throw new NotFoundError(`User not found with such id ${userId}`) }
+  if (!user) {
+    throw new NotFoundError(`User not found with such id ${userId}`);
+  }
   const rolesAndPermissions = await PermissionInteractor.getRolesAndPermissions(parseInt(userId));
   return {
     ...user,
-    rolesAndPermissions
-  }
-
-}
+    rolesAndPermissions,
+  };
+};
 
 export const updateUserProfile = async (userId: string, userProfileData: any) => {
   try {
@@ -99,9 +115,12 @@ export const updateUserProfile = async (userId: string, userProfileData: any) =>
       mothername: userProfileData.mothername,
       code: userProfileData.code,
       email: userProfileData.email,
-      phone: userProfileData.phone
-    }
-    const updatedProfile = await UserProfileRepository.updateUserProfile(userId, userProfileRequest);
+      phone: userProfileData.phone,
+    };
+    const updatedProfile = await UserProfileRepository.updateUserProfile(
+      userId,
+      userProfileRequest
+    );
     return updatedProfile;
   } catch (error) {
     logger.error(`Error updating user: ${error}`);

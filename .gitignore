@@ -25,3 +25,7 @@ yarn-error.log*
 # Ignore .DS_Store files (macOS)
 .DS_Store
 .vercel
+.idea
+
+#Ignore package-lock.json
+package-lock.json

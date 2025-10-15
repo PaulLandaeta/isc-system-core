@@ -1,3 +1,4 @@
+import { MenuResponse } from '../types/menuTypes';
 interface UserResponse {
   id: number;
   username: string;
@@ -7,6 +8,7 @@ interface UserResponse {
   password?: string;
   email: string;
   token: string;
+  menu?: MenuResponse;
 }
 
 export default UserResponse;

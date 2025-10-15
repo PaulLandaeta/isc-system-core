@@ -5,7 +5,9 @@ import { NotFoundError } from '../errors/notFoundError';
 import { DefenseDetail } from '../models/defenseDetailInterface';
 import GraduationProcess from '../models/graduationProcessInterface';
 import * as GraduationProcessService from '../services/graduationService';
-import { getStudentByCode } from './studentInteractor';
+import UserRole from '../constants/roles';
+import { getUserByCode } from '../repositories/userRepository';
+import { ConflictError } from '../errors/conflictError';
 
 export const getGraduationProcessById = async (processId: number) => {
   const process = await GraduationProcessService.getGraduationProcessById(processId);
@@ -36,17 +38,27 @@ export const updateGraduationProcess = async (
 export const createGraduationProcess = async (
   graduationProcess: createGraduationProcessRequest
 ) => {
-  const student = await getStudentByCode(graduationProcess.student_code);
-  if (!student) {
-    throw new BadRequestError("The provided student doesn't exist");
+  const user = await getUserByCode(graduationProcess.student_code);
+
+  const validRoles = [UserRole.STUDENT.id, UserRole.INTERN.id];
+
+  if (!user || !validRoles.includes(user.role_id)) {
+    throw new BadRequestError('El usuario no existe o no es un estudiante');
+  }
+
+  const process = await GraduationProcessService.getProcessByName(graduationProcess.project_name);
+
+  if (process) {
+    throw new ConflictError('Ya existe un proceso con el mismo nombre');
   }
 
   const newGraduationProcess: NewGraduationProcess = {
     modality_id: graduationProcess.modality_id,
     period: graduationProcess.period,
     project_name: graduationProcess.project_name,
-    student_id: student.id,
+    student_id: user.id,
   };
+
   return await GraduationProcessService.createGraduationProcess(newGraduationProcess);
 };
 
@@ -62,8 +74,13 @@ export const createDefense = async (processId: number, defenseData: DefenseDetai
   return await GraduationProcessService.createDefense(processId, defenseData);
 };
 
-export const updateDefense = async (processId: number, updatedData: Partial<DefenseDetail>) => {
-  return await GraduationProcessService.updateDefense(processId, updatedData);
+export const updateDefense = async (defenseId: number, updatedData: Partial<DefenseDetail>) => {
+  const existingDefense = await GraduationProcessService.getDefenseById(defenseId);
+  if (!existingDefense) {
+    throw new NotFoundError('Defense not found');
+  }
+
+  return await GraduationProcessService.updateDefense(defenseId, updatedData);
 };
 
 export const getDefense = async (processId: number, type: string) => {

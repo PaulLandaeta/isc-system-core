@@ -1,4 +1,6 @@
 import { Request, Response } from 'express';
+import { BadRequestError } from '../errors/badRequestError';
+
 import {
   updateHours,
   getInternById,
@@ -8,10 +10,15 @@ import {
   getListInterns,
   getInternByUserId,
   getAllDataInternsService,
-  createInternService,
 } from '../services/internService';
 import { sendCreated, sendSuccess } from '../handlers/successHandler';
 import { handleError } from '../handlers/errorHandler';
+import { createInternInteractor } from '../interactors/internInteractor';
+
+const isNotID = (internIdString: string) => {
+  const interntIdNumber = Number(internIdString);
+  return isNaN(interntIdNumber) || interntIdNumber < 0 || interntIdNumber % 1 !== 0
+}
 
 export const updateHoursController = async (req: Request, res: Response) => {
   try {
@@ -32,6 +39,12 @@ export const updateHoursController = async (req: Request, res: Response) => {
 export const getInternsByUserId = async (req: Request, res: Response) => {
   try {
     const { user_id } = req.params;
+
+    if (isNotID(user_id)) {
+      handleError(res, new BadRequestError("El ID debe ser un número entero"))
+      return
+    }
+
     const intern = await getInternByUserId(parseInt(user_id, 10));
 
     if (!intern) {
@@ -47,6 +60,12 @@ export const getInternsByUserId = async (req: Request, res: Response) => {
 export const getInternsById = async (req: Request, res: Response) => {
   try {
     const { intern_id } = req.params;
+
+    if (isNotID(intern_id)) {
+      handleError(res, new BadRequestError("El ID debe ser un número entero"))
+      return
+    }
+
     const intern = await getInternById(parseInt(intern_id, 10));
     if (!intern) {
       return res.status(404).json({ success: false, message: 'Event not found' });
@@ -93,6 +112,11 @@ export const getMyEventsInternController = async (req: Request, res: Response) =
   try {
     const { intern_id } = req.params;
     const events = await getMyEventsInternService(parseInt(intern_id, 10));
+    const numericId = parseInt(intern_id, 10);
+    const intern = await getInternById(numericId);
+    if (!intern) {
+      return res.status(404).json({ message: 'Intern not found' });
+    }
     if (!events) {
       return res.status(404).json({ success: false, message: 'Interns process not found' });
     }
@@ -135,7 +159,7 @@ export const getAllDataInternsControlller = async (req: Request, res: Response) 
 export const createInternController = async (req: Request, res: Response) => {
   try {
     const intern = req.body;
-    const newIntern = await createInternService(intern);
+    const newIntern = await createInternInteractor(intern);
     if (!newIntern) {
       return res.status(404).json({ success: false, message: 'New intern not found' });
     }

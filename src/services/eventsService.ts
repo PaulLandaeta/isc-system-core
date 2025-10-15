@@ -6,8 +6,9 @@ import {
   deleteEvent,
 } from '../repositories/eventsRepository';
 import Event from '../models/eventInterface';
-import { updateHours } from './internService';
 import { getEventInterns } from '../repositories/eventInternsRepository';
+
+import { updateHours } from './internService';
 
 export const getEventsService = async () => {
   try {
@@ -70,7 +71,7 @@ export const finishEventService = async (eventId: number) => {
     if (fullEvent.is_finished) {
       throw new Error('Event is already finished');
     }
-    const interns = fullEvent.interns;
+    const { interns } = fullEvent;
     for (const intern of interns) {
       await updateHours(intern.id_intern, intern.type, intern.worked_hours);
     }

@@ -1,4 +1,6 @@
 import { buildLogger } from '../plugin/logger';
+import { HttpError } from '../errors/httpError';
+
 import db from './pg-connection';
 
 const logger = buildLogger('studentRepository');
@@ -6,7 +8,7 @@ const logger = buildLogger('studentRepository');
 const TABLE_NAME = 'students';
 interface studentInterface {
   id: string;
-  is_scholarship:boolean;
+  is_scholarship: boolean;
 }
 export const storeStudent = async (student: studentInterface) => {
   try {
@@ -15,7 +17,10 @@ export const storeStudent = async (student: studentInterface) => {
       logger.debug('Student have not created');
     }
     return newStudent;
-  } catch (error) {
+  } catch (error: any) {
+    if (error.code === '23505') {
+      throw new HttpError(409, 'Ya existe un estudiante con ese código o correo');
+    }
     logger.error(`Error creating student: ${error}`);
     throw error;
   }
@@ -46,6 +51,29 @@ export const deleteStudent = async (userId: string) => {
     await db(TABLE_NAME).where('id', userId).delete();
   } catch (error) {
     logger.error(`Error deleting student: ${error}`);
+    throw error;
+  }
+};
+
+export const getStudentByGraduation = async () => {
+  try {
+    logger.debug('Fetching students without graduation process');
+
+    const students = await db('students as s')
+      .join('user_profile as u', 'u.id', 's.id')
+      .leftJoin('graduation_process as gp', 'u.id', 'gp.student_id')
+      .whereNull('gp.student_id')
+      .select(
+        'u.id',
+        'u.code',
+        db.raw("CONCAT(u.name, ' ', u.lastname, ' ', u.mothername) as name"),
+        'u.email',
+        'u.phone'
+      );
+
+    return students;
+  } catch (error) {
+    logger.error(`Error fetching students without graduation process: ${error}`);
     throw error;
   }
 };

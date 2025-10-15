@@ -7,5 +7,5 @@ export interface MailOptions {
 }
 
 export interface MailerPlugin {
-  sendMail(options: MailOptions): Promise<void>;
+  sendMail(_options: MailOptions): Promise<void>;
 }

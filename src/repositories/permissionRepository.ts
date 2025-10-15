@@ -1,9 +1,10 @@
-import db from './pg-connection';
 import PermissionCategoryResponse from '../models/permissionCategoryResponseInterface';
 import PermissionCategory from '../models/PermissionCategoryInterface';
+
+import db from './pg-connection';
 const userProfileTable = 'user_profile';
 const userRolesTable = 'user_roles';
-const tablePermissions = 'permissions'
+const tablePermissions = 'permissions';
 const permissionCatgeoryTable = 'permission_categories';
 
 export const getRoleAndPermissions = async (id: number) => {
@@ -45,23 +46,29 @@ export const getRoleAndPermissions = async (id: number) => {
       .leftJoin('permissions', 'role_permissions.permission_id', 'permissions.id')
       .where('user_roles.user_id', id)
       .andWhere('roles.disabled', false);
-      
-    const combinedRolesAndPermissionsRaw = [...profileRolesAndPermissions, ...userRolesAndPermissions];
+
+    const combinedRolesAndPermissionsRaw = [
+      ...profileRolesAndPermissions,
+      ...userRolesAndPermissions,
+    ];
 
     const rolesAndPermissions = combinedRolesAndPermissionsRaw.reduce((acc, row) => {
-      const { role_name, role_id, 
-        permission_id, 
-        permission_name, 
-        permission_description, 
-        permission_display_name, 
-        permission_path, 
+      const {
+        role_name,
+        role_id,
+        permission_id,
+        permission_name,
+        permission_description,
+        permission_display_name,
+        permission_path,
         permission_sort,
-        permission_disabled } = row;
-      
+        permission_disabled,
+      } = row;
+
       if (!acc[role_id]) {
         acc[role_id] = {
           role_name: role_name,
-          permissions: [] 
+          permissions: [],
         };
       }
       if (permission_id && !permission_disabled) {
@@ -71,7 +78,7 @@ export const getRoleAndPermissions = async (id: number) => {
           description: permission_description,
           display_name: permission_display_name,
           path: permission_path,
-          sort: permission_sort
+          sort: permission_sort,
         });
       }
 
@@ -90,7 +97,11 @@ export const getPermissions = async () => {
     const permissions = await db
       .select(`${tablePermissions}.*`, `${permissionCatgeoryTable}.name as category_name`)
       .from(tablePermissions)
-      .innerJoin(permissionCatgeoryTable, `${tablePermissions}.category_id`, `${permissionCatgeoryTable}.id`)
+      .innerJoin(
+        permissionCatgeoryTable,
+        `${tablePermissions}.category_id`,
+        `${permissionCatgeoryTable}.id`
+      )
       .orderBy(`${permissionCatgeoryTable}.name`, 'asc');
 
     const categorizedPermissions: PermissionCategoryResponse = {};
@@ -110,10 +121,24 @@ export const getPermissions = async () => {
 
 export const getPermissionByID = async (id: number) => {
   try {
-    const permission = db(tablePermissions).where('id',id).returning('*');
+    const permission = db(tablePermissions).where('id', id).returning('*');
     return permission;
-  } catch (error){
+  } catch (error) {
     console.error('Error in GenericRoleRepository.getPermissionByID:', error);
     throw new Error('Error fetching Permission');
+  }
+};
+
+export const getMenuItemsByRoleId = async (roleId: number) => {
+  try {
+    const permissions = await db('role_permissions as rp')
+      .join('permissions as p', 'p.id', 'rp.permission_id')
+      .where('rp.role_id', roleId)
+      .select('p.display_name as name', 'p.path', 'rp.menu_order')
+      .orderBy('rp.menu_order', 'asc');
+    return permissions;
+  } catch (error) {
+    console.error('Error fetching menu items by role ID:', error);
+    throw new Error('Error fetching menu items');
   }
 };

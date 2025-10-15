@@ -1,5 +1,5 @@
 interface GraduationProcess {
-  id?: number; // Optional for creation as it's auto-generated
+  id?: number;
   student_id: number;
   modality_id: number;
   project_name: string;

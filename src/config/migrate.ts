@@ -1,4 +1,5 @@
 import knex, { Knex } from 'knex';
+
 import knexConfig from '../knexfile';
 import { buildLogger } from '../plugin/logger';
 
@@ -23,6 +24,7 @@ export async function runMigrations(): Promise<void> {
   await checkDatabaseConnection();
   try {
     await db.migrate.latest();
+    await db.seed.run();
     logger.info(`[${environment}] Migrations ran successfully at ${new Date().toISOString()}`);
   } catch (err) {
     const error = err as Error;

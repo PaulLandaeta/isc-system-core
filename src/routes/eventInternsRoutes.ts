@@ -1,4 +1,5 @@
 import { Router } from 'express';
+
 import { checkUserAuth } from '../middlewares/checkUserAuth';
 import {
   deleteRegistrationController,
@@ -27,5 +28,5 @@ router
   .route('/:id_evento/confirm_attendance/:id_becario')
   .put(checkUserAuth, updateAttendanceController);
 router.route('/register-information').get(checkUserAuth, getEventInformationsController);
-router.route('/:id_evento/status/:id_becario').get(checkUserAuth, getEventInternController)
+router.route('/:id_evento/status/:id_becario').get(checkUserAuth, getEventInternController);
 export default router;
