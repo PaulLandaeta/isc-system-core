@@ -75,5 +75,8 @@ export const getStudentByGraduation = async () => {
 };
 
 export const getStudentByPhone = async (phone: string): Promise<any | null> => {
-  return UserRepository.getUserByPhone(phone);
+  const userFromUsers = await UserRepository.getUserByPhone(phone);
+  if (userFromUsers) return userFromUsers;
+  const userFromProfile = await UserProfileRepository.getUserByPhone(phone);
+  return userFromProfile;
 };
