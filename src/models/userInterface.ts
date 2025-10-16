@@ -3,9 +3,13 @@ interface User {
   username: string;
   name: string;
   lastname: string;
-  mothername: string;
+  mothername?: string;
   password: string;
   email: string;
+  code: string;
+  phone: string;
+  role_id?: number;
+  roles?: string[];
 }
 
 export default User;

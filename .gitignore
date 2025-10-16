@@ -10,12 +10,6 @@ node_modules/
 # Ignore any local configuration files
 config/*.local.ts
 
-# Ignore log files
-logs/
-
-# Ignore any generated files
-*.log
-
 # Ignore VSCode settings
 .vscode/
 
@@ -30,3 +24,8 @@ yarn-error.log*
 
 # Ignore .DS_Store files (macOS)
 .DS_Store
+.vercel
+.idea
+
+#Ignore package-lock.json
+package-lock.json

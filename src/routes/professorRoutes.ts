@@ -1,8 +1,23 @@
 import express from 'express';
-import { getProfessorsController } from '../controllers/professorController';
 
+import * as ProfessorController from '../controllers/professorController';
+import { checkUserAuth } from '../middlewares/checkUserAuth';
+import { validateBody } from '../middlewares/validateBodyMiddleware';
+import { professorSchema } from '../middlewares/schemas/createProfessorSchema';
 const router = express.Router();
 
-router.get('/', getProfessorsController);
-
+router.get('/', checkUserAuth, ProfessorController.getProfessorsController);
+router.post('/', checkUserAuth, validateBody(professorSchema), ProfessorController.createProfessor);
+router.get('/:id', checkUserAuth, ProfessorController.getProfessorById);
+router.delete('/:id', checkUserAuth, ProfessorController.deleteProfessorController);
+router.get(
+  '/thesis-students/:supervisorId',
+  checkUserAuth,
+  ProfessorController.getThesisStudentsController
+);
+router.get(
+  '/profile/:id',
+  checkUserAuth,
+  ProfessorController.getProfessorProfileController
+);
 export default router;

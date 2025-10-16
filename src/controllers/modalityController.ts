@@ -1,5 +1,8 @@
 import { Request, Response } from 'express';
+
 import * as ModalityInteractor from '../interactors/modalityInteractor';
+import { handleError } from '../handlers/errorHandler';
+import { sendSuccess } from '../handlers/successHandler';
 
 export const getModalitiesController = async (req: Request, res: Response) => {
   try {
@@ -7,8 +10,10 @@ export const getModalitiesController = async (req: Request, res: Response) => {
     if (!modalities) {
       return res.status(404).json({ success: false, message: 'Modalities not found' });
     }
-    res.json({ success: true, data: modalities, message: 'Modalities retrieved successfully' });
+    sendSuccess(res, modalities, 'Modalities retrieved successfully');
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Internal server error' });
+    if (error instanceof Error) {
+      handleError(res, error);
+    }
   }
 };

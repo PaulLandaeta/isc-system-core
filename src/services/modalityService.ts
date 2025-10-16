@@ -1,4 +1,4 @@
-import Modality from '../models/modality';
+import Modality from '../models/modalityInterface';
 import * as ModalityRepository from '../repositories/modalityRepository';
 
 export const getGraduationProcessById = async (): Promise<Modality[]> => {

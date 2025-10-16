@@ -1,5 +1,8 @@
-import logger from '../utils/logger';
+import { buildLogger } from '../plugin/logger';
+
 import db from './pg-connection';
+
+const logger = buildLogger('modalityRepository');
 
 const TABLE_NAME = 'modalities';
 export const getModalities = async () => {

@@ -1,20 +1,81 @@
 import * as UserService from '../services/userService';
-import logger from '../utils/logger';
+
+import { buildLogger } from '../plugin/logger';
+import { NotFoundError } from '../errors/notFoundError';
+import { ConflictError } from '../errors/conflictError';
+import createProfessorRequest from '../dtos/createProfessorRequest';
+import { createProfessorService } from '../services/professorService';
+import * as userProfileService from '../services/userProfileService';
+import * as graduationService from '../services/graduationService';
+import { BadRequestError } from '../errors/badRequestError';
+const logger = buildLogger('professorInteractor');
 
 export const getProfessors = async () => {
+  logger.debug('Fetching professors');
+  const professors = await UserService.getProfessors();
+
+  if (!professors) {
+    logger.info('No professors found');
+    throw new NotFoundError('There are no professors');
+  }
+
+  logger.info('Professors fetched successfully');
+  return professors;
+};
+
+export const createProfessor = async (professorData: createProfessorRequest) => {
   try {
-    logger.debug('Fetching professors');
-    const professors = await UserService.getProfessors();
-
-    if (professors.length === 0) {
-      logger.info('No professors found');
-      return 'There are no professors';
+    logger.info('Creating professor with data:', { professorData });
+    const existingUser = await UserService.findByEmail(professorData.email);
+    if (existingUser) {
+      throw new ConflictError(`El correo ${professorData.email} ya está registrado.`);
     }
-
-    logger.info('Professors fetched successfully');
-    return professors;
+    const newUserProfile = await userProfileService.createUserProfile(professorData);
+    const { id } = newUserProfile;
+    professorData.id = id;
+    const newProfessor = await createProfessorService(professorData);
+    return newProfessor;
   } catch (error) {
-    logger.error(`Error fetching professors: ${error}`);
-    throw new Error('Error fetching professors');
+    console.error('Error in createProfessor interactor:', error);
+    throw error;
+  }
+
+};
+
+export const getProfessorById = async (id: string) => {
+  logger.debug('Fetching professor by id:', { id });
+  try {
+    const professor = await UserService.getProfessorById(id);
+    logger.debug('Professor fetched successfully:', { id });
+    return professor;
+  } catch (error) {
+    logger.error('Error in getProfessorById interactor:', {
+      id,
+      message: (error as Error).message,
+    });
+    throw new Error(`Error fetching the professor with id: ${id}`);
   }
 };
+
+export const getProfessorProfile = async (id: string) => {
+  try {
+    const userProfileData = await userProfileService.getUserById(id);
+    if (!userProfileData) {
+      logger.info('No professors found');
+      throw new NotFoundError(`User profile not found for id: ${id}`);
+    }
+    const graduationData = await graduationService.getProcessByTutorId(id);
+    if (!graduationData) {
+      logger.info('No graduation process found');
+      throw new NotFoundError(`Graduation process not found for tutor id: ${id}`);
+    }
+    const data = {... userProfileData, graduationData};
+    return data;
+  } catch (error) {
+    logger.error('Error in getProfessorById interactor:', {
+      id,
+      message: (error as Error).message,
+    });
+    throw new Error(`Error fetching professor profile for id: ${id}`);
+  }
+}
