@@ -73,3 +73,7 @@ export const getStudentByGraduation = async () => {
     throw error;
   }
 };
+
+export const getStudentByPhone = async (phone: string): Promise<any | null> => {
+  return UserRepository.getUserByPhone(phone);
+};
