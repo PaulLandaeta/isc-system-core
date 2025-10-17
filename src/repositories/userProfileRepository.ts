@@ -2,12 +2,9 @@ import UserResponse from '../models/genericUserResponse';
 import { userProfileInterface } from '../models/userProfile';
 import { buildLogger } from '../plugin/logger';
 import { StudentProfileResponseDTO } from '../dtos/studentProfileResponse';
-
-
 import db from './pg-connection';
 
 const logger = buildLogger('userProfileRepository');
-
 const TABLE_NAME = 'user_profile';
 
 export const createUserProfile = async (userProfile: userProfileInterface) => {
@@ -36,6 +33,16 @@ export const getUserById = async (userId: number) => {
     return user;
   } catch (error) {
     console.error('Error fetching user by id:', error);
+    throw error;
+  }
+};
+
+export const getUserByPhone = async (phone: string) => {
+  try {
+    const user = await db(TABLE_NAME).where('phone', phone).first();
+    return user || null;
+  } catch (error) {
+    console.error('Error fetching user by phone:', error);
     throw error;
   }
 };
@@ -72,7 +79,6 @@ export const updateUserProfileRole = async (userId: string, roleId: number) => {
   }
 };
 
-
 export const getUserProfilePublicById = async (userId: string): Promise<StudentProfileResponseDTO | null> => {
   try {
     const row = await db(`${TABLE_NAME} as up`)
@@ -80,7 +86,7 @@ export const getUserProfilePublicById = async (userId: string): Promise<StudentP
       .select(
         'up.id',
         'up.name',
-        db.raw(`'' as career`),   
+        db.raw(`'' as career`),
         'up.phone',
         'up.email',
         db.raw(`COALESCE(r.name, 'unknown') as role`)
