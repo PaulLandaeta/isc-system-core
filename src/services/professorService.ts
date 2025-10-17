@@ -26,7 +26,7 @@ export const createProfessorService = async (
     const newProfessor = await ProfessorRepository.storeProfessor(professorRequest);
     return newProfessor;
   } catch (error) {
-    console.error('Error in createProfessor interactors:', error);
+    logger.error(`Error in createProfessorService: ${error}`);
     if (error instanceof BadRequestError) {
       throw error;
     } else {
@@ -37,19 +37,22 @@ export const createProfessorService = async (
 
 export const handleProfessorUpdate = async (userId: string, userProfileData: any) => {
   try {
-    await StudentRepository.deleteStudent(userId);
     const existingProfessor = await ProfessorRepository.getProfessorById(userId);
+
     const professorData = {
       id: userId,
       degree: userProfileData.degree,
       department: userProfileData.department,
       specialty: userProfileData.specialty,
     };
+
     if (existingProfessor) {
       await ProfessorRepository.updateProfessor(userId, professorData);
     } else {
       await ProfessorRepository.storeProfessor(professorData);
     }
+
+    return true;
   } catch (error) {
     logger.error(`Error updating professor: ${error}`);
     throw error;
@@ -68,10 +71,10 @@ export const deleteProfessorService = async (id: string) => {
     const professorDeleted = await ProfessorRepository.deleteProfessor(id);
     return professorDeleted;
   } catch (error) {
+    logger.error(`Error in deleteProfessorService: ${error}`);
     if (error instanceof NotFoundError || (error as any).name === 'NotFoundError') {
       throw new HttpError(404, (error as Error).message);
     }
-    console.error('Error in professorService.deleteProfessorService:', error);
     throw error;
   }
 };
@@ -134,3 +137,4 @@ export const getThesisStudentsService = async (
     throw error;
   }
 };
+
