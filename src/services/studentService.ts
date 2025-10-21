@@ -9,27 +9,53 @@ import { buildLogger } from '../plugin/logger';
 const logger = buildLogger('studentsService');
 
 export const getStudents = async (): Promise<Student[]> => {
-  return UserRepository.getStudents();
+  try {
+    return await UserRepository.getStudents();
+  } catch (error) {
+    logger.error(`Error fetching students: ${error}`);
+    throw error;
+  }
 };
 
 export const getStudentByCode = async (userCode: number): Promise<Student | null> => {
-  return UserRepository.getStudentByCode(userCode);
+  try {
+    return await UserRepository.getStudentByCode(userCode);
+  } catch (error) {
+    logger.error(`Error fetching student by code ${userCode}: ${error}`);
+    throw error;
+  }
 };
 
 export const getStudentByEmail = async (email: string): Promise<Student | null> => {
-  return UserRepository.getUserByEmail(email);
+  try {
+    return await UserRepository.getUserByEmail(email);
+  } catch (error) {
+    logger.error(`Error fetching student by email ${email}: ${error}`);
+    throw error;
+  }
 };
 
 export const getStudentById = async (studentId: number): Promise<Student | null> => {
-  return UserProfileRepository.getUserById(studentId);
+  try {
+    return await UserProfileRepository.getUserById(studentId);
+  } catch (error) {
+    logger.error(`Error fetching student by id ${studentId}: ${error}`);
+    throw error;
+  }
 };
 
 export const updateUser = async (
   studentId: number,
   studentData: createUserRequest
 ): Promise<createUserRequest | null> => {
-  return UserRepository.updateUser(studentId, studentData);
+  try {
+    return await UserRepository.updateUser(studentId, studentData);
+  } catch (error) {
+    logger.error(`Error updating user ${studentId}: ${error}`);
+    throw error;
+  }
 };
+
 export const createStudent = async (student: createStudentRequest): Promise<any | null> => {
   try {
     const studentRequest = {
@@ -75,5 +101,13 @@ export const getStudentByGraduation = async () => {
 };
 
 export const getStudentByPhone = async (phone: string): Promise<any | null> => {
-  return UserRepository.getUserByPhone(phone);
+  try {
+    const userFromUsers = await UserRepository.getUserByPhone(phone);
+    if (userFromUsers) return userFromUsers;
+    const userFromProfile = await UserProfileRepository.getUserByPhone(phone);
+    return userFromProfile;
+  } catch (error) {
+    logger.error(`Error fetching student by phone ${phone}: ${error}`);
+    throw error;
+  }
 };
