@@ -117,7 +117,10 @@ export const getStudent = async (studentId: number) => {
     return student;
   } catch (error) {
     console.error('Error getting student:', error);
-    throw new Error('Error getting student');
+    if (error instanceof NotFoundError || error instanceof HttpError) {
+      throw error;
+    }
+    throw new HttpError(500, 'Unexpected error retrieving student');
   }
 };
 
@@ -140,7 +143,9 @@ export const updateStudent = async (studentId: number, studentData: createUserRe
     return updatedStudent;
   } catch (error) {
     console.error('Error updating student:', error);
-    if (error instanceof HttpError) throw error;
+    if (error instanceof HttpError) {
+      throw error;
+    }
     throw new Error('Error updating student');
   }
 };
