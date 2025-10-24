@@ -15,5 +15,6 @@
     "typeRoots": ["./src/@types", "./node_modules/@types"],
     "types": ["express", "jest"]
   },
-  "include": ["src/**/*", "scripts", "data", "test"]
+  "include": ["src/**/*.ts"],
+  "ts-node": { "files": true }
 }

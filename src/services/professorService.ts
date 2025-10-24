@@ -2,14 +2,10 @@ import createProfessorRequest from '../dtos/createProfessorRequest';
 import * as ProfessorRepository from '../repositories/professorRepository';
 import * as StudentRepository from '../repositories/studentRepository';
 import { buildLogger } from '../plugin/logger';
-import {
-  deleteProfessor,
-  findProcessByTutorId,
-  storeProfessor,
-} from '../repositories/professorRepository';
 import { modalityMap } from '../constants/modalityMap';
 import { BadRequestError } from '../errors/badRequestError';
 import { HttpError } from '../errors/httpError';
+import { NotFoundError } from '../errors/notFoundError';
 
 const logger = buildLogger('professorsService');
 
@@ -27,10 +23,10 @@ export const createProfessorService = async (
       department: 'DTI',
       specialty: 'Dormir',
     };
-    const newProfessor = await storeProfessor(professorRequest);
+    const newProfessor = await ProfessorRepository.storeProfessor(professorRequest);
     return newProfessor;
   } catch (error) {
-    console.error('Error in createProfessor interactors:', error);
+    logger.error(`Error in createProfessorService: ${error}`);
     if (error instanceof BadRequestError) {
       throw error;
     } else {
@@ -41,19 +37,22 @@ export const createProfessorService = async (
 
 export const handleProfessorUpdate = async (userId: string, userProfileData: any) => {
   try {
-    await StudentRepository.deleteStudent(userId);
     const existingProfessor = await ProfessorRepository.getProfessorById(userId);
+
     const professorData = {
       id: userId,
       degree: userProfileData.degree,
       department: userProfileData.department,
       specialty: userProfileData.specialty,
     };
+
     if (existingProfessor) {
       await ProfessorRepository.updateProfessor(userId, professorData);
     } else {
       await ProfessorRepository.storeProfessor(professorData);
     }
+
+    return true;
   } catch (error) {
     logger.error(`Error updating professor: ${error}`);
     throw error;
@@ -62,19 +61,20 @@ export const handleProfessorUpdate = async (userId: string, userProfileData: any
 
 export const deleteProfessorService = async (id: string) => {
   try {
-    const tutorInGraduation = await findProcessByTutorId(id);
-
+    const tutorInGraduation = await ProfessorRepository.findProcessByTutorId(id);
     if (tutorInGraduation) {
       throw new HttpError(
         409,
         'No se puede eliminar el profesor: está asignado como tutor en un proceso de graduación activo'
       );
     }
-
-    const professorDeleted = await deleteProfessor(id);
+    const professorDeleted = await ProfessorRepository.deleteProfessor(id);
     return professorDeleted;
   } catch (error) {
-    console.error('Error in professorService.deleteProfessorService:', error);
+    logger.error(`Error in deleteProfessorService: ${error}`);
+    if (error instanceof NotFoundError || (error as any).name === 'NotFoundError') {
+      throw new HttpError(404, (error as Error).message);
+    }
     throw error;
   }
 };
@@ -137,3 +137,4 @@ export const getThesisStudentsService = async (
     throw error;
   }
 };
+

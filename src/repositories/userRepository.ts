@@ -2,7 +2,6 @@ import UserRole from '../constants/roles';
 import createUserRequest from '../dtos/createUserRequest';
 import User from '../models/userInterface';
 import { buildLogger } from '../plugin/logger';
-
 import db from './pg-connection';
 
 const logger = buildLogger('userRepository');
@@ -16,7 +15,21 @@ export const getUserByEmail = async (email: string) => {
       .groupBy('u.id');
     return user;
   } catch (error) {
-    console.error('Error fetching user by email:', error);
+    logger.error(`Error fetching user by email: ${error}`);
+    throw error;
+  }
+};
+
+export const getUserByPhone = async (phone: string) => {
+  try {
+    const user = await db('user_profile as u')
+      .where('u.phone', phone)
+      .join('roles as r', 'u.role_id', '=', 'r.id')
+      .first('u.*', db.raw('array_agg(r.name) as roles'))
+      .groupBy('u.id');
+    return user || null;
+  } catch (error) {
+    logger.error(`Error fetching user by phone: ${error}`);
     throw error;
   }
 };
@@ -35,10 +48,11 @@ export const getStudents = async () => {
 
     return students;
   } catch (error) {
-    console.error(error);
+    logger.error(`Error fetching students: ${error}`);
     throw error;
   }
 };
+
 export const getStudentByCode = async (userCode: number) => {
   try {
     const student = await db('user_profile as u')
@@ -55,7 +69,7 @@ export const getStudentByCode = async (userCode: number) => {
 
     return student || null;
   } catch (error) {
-    console.error('Error in getStudentByCode:', error);
+    logger.error(`Error in getStudentByCode: ${error}`);
     throw new Error('Error fetching student by code');
   }
 };
@@ -75,7 +89,7 @@ export const createUser = async (userData: User) => {
 
     return newUser;
   } catch (error) {
-    console.error(error);
+    logger.error(`Error creating user: ${error}`);
     throw error;
   }
 };
@@ -101,7 +115,8 @@ export const getProfessors = async () => {
           SELECT COUNT(*) FROM graduation_process gp WHERE gp.reviewer_id = p.id
         ) as reviewer_count`)
       )
-      .join('user_profile as up', 'p.id', '=', 'up.id');
+      .join('user_profile as up', 'p.id', '=', 'up.id')
+      .where('p.disabled', false);
 
     logger.info('Professors fetched successfully with tutorias and revisiones.');
     logger.debug(`Fetched professors: ${JSON.stringify(professors)}`);
@@ -111,12 +126,7 @@ export const getProfessors = async () => {
     throw Error('Error fetching professors');
   }
 };
-/**
- * Update user data
- * @param userId User id
- * @param userData User data
- * @returns Updated user data
- */
+
 export const updateUser = async (userId: number, userData: createUserRequest) => {
   try {
     const allowedFields = {
@@ -130,7 +140,7 @@ export const updateUser = async (userId: number, userData: createUserRequest) =>
     await db('user_profile').where('id', userId).update(allowedFields);
     return allowedFields;
   } catch (error) {
-    console.error('Error updating user:', error);
+    logger.error(`Error updating user: ${error}`);
     throw error;
   }
 };
@@ -140,16 +150,11 @@ export const getUserByRol = async (rolId: number) => {
     const usersByRol = await db('user_profile').where('role_id', rolId).returning('*');
     return usersByRol;
   } catch (error) {
-    console.error('Error deleting user:', error);
+    logger.error(`Error fetching user by role: ${error}`);
     throw error;
   }
 };
 
-/**
- * Get professor by id
- * @param id Professor id
- * @returns Professor data
- */
 export const getProfessorById = async (id: string) => {
   try {
     const professor = await db('professors as p')
@@ -166,13 +171,15 @@ export const getProfessorById = async (id: string) => {
       )
       .join('user_profile as up', 'p.id', '=', 'up.id')
       .where('up.id', id)
+      .andWhere('p.disabled', false)
       .first();
     return professor;
   } catch (error) {
-    logger.error(`Error in getProfessorById for id: ${id}`);
+    logger.error(`Error in getProfessorById for id: ${id}: ${error}`);
     throw new Error(`Unable to retrieve professor with id: ${id}`);
   }
 };
+
 export const getUserByCode = async (userCode: string) => {
   try {
     const student = await db('user_profile as u')
@@ -189,8 +196,8 @@ export const getUserByCode = async (userCode: string) => {
 
     return student || null;
   } catch (error) {
-    console.error('Error in getUserByCode:', error);
-    throw new Error('Error fetching student by code');
+    logger.error(`Error in getUserByCode: ${error}`);
+    throw new Error('Error fetching user by code');
   }
 };
 
@@ -203,7 +210,7 @@ export const getUserById = async (userId: number) => {
       .first();
     return user || null;
   } catch (error) {
-    console.error('Error in getUserById:', error);
+    logger.error(`Error in getUserById: ${error}`);
     throw new Error('Error fetching user by ID');
   }
 };

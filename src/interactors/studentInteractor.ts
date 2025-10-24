@@ -43,6 +43,13 @@ export const createStudent = async (studentData: createStudentRequest) => {
       throw new HttpError(409, 'Ya existe un estudiante con este código.');
     }
 
+    if (studentData.phone) {
+      const existingUserWithPhone = await StudentService.getStudentByPhone(studentData.phone);
+      if (existingUserWithPhone) {
+        throw new HttpError(400, 'El número de teléfono ya está registrado.');
+      }
+    }
+
     const newStudent = await UserService.createUser({
       name: studentData.name,
       lastname: studentData.lastname,
@@ -110,7 +117,10 @@ export const getStudent = async (studentId: number) => {
     return student;
   } catch (error) {
     console.error('Error getting student:', error);
-    throw new Error('Error getting student');
+    if (error instanceof NotFoundError || error instanceof HttpError) {
+      throw error;
+    }
+    throw new HttpError(500, 'Unexpected error retrieving student');
   }
 };
 
@@ -122,10 +132,20 @@ export const updateStudent = async (studentId: number, studentData: createUserRe
       throw new NotFoundError('Student not found');
     }
 
+    if (studentData.phone) {
+      const userWithPhone = await StudentService.getStudentByPhone(studentData.phone);
+      if (userWithPhone && Number(userWithPhone.id) !== Number(studentId)) {
+        throw new HttpError(400, 'El número de teléfono ya está registrado.');
+      }
+    }
+
     const updatedStudent = await StudentService.updateUser(studentId, studentData);
     return updatedStudent;
   } catch (error) {
     console.error('Error updating student:', error);
+    if (error instanceof HttpError) {
+      throw error;
+    }
     throw new Error('Error updating student');
   }
 };

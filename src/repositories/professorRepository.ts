@@ -1,62 +1,70 @@
 import { buildLogger } from '../plugin/logger';
-
+import { NotFoundError } from '../errors/notFoundError';
 import db from './pg-connection';
 
 const logger = buildLogger('professorRepository');
 
 const TABLE_NAME = 'professors';
-  interface professorInterface {
+
+interface professorInterface {
   id: string;
   degree: string;
   department: string;
   specialty: string;
 }
+
 export const storeProfessor = async (professor: professorInterface) => {
   try {
     const newProfessor = await db(TABLE_NAME).insert(professor).returning('*');
-    if (!newProfessor) {
-      logger.debug('Professor have not created');
-    }
-    return newProfessor;
+    return Array.isArray(newProfessor) ? newProfessor[0] : newProfessor;
   } catch (error) {
-    logger.error(`Error creating professor: ${error}`);
+    logger.error(`storeProfessor error: ${error}`);
     throw error;
   }
 };
+
 export const getProfessorById = async (userId: string) => {
-    try {
-        const professor = await db(TABLE_NAME)
-          .where('id', userId)
-          .where('disabled', false)
-          .first();
-        return professor;
-      } catch (error) {
-        logger.error('Error fetching professor by id');
-        throw error;
-      }
+  try {
+    const professor = await db(`${TABLE_NAME} as p`)
+      .join('user_profile as u', 'u.id', 'p.id')
+      .where('p.id', userId)
+      .andWhere('p.disabled', false)
+      .first();
+
+    return professor || null;
+  } catch (error) {
+    logger.error(`getProfessorById error for id=${userId}: ${error}`);
+    throw error;
+  }
 };
-    
 
 export const updateProfessor = async (userId: string, professorData: any) => {
   try {
-    const updatedProfessor = await db(TABLE_NAME)
+    const updated = await db(TABLE_NAME)
       .where('id', userId)
       .update(professorData)
       .returning('*');
-    return updatedProfessor;
+    return Array.isArray(updated) ? updated[0] : updated;
   } catch (error) {
-    logger.error(`Error updating professor: ${error}`);
+    logger.error(`updateProfessor error for id=${userId}: ${error}`);
     throw error;
   }
 };
 
 export const deleteProfessor = async (id: string) => {
   try {
-    const professorUpdated = await db(TABLE_NAME).where('id', id).update({ disabled: true }).returning('*');
-    return professorUpdated;
+    const existing = await db(TABLE_NAME).where('id', id).first();
+    if (!existing) {
+      throw new NotFoundError(`Professor with id ${id} not found`);
+    }
+    if (existing.disabled) {
+      throw new NotFoundError(`Professor with id ${id} not found`);
+    }
+    const updated = await db(TABLE_NAME).where('id', id).update({ disabled: true }).returning('*');
+    return Array.isArray(updated) ? updated[0] : updated;
   } catch (error) {
-    console.error('Error in professorRepository.deleteProfessor:', error);
-    throw new Error('Error updating Professor disabled status');
+    logger.error(`deleteProfessor error for id=${id}: ${error}`);
+    throw error;
   }
 };
 
@@ -64,11 +72,12 @@ export const getProfessorByCode = async (code: string) => {
   try {
     const professor = await db(`${TABLE_NAME} as p`)
       .join('user_profile as u', 'u.id', 'p.id')
-      .where('code', code)
+      .where('u.code', code)
+      .andWhere('p.disabled', false)
       .first();
-    return professor;
+    return professor || null;
   } catch (error) {
-    logger.error('Error fetching professor by code: ${error}');
+    logger.error(`getProfessorByCode error for code=${code}: ${error}`);
     throw error;
   }
 };
@@ -103,7 +112,7 @@ export const getThesisSummaryByTutor = async (tutorId: string) => {
 
     return summaryByType;
   } catch (error) {
-    logger.error(`Error fetching thesis summary by tutor: ${error}`);
+    logger.error(`getThesisSummaryByTutor error for tutorId=${tutorId}: ${error}`);
     throw error;
   }
 };
@@ -118,7 +127,6 @@ export const getThesisStudentsByTutor = async (
 ) => {
   try {
     const { type, sortBy, order } = filters;
-
     const sortField = sortBy === 'status' ? 'gp.stage_id' : 'gp.date_tutor_assignament';
     const sortOrder = order || 'desc';
 
@@ -144,31 +152,49 @@ export const getThesisStudentsByTutor = async (
 
     return await query;
   } catch (error) {
-    logger.error(`Error fetching thesis students by tutor: ${error}`);
+    logger.error(`getThesisStudentsByTutor error for tutorId=${tutorId}: ${error}`);
     throw error;
   }
 };
 
 export const findProcessByTutorId = async (tutorId: string) => {
-  return db('graduation_process').where('tutor_id', tutorId).first();
+  try {
+    return await db('graduation_process').where('tutor_id', tutorId).first();
+  } catch (error) {
+    logger.error(`findProcessByTutorId error for tutorId=${tutorId}: ${error}`);
+    throw error;
+  }
 };
 
 export const getProfessors = async () => {
   try {
-    const professors = await db('professor')
-      .where({ disabled: false }); 
+    const professors = await db(`${TABLE_NAME} as p`)
+      .join('user_profile as up', 'p.id', 'up.id')
+      .where('p.disabled', false)
+      .select(
+        'up.id',
+        'up.name',
+        'up.lastname',
+        'up.mothername',
+        'up.email',
+        'up.code',
+        'up.phone',
+        'p.degree'
+      );
     return professors;
   } catch (error) {
-    console.error('Error fetching professors:', error);
+    logger.error(`getProfessors error: ${error}`);
     throw error;
   }
 };
 
 export const getRolesCountByProfessor = async (professorId: string) => {
-  const resTutor = await db('graduation_process').where('tutor_id', professorId).count('*').first();
-  const resReviewer = await db('graduation_process')
-    .where('reviewer_id', professorId)
-    .count('*')
-    .first();
-  return { resTutor, resReviewer };
+  try {
+    const resTutor = await db('graduation_process').where('tutor_id', professorId).count('*').first();
+    const resReviewer = await db('graduation_process').where('reviewer_id', professorId).count('*').first();
+    return { resTutor, resReviewer };
+  } catch (error) {
+    logger.error(`getRolesCountByProfessor error for professorId=${professorId}: ${error}`);
+    throw error;
+  }
 };
