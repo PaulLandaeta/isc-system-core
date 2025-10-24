@@ -1,0 +1,109 @@
+pipeline {
+    agent {
+        docker {
+            image 'node:18'
+            args '-v /var/run/docker.sock:/var/run/docker.sock'
+        }
+    }
+
+    environment {
+        DOCKER_REGISTRY = credentials('DOCKER_REGISTRY')
+        DOCKER_REGISTRY_CREDENTIALS = credentials('DOCKER_REGISTRY_CREDENTIALS')
+        NODE_ENV = 'production'
+        APP_NAME = 'isc-system-core'
+        VERSION = sh(script: 'node -p "require(\'./package.json\').version"', returnStdout: true).trim()
+    }
+
+    options {
+        timeout(time: 1, unit: 'HOURS')
+        disableConcurrentBuilds()
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+    }
+
+    triggers {
+        pollSCM('H/5 * * * *')
+    }
+
+    stages {
+        stage('Validation') {
+            steps {
+                script {
+                    if (env.BRANCH_NAME != 'main') {
+                        error('Production deployments are only allowed from main branch')
+                    }
+                }
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh 'npm ci'
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                sh 'npm test'
+            }
+        }
+
+        stage('Code Quality') {
+            steps {
+                sh 'npm run lint'
+                sh 'npm audit --production'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'npm run build'
+                sh """
+                    docker build -t ${DOCKER_REGISTRY}/${APP_NAME}:${VERSION} .
+                    docker tag ${DOCKER_REGISTRY}/${APP_NAME}:${VERSION} ${DOCKER_REGISTRY}/${APP_NAME}:latest
+                """
+            }
+        }
+
+        stage('Publish') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'DOCKER_REGISTRY_CREDENTIALS', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh """
+                        echo "${DOCKER_PASS}" | docker login ${DOCKER_REGISTRY} -u "${DOCKER_USER}" --password-stdin
+                        docker push ${DOCKER_REGISTRY}/${APP_NAME}:${VERSION}
+                        docker push ${DOCKER_REGISTRY}/${APP_NAME}:latest
+                    """
+                }
+            }
+        }
+
+        stage('Deploy to Production') {
+            steps {
+                withCredentials([file(credentialsId: 'KUBECONFIG_PROD', variable: 'KUBECONFIG')]) {
+                    sh """
+                        kubectl set image deployment/${APP_NAME} ${APP_NAME}=${DOCKER_REGISTRY}/${APP_NAME}:${VERSION} --record
+                        kubectl rollout status deployment/${APP_NAME}
+                    """
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            cleanWs()
+            sh 'docker system prune -f'
+        }
+        success {
+            slackSend(
+                color: 'good',
+                message: "Build #${env.BUILD_NUMBER} of ${env.JOB_NAME} succeeded\nVersion: ${VERSION}\nBuild URL: ${env.BUILD_URL}"
+            )
+        }
+        failure {
+            slackSend(
+                color: 'danger',
+                message: "Build #${env.BUILD_NUMBER} of ${env.JOB_NAME} failed\nVersion: ${VERSION}\nBuild URL: ${env.BUILD_URL}"
+            )
+        }
+    }
+}
