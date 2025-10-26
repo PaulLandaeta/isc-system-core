@@ -30,7 +30,6 @@ export const getProfessorById = async (userId: string) => {
       .where('p.id', userId)
       .andWhere('p.disabled', false)
       .first();
-
     return professor || null;
   } catch (error) {
     logger.error(`getProfessorById error for id=${userId}: ${error}`);
@@ -182,9 +181,27 @@ export const getProfessors = async () => {
         'p.degree'
       );
     return professors;
-  } catch (error) {
-    logger.error(`getProfessors error: ${error}`);
-    throw error;
+  } catch (primaryError) {
+    logger.error(`getProfessors primary query error: ${primaryError}`);
+    try {
+      const professorsFallback = await db(`${TABLE_NAME} as p`)
+        .join('users as up', 'p.id', 'up.id')
+        .where('p.disabled', false)
+        .select(
+          'up.id',
+          'up.name',
+          'up.lastname',
+          'up.mothername',
+          'up.email',
+          'up.code',
+          'up.phone',
+          'p.degree'
+        );
+      return professorsFallback;
+    } catch (fallbackError) {
+      logger.error(`getProfessors fallback query error: ${fallbackError}`);
+      throw fallbackError;
+    }
   }
 };
 

@@ -1,5 +1,4 @@
 import { Router } from 'express';
-
 import * as GraduationController from '../controllers/graduationController';
 import { checkUserAuth } from '../middlewares/checkUserAuth';
 import { validateParams } from '../middlewares/validateParamsMiddleware';
@@ -39,5 +38,6 @@ router.route('/').get(checkUserAuth, GraduationController.getGraduationProcesses
 router.route('/defense/:id').put(checkUserAuth, GraduationController.updateDefenseController);
 router.route('/:id/defense').post(checkUserAuth, GraduationController.createDefenseController);
 router.route('/:id/defense').get(checkUserAuth, GraduationController.getDefenseController);
+router.route('/:id/tutors').get(checkUserAuth, GraduationController.getTutorsForAssignmentController);
 
 export default router;

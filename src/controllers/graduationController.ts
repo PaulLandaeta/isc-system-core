@@ -1,13 +1,12 @@
 import { Request, Response } from 'express';
-
 import * as GraduationProcessInteractor from '../interactors/graduationInteractor';
+import * as ProfessorRepository from '../repositories/professorRepository';
 import createGraduationProcessRequest from '../dtos/createGraduationProcessRequest';
 import { handleError } from '../handlers/errorHandler';
 import { sendCreated, sendSuccess } from '../handlers/successHandler';
 
 export const getGraduationProcessByIdController = async (req: Request, res: Response) => {
   const processId = parseInt(req.params.id);
-
   try {
     const graduationProcess = await GraduationProcessInteractor.getGraduationProcessById(processId);
     if (!graduationProcess) {
@@ -22,7 +21,6 @@ export const getGraduationProcessByIdController = async (req: Request, res: Resp
 export const updateGraduationProcessController = async (req: Request, res: Response) => {
   const processId = parseInt(req.params.id);
   const updatedData = req.body;
-
   try {
     const updatedGraduationProcess = await GraduationProcessInteractor.updateGraduationProcess(
       processId,
@@ -41,7 +39,6 @@ export const updateGraduationProcessController = async (req: Request, res: Respo
 
 export const createGraduationProcessController = async (req: Request, res: Response) => {
   const graduationProcess: createGraduationProcessRequest = req.body;
-
   try {
     const newGraduationProcess =
       await GraduationProcessInteractor.createGraduationProcess(graduationProcess);
@@ -67,7 +64,6 @@ export const getGraduationProcessesController = async (req: Request, res: Respon
 export const createDefenseController = async (req: Request, res: Response) => {
   const processId = parseInt(req.params.id);
   const defenseData = req.body;
-
   try {
     const defense = await GraduationProcessInteractor.createDefense(processId, defenseData);
     sendCreated(res, defense, 'Defense created successfully');
@@ -81,7 +77,6 @@ export const createDefenseController = async (req: Request, res: Response) => {
 export const updateDefenseController = async (req: Request, res: Response) => {
   const defenseId = parseInt(req.params.id);
   const updatedData = req.body;
-
   try {
     const defense = await GraduationProcessInteractor.updateDefense(defenseId, updatedData);
     sendSuccess(res, defense, 'Defense updated successfully');
@@ -101,6 +96,19 @@ export const getDefenseController = async (req: Request, res: Response) => {
   } catch (error) {
     if (error instanceof Error) {
       handleError(res, error);
+    }
+  }
+};
+
+export const getTutorsForAssignmentController = async (req: Request, res: Response) => {
+  try {
+    const professors = await ProfessorRepository.getProfessors();
+    sendSuccess(res, professors, 'Tutors retrieved successfully');
+  } catch (error) {
+    if (error instanceof Error) {
+      handleError(res, error);
+    } else {
+      res.status(500).json({ success: false, message: 'Error retrieving tutors' });
     }
   }
 };
