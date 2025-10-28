@@ -14,8 +14,7 @@ const login = async (req: Request, res: Response) => {
     if (typeof resLogin === 'string') {
       throw new AuthenticationError(resLogin);
     }
-    // TODO: use when all permissions are set
-    const roles_permissions = await PermissionsInteractor.getRolesAndPermissions(resLogin.id);
+    const roles_permissions = await PermissionsInteractor.getRolesAndPermissions(resLogin.role_id);
     const result = {
       ...resLogin,
       roles_permissions,
