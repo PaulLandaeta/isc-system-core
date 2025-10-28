@@ -8,6 +8,7 @@ interface UserResponse {
   password?: string;
   email: string;
   token: string;
+  role_id: number;
   menu?: MenuResponse;
 }
 
