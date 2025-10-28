@@ -10,7 +10,7 @@ import createStudentRequest from '../dtos/createStudentRequest';
 import { ConflictError } from '../errors/conflictError';
 import UserRole from '../constants/roles';
 
-const studentRole = 1;
+const studentRole = 3;
 
 export const getStudents = async () => {
   const students = await StudentService.getStudents();
