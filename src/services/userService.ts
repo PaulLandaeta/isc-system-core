@@ -5,6 +5,8 @@ import config from '../config/config';
 import createUserRequest from '../dtos/createUserRequest';
 import roles from '../constants/roles';
 import { ConflictError } from '../errors/conflictError';
+import { NotFoundError } from '../errors/notFoundError';
+import { HttpError } from '../errors/httpError';
 
 import * as AuthenticationService from './authenticationService';
 
@@ -45,11 +47,19 @@ export const getProfessors = async () => {
   try {
     logger.debug('Attempting to fetch professors');
     const professors = await UserRepository.getProfessors();
+    if (!professors || professors.length === 0) {
+      logger.info('No professors found');
+      throw new NotFoundError('No professors found');
+    }
+
     logger.info('Professors fetched successfully.');
     return professors;
   } catch (error) {
-    logger.error(`Error fetching professors: ${error}`);
-    throw new Error('Error occurred while fetching professors');
+    logger.error(`Error fetching professors: ${(error as Error).message}`);
+    if (error instanceof NotFoundError || error instanceof HttpError) {
+      throw error;
+    }
+    throw new HttpError(502, 'Failed to fetch professors from database');
   }
 };
 

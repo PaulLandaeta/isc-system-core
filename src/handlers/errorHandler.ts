@@ -17,13 +17,18 @@ const errorMap: Record<string, ErrorResponse> = {
   DefaultError: { error: 'Unexpected error. Please try again later', code: 500 },
 };
 
-export const handleError = (res: Response, error: Error) => {
-  const errorResponse = errorMap[error.name] || errorMap['DefaultError'];
-  res.status(errorResponse.code).json({
+export const handleError = (res: Response, error: any) => {
+  const dynamicStatus = typeof error?.statusCode === 'number' ? error.statusCode : undefined;
+
+  const fallback = errorMap[error?.name] || errorMap['DefaultError'];
+  const status = dynamicStatus ?? fallback.code;
+  const label = dynamicStatus ? 'HTTP Error' : fallback.error;
+
+  res.status(status).json({
     success: false,
     data: null,
-    message: error.message,
-    error: errorResponse.error,
-    code: errorResponse.code,
+    message: error?.message || 'Unexpected error',
+    error: label,
+    code: status,
   });
 };
