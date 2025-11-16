@@ -15,12 +15,6 @@ const logger = buildLogger('professorController');
 export const getProfessorsController = async (req: Request, res: Response) => {
   try {
     const professors = await ProfessorInteractor.getProfessors();
-
-    if (professors.length === 0) {
-      logger.info('No professors found');
-      return res.status(404).json({ success: false, message: 'No professors found' });
-    }
-
     logger.info('Professors retrieved successfully');
     sendSuccess(res, professors, 'Professors retrieved successfully');
   } catch (error) {
@@ -34,19 +28,15 @@ export const getProfessorsController = async (req: Request, res: Response) => {
 export const createProfessor = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const professorData: createProfessorRequest = req.body;
-
     const codeValue = professorData.code;
     if (typeof codeValue !== 'string' && typeof codeValue !== 'number') {
       throw new BadRequestError('Código inválido. Debe ser numérico.');
     }
-
     const codeStr = String(codeValue);
     if (!/^[0-9]+$/.test(codeStr)) {
       throw new BadRequestError('Código inválido. Debe contener únicamente dígitos (0-9).');
     }
-
     professorData.code = codeStr;
-
     const newProfessor = await ProfessorInteractor.createProfessor(professorData);
     sendCreated(res, { profesor: newProfessor }, 'Professor created successfully');
   } catch (error) {
@@ -90,26 +80,20 @@ export const getThesisStudentsController = async (req: Request, res: Response) =
   try {
     const { supervisorId } = req.params;
     const { type, sortBy = 'date', order = 'desc' } = req.query;
-
     const validSortBy = ['date', 'status'];
     const validOrder = ['asc', 'desc'];
-
     if (sortBy && !validSortBy.includes(sortBy as string)) {
       throw new BadRequestError('Parámetro "sortBy" inválido');
     }
-
     if (order && !validOrder.includes(order as string)) {
       throw new BadRequestError('Parámetro "order" inválido');
     }
-
     const filters = {
       type: type as string | undefined,
       sortBy: sortBy as 'date' | 'status',
       order: order as 'asc' | 'desc',
     };
-
     const result = await getThesisStudentsService(supervisorId, filters);
-
     sendSuccess(res, result, 'Tesistas obtenidos correctamente');
   } catch (error) {
     if (error instanceof Error) {
@@ -123,7 +107,6 @@ export const getProfessorProfileController = async (req: Request, res: Response)
   try {
     const data = await ProfessorInteractor.getProfessorProfile(id);
     const tutorias: any[] = [];
-
     data.graduationData.forEach((tutoria: any) => {
       const row = {
         id: tutoria.id,
@@ -138,7 +121,6 @@ export const getProfessorProfileController = async (req: Request, res: Response)
       };
       tutorias.push(row);
     });
-
     const response: ProfessorProfileResponseDTO = {
       name: data.name,
       lastname: data.lastname,
@@ -147,7 +129,6 @@ export const getProfessorProfileController = async (req: Request, res: Response)
       email: data.email,
       tutorias: tutorias,
     };
-
     sendSuccess(res, response, 'Perfil del profesor obtenido correctamente');
   } catch (error) {
     logger.error(`Error in getProfessorProfileController for id ${id}: ${error}`);
